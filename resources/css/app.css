@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'forte';
+  font-style:normal;
+  font-weight: 100;
+  font-stretch: 150%;
+  font-display: swap;
+  src: url(http://review-app.test/fonts/FORTE.ttf) format(truetype) tech(variations);
+}
+
+.font-forte {
+  font-family: forte;
+}
+
+.collapse-icon::after{
+  content: url('http://review-app.test/svg/icon/chevron_right_FILL0_wght400_GRAD0_opsz48.svg');
+  transform: scale(.3);
+  position: absolute;
+  top: -5px;
+  right: 0;
+}
+
+.expand-icon::after{
+  content: url('http://review-app.test/svg/icon/expand_more_FILL0_wght400_GRAD0_opsz48.svg');
+  transform: scale(.3);
+  position: absolute;
+  top: -5px;
+  right: 0;
+}
+
+.close-icon::after{
+  content: url('http://review-app.test/svg/icon/close_FILL0_wght400_GRAD0_opsz48.svg');
+  transform: scale(.3);
+  position: absolute;
+  top: -5px;
+  right:-10px;
+  transform-origin: center;
+}
+
+.plus-icon::before{
+  content: url('http://review-app.test/svg/icon/add_FILL1_wght400_GRAD0_opsz48.svg');
+  position: absolute;
+  /* left: 25%;
+  right: 25%; */
+  transform-origin: center;
+  /* transform: scale(0.5); */
+}
+.hourglass_empty-icon::before{
+  content: url('http://review-app.test/svg/icon/hourglass_empty_FILL0_wght400_GRAD0_opsz48.svg');
+  position: absolute;
+  /* left: 25%;
+  right: 25%; */
+  transform: scale(0.5);
+  transform-origin: center;
+}
+.hourglass_full-icon::before{
+  content: url('http://review-app.test/svg/icon/hourglass_full_FILL0_wght400_GRAD0_opsz48.svg');
+  position: absolute;
+  /* left: 25%;
+  right: 25%; */
+  transform: scale(0.5);
+  transform-origin: center;
+}
+

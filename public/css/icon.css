@@ -1,0 +1,42 @@
+.gear::before {
+ content: url('/svg/icon/settings_FILL0_wght200_GRAD0_opsz20.svg');
+ margin-left: 3px;
+ margin-right: 3px;
+ top: 0.5em;
+ position: relative;
+}
+.edit_doc::before {
+ content: url('/svg/icon/edit_document_FILL0_wght400_GRAD0_opsz20.svg'); 
+ margin-left: 3px;
+ margin-right: 3px;
+ top: 0.5em;
+ position: relative;
+}
+.help::before {
+ content: url('/svg/icon/help_FILL0_wght400_GRAD0_opsz20.svg'); 
+ margin-left: 3px;
+ margin-right: 3px;
+ top: 0.5em;
+ position: relative;
+}
+.history::before {
+ content: url('/svg/icon/history_FILL0_wght400_GRAD0_opsz20.svg'); 
+ margin-left: 3px;
+ margin-right: 3px;
+ top: 0.5em;
+ position: relative;
+}
+.bookmark::before {
+ content: url('/svg/icon/bookmark_FILL0_wght400_GRAD0_opsz20.svg'); 
+ margin-left: 3px;
+ margin-right: 3px;
+ top: 0.5em;
+ position: relative;
+}
+.back::before {
+  content: url('/svg/icon/reply_FILL0_wght400_GRAD0_opsz24.svg'); 
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.5em;
+  position: relative;
+ }
