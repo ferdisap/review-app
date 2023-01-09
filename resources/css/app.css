@@ -40,6 +40,7 @@
   transform-origin: center;
 }
 
+/** .plus-icon TIDAK DIPAKAI */
 .plus-icon::before{
   content: url('http://review-app.test/svg/icon/add_FILL1_wght400_GRAD0_opsz48.svg');
   position: absolute;

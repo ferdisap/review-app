@@ -38,3 +38,12 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+
+Route::get('test', function(){
+  // dd('foo');
+  // asset('storage/ferdisap.jpg');
+  return view('test', [
+    'par' => asset('storage/ferdisap.jpg'),
+  ]);
+});

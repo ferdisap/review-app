@@ -1,0 +1,11 @@
+1. gumlet/php-image-resize, require 
+php: >=5.6.0
+ext-fileinfo: *
+ext-gd: * 
+
+cara gunakan ext-gd:
+1. buka php.ini
+2. uncomment extension=gd
+3. tambahkan extension=php_gd2.dll
+4. restart server
+5. run script again
