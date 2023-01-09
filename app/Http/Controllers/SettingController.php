@@ -30,10 +30,7 @@ class SettingController extends Controller
    * Untuk mengupdate data account user
    */
   public function update(Request $request){
-
-    // dd(phpinfo());
-    // dd(get_extension_funcs('gd'));
-
+    // Validation request
     switch ($request->type_form) {
       case 'change password':
         $request->validate([
@@ -62,25 +59,52 @@ class SettingController extends Controller
         break;
     }
 
-    $path = $request->file('pprofile')->path();
-    $this->resizeImage($path, 200);
-    $request->pprofile->storeAs('public/photos/pprofile', Auth::user()->username . "." . $request->pprofile->extension());
-
-    return back()->withInput()->with('success', 'foobar');    
-    
-    return response()->json([
-      'result' => 'success'
-    ]);
+    // action tobe updated
+    $result = false;
+    switch ($request->type_form){
+      case 'change passwird' :
+      case 'change personal information':
+      case 'change pprofile':
+        $result = $this->updatePProfile($request) ? true : false;
+      default:
+        return $result ? 
+        back()->withInput()->with('success', 'foobar') :
+        back()->withInput()->with('fail', 'update fail');
+        break;
+    }    
   }
 
   /**
-   * $width adalah PX
+   * Method untuk update setting/chagnge Photo Profile
    */
-  
-  public function resizeImage($path = null, $width){
+  private function updatePProfile(Request $request){
+    // try {
+    //   $path = $request->file('pprofile')->path();
+    //   $this->resizeImage($path, 100);
+    //   $request->pprofile->storeAs('public/photos/pprofile', Auth::user()->username . "." . $request->pprofile->extension());
+    //   return true;
+    // } catch (\Throwable $e) {
+    //   return false;
+    // }
+    $path = $request->file('pprofile')->path();
+    $this->resizeImage($path, 100);
+    if ($path = $request->pprofile->storeAs('public/photos/pprofile', Auth::user()->username . "." . $request->pprofile->extension()) ){
+      User::where('username', '=', Auth::user()->username)->update([
+        'pprofile' => $path
+      ]);
+      return true;      
+    } else{
+      return false;
+    } 
+  }
+
+  /**
+   * @integer $width adalah PX
+   */  
+  public function resizeImage(String $path = null, Int $width){
     if ($path){
       $image = new ImageResize($path);
-      $image->resizeToWidth(200);
+      $image->resizeToWidth($width);
       $image->save($path);
     }
   }
@@ -89,7 +113,6 @@ class SettingController extends Controller
    * $filename adalah $path to image, not relative page
    * TIDAK DIPAKAI
    */
-
   public function resizeImage2($filename){
     $filename = $filename;
       
