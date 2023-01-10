@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePersonalInformationRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +30,8 @@ class SettingController extends Controller
   /**
    * Untuk mengupdate data account user
    */
-  public function update(Request $request){
+  public function update(ChangePersonalInformationRequest $request){
+    // dd($request);
     // Validation request
     switch ($request->type_form) {
       case 'change password':
@@ -42,9 +44,9 @@ class SettingController extends Controller
       
       case 'change personal information':
         $request->validate([
-          'username' => $request->username ? 'min:8|max:12' : null,
-          'name' => $request->username ? 'max:255' : null,
-          'email' => $request->email ? ['string', 'email', 'max:255', 'unique:'.User::class]  : null,
+          'username' => $request->username ? 'min:8|max:12|unique:users,username' : null,
+          'name' => $request->name ? 'max:255|unique:users,name' : null,
+          // 'email' => $request->email ? ['string', 'email', 'max:255', 'unique:'.User::class]  : null,
         ]);
         break;
 
@@ -60,16 +62,17 @@ class SettingController extends Controller
     }
 
     // action tobe updated
-    $result = false;
     switch ($request->type_form){
       case 'change passwird' :
-      case 'change personal information':
+      case "change personal information":
+        return $this->updatePersonalInformation($request) ? $this->back(true, 'update success') : $this->back(false, 'update fail');
+        break;
       case 'change pprofile':
-        $result = $this->updatePProfile($request) ? true : false;
+        // return $this->updatePProfile($request) ? $success : $fail;
+        return $this->updatePProfile($request) ? $this->back(true, 'update success') : $this->back(false, 'update fail');
+        break;
       default:
-        return $result ? 
-        back()->withInput()->with('success', 'foobar') :
-        back()->withInput()->with('fail', 'update fail');
+        return $this->back(false, 'update fail');
         break;
     }    
   }
@@ -78,24 +81,27 @@ class SettingController extends Controller
    * Method untuk update setting/chagnge Photo Profile
    */
   private function updatePProfile(Request $request){
-    // try {
-    //   $path = $request->file('pprofile')->path();
-    //   $this->resizeImage($path, 100);
-    //   $request->pprofile->storeAs('public/photos/pprofile', Auth::user()->username . "." . $request->pprofile->extension());
-    //   return true;
-    // } catch (\Throwable $e) {
-    //   return false;
-    // }
     $path = $request->file('pprofile')->path();
     $this->resizeImage($path, 100);
-    if ($path = $request->pprofile->storeAs('public/photos/pprofile', Auth::user()->username . "." . $request->pprofile->extension()) ){
-      User::where('username', '=', Auth::user()->username)->update([
-        'pprofile' => $path
-      ]);
-      return true;      
-    } else{
-      return false;
+    if ($path = $request->pprofile->storeAs('photos', "pprofile/" . Auth::user()->username . "." . $request->pprofile->extension()) ){
+      if (User::where('username', '=', Auth::user()->username)->update(['pprofile' => $path])){
+        return true;      
+      } 
     } 
+    return false;
+  }
+
+  /**
+   * Method untuk update setting/change Personal Information
+   */
+  private function updatePersonalInformation(Request $request){
+    if (User::find(Auth::user()->id)->update([
+      'username' => $request->username,
+      'name' => $request->name,
+    ]) ){
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -107,6 +113,16 @@ class SettingController extends Controller
       $image->resizeToWidth($width);
       $image->save($path);
     }
+  }
+
+  /**
+   * back with session
+   */
+  private function back(bool $failOrSuccess, string $message){
+    if ($failOrSuccess){
+      return back()->withInput()->with('success', $message);
+    }
+    return back()->withInput()->with('fail', $message);
   }
 
   /**

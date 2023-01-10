@@ -1,5 +1,4 @@
 <x-guest-layout>
-  @dd('foo')
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 

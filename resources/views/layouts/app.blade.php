@@ -24,8 +24,8 @@
     </head>
     <body class="font-sans antialiased">
       <div class="flex justify-center">
-        <div class="min-h-screen bg-white w-full sm:w-1/2 border-4 border-slate-500 rounded-lg p-1">
-        {{-- <div class="min-h-screen bg-gray-100 w-full sm:w-1/2"> --}}
+        {{-- <div class="min-h-screen bg-white w-full sm:w-1/2 border-4 border-slate-500 rounded-lg p-1"> --}}
+        <div class="min-h-screen bg-gray-100 w-full sm:w-1/2">
             {{-- @include('layouts.navigation') --}}
             <x-navigation-layout title="{{ $title ?? null }}"></x-navigation-layout>
 

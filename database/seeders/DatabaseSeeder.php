@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'ferdisap',
             'email' => 'ferdisaptoko@gmail.com',
             'email_verified_at' => now(),
-            'password' => 'password'
+            'password' => '$2y$10$eXI2mcuX.TgQENrdmwQfQep6F1R.Dt0ET9acG0aO.LNRpoCDmbDv6' // password
         ]);
     }
 }

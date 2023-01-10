@@ -1,5 +1,5 @@
 @php
-$url = "/setting/{{ Auth::user()->id }}/update"
+$url = "/setting/". Auth::user()->id ."/update"
 @endphp
 
 <x-app-layout>
@@ -55,7 +55,7 @@ $url = "/setting/{{ Auth::user()->id }}/update"
       </x-dropdown-form>   
 
       <!-- Form2: personal information  -->
-      <x-dropdown-form title="Personal Information" open="{{ old('open_form2') ?? 'false' }}">
+      <x-dropdown-form title="Personal Information" open="{{ old('open_form2') ?? 'true' }}">
         <x-slot name="form">
           <form action="{{ $url }}" method="post" id="form-personal-information">
             @csrf
@@ -65,14 +65,20 @@ $url = "/setting/{{ Auth::user()->id }}/update"
             
             <!-- Username -->
             <div class="mb-2">
-              <x-input-label for="username" :value="__('Username')" />
+              <div class="flex space-x-2">
+                <input style="margin-left: -1.5rem" ckbox="username" checked type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
+                <x-input-label for="username" :value="__('Username')" />
+              </div>
               <x-text-input id="username" class="block mt-1 w-full h-8" type="text" name="username" :value="old('username') ?? Auth::user()->username" autofocus error="{{ $errors->get('username') ? true : false }}"/>
               <x-input-error :messages="$errors->get('username')" class="mt-2" />
             </div> 
 
             <!-- Name -->
             <div class="mb-2">
-              <x-input-label for="name" :value="__('Name')" />
+              <div class="flex space-x-2">
+                <input style="margin-left: -1.5rem" checked type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
+                <x-input-label for="name" :value="__('Name')" />
+              </div>
               <x-text-input id="name" class="block mt-1 w-full h-8" type="text" name="name" :value="old('name') ?? Auth::user()->name" autofocus error="{{ $errors->get('old_password') ? true : false }}"/>
               <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div> 
@@ -80,7 +86,7 @@ $url = "/setting/{{ Auth::user()->id }}/update"
             <!-- Email -->
             <div class="mb-2 mt-4">
               <x-input-label for="email" :value="__('Email')" />
-              <x-text-input id="email" class="block mt-1 w-full h-8" type="text" name="email" :value="old('email') ?? Auth::user()->email" autofocus error="{{ $errors->get('email') ? true : false }}"/>
+              <x-text-input id="email" class="block mt-1 w-full h-8 text-slate-400" type="text" :value="old('email') ?? Auth::user()->email" autofocus error="{{ $errors->get('email') ? true : false }}" disabled="true"/>
               <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div> 
 
@@ -96,11 +102,12 @@ $url = "/setting/{{ Auth::user()->id }}/update"
       
       <!-- Form3: Profile Photo -->
       <x-dropdown-form title="Photo Profile" open="{{ old('open_form3') ?? 'true' }}">
-        {{-- <x-dropdown-form title="Photo Profile" open="{{ old('open_form3') ?? 'false' }}"> --}}
         <x-slot name="form">
           @php
-          $user_pprofile = asset('storage/photos/pprofile/ferdisap.jpg');
-          // $user_pprofile = Auth::user()->pprofile;
+          // dd(asset(Auth::user()->pprofile))
+          $user_pprofile = asset(Auth::user()->pprofile);
+          // $user_pprofile = asset('storage/photos/pprofile/ferdisap.jpg');
+          // $user_pprofile = "/" . Auth::user()->pprofile;
           @endphp
 
           <form action="{{ $url }}" method="post" id="form-photo-profile" enctype="multipart/form-data">
