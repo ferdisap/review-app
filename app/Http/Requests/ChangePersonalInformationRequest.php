@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,7 +21,7 @@ class ChangePersonalInformationRequest extends FormRequest
    */
   public function authorize()
   {
-    return false;
+    return true;
   }
 
   /**
@@ -40,12 +41,16 @@ class ChangePersonalInformationRequest extends FormRequest
    */
   protected function prepareForValidation()
   {
-    $username = $this->username;
-    $name = $this->name;
+    $user = User::find(Auth::user()->id);
+    $username = $this->username == $user->username;
+    $name = $this->name == $user->name;
 
-    if ($username == Auth::user()->username && $name == Auth::user()->name){
+    if ($username && $name){
       // back
       // jika sama semua maka return back() tidak ada perubahan
+      $this->merge([
+        'message' => 'tidak ada perubahan yang diperlukan.',
+    ]);
     } elseif($username){
       $this->rules = [
         'username' => 'min:8|max:12|unique:users,username',

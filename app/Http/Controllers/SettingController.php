@@ -30,42 +30,47 @@ class SettingController extends Controller
   /**
    * Untuk mengupdate data account user
    */
-  public function update(ChangePersonalInformationRequest $request){
-    // dd($request);
+  public function update(Request $request){
+    // type hint param harus insstance of SettingRequest form validation dimana didalamnya akan menyeleksi form pprofile, change password atau lainnya
+    
     // Validation request
-    switch ($request->type_form) {
-      case 'change password':
-        $request->validate([
-          'old_password' =>'required',
-          'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
-          // 'confirm_password' => '',
-        ]);
-        break;
+    // switch ($request->type_form) {
+    //   case 'change password':
+    //     $request->validate([
+    //       'old_password' =>'required',
+    //       'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
+    //       // 'confirm_password' => '',
+    //     ]);
+    //     break;
       
-      case 'change personal information':
-        $request->validate([
-          'username' => $request->username ? 'min:8|max:12|unique:users,username' : null,
-          'name' => $request->name ? 'max:255|unique:users,name' : null,
-          // 'email' => $request->email ? ['string', 'email', 'max:255', 'unique:'.User::class]  : null,
-        ]);
-        break;
+    //   case 'change personal information':
+    //     $request->validate([
+    //       'username' => $request->username ? 'min:8|max:12|unique:users,username' : null,
+    //       'name' => $request->name ? 'max:255|unique:users,name' : null,
+    //       // 'email' => $request->email ? ['string', 'email', 'max:255', 'unique:'.User::class]  : null,
+    //     ]);
+    //     break;
 
-      case 'change pprofile':
-        $request->validate([
-          'pprofile' => 'required|mimes:jpeg, bmp, png, gif',
-        ]);
-        break;
+    //   case 'change pprofile':
+    //     $request->validate([
+    //       'pprofile' => 'required|mimes:jpeg, bmp, png, gif',
+    //     ]);
+    //     break;
 
-      default:
-        return back()->withInput()->with('fail', 'update fail');
-        break;
+    //   default:
+    //     return back()->withInput()->with('fail', 'update fail');
+    //     break;
+    // }
+    if ($request->message){
+      return $this->back(false, $request->message);
     }
-
     // action tobe updated
     switch ($request->type_form){
-      case 'change passwird' :
+      case 'change password' :
       case "change personal information":
-        return $this->updatePersonalInformation($request) ? $this->back(true, 'update success') : $this->back(false, 'update fail');
+        $form = ChangePersonalInformationRequest::createFrom($request);
+        dd($form);
+        // return $this->updatePersonalInformation($form) ? $this->back(true, 'update success') : $this->back(false, 'update fail');
         break;
       case 'change pprofile':
         // return $this->updatePProfile($request) ? $success : $fail;
@@ -94,7 +99,12 @@ class SettingController extends Controller
   /**
    * Method untuk update setting/change Personal Information
    */
-  private function updatePersonalInformation(Request $request){
+  private function updatePersonalInformation(ChangePersonalInformationRequest $request){
+    // $request->validateResolved();
+    // if($request->authorize()){
+    //   $request = $request->prepareForValidation();
+    //   $request = $request->rules();
+    // }
     if (User::find(Auth::user()->id)->update([
       'username' => $request->username,
       'name' => $request->name,
