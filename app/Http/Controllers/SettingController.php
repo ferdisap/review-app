@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ChangePersonalInformationRequest;
+use App\Http\Requests\SettingRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +11,9 @@ use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
 use Gumlet\ImageResize;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class SettingController extends Controller
 {
@@ -30,50 +33,21 @@ class SettingController extends Controller
   /**
    * Untuk mengupdate data account user
    */
-  public function update(Request $request){
+  public function update(SettingRequest $request){
     // type hint param harus insstance of SettingRequest form validation dimana didalamnya akan menyeleksi form pprofile, change password atau lainnya
     
-    // Validation request
-    // switch ($request->type_form) {
-    //   case 'change password':
-    //     $request->validate([
-    //       'old_password' =>'required',
-    //       'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
-    //       // 'confirm_password' => '',
-    //     ]);
-    //     break;
-      
-    //   case 'change personal information':
-    //     $request->validate([
-    //       'username' => $request->username ? 'min:8|max:12|unique:users,username' : null,
-    //       'name' => $request->name ? 'max:255|unique:users,name' : null,
-    //       // 'email' => $request->email ? ['string', 'email', 'max:255', 'unique:'.User::class]  : null,
-    //     ]);
-    //     break;
-
-    //   case 'change pprofile':
-    //     $request->validate([
-    //       'pprofile' => 'required|mimes:jpeg, bmp, png, gif',
-    //     ]);
-    //     break;
-
-    //   default:
-    //     return back()->withInput()->with('fail', 'update fail');
-    //     break;
-    // }
     if ($request->message){
       return $this->back(false, $request->message);
     }
     // action tobe updated
     switch ($request->type_form){
       case 'change password' :
+        return $this->updatePassword($request) ? $this->back(true, 'update success', ['open_form1' => true]) : $this->back(false, 'update fail', ['open_form1'  => true]);
+        break;
       case "change personal information":
-        $form = ChangePersonalInformationRequest::createFrom($request);
-        dd($form);
-        // return $this->updatePersonalInformation($form) ? $this->back(true, 'update success') : $this->back(false, 'update fail');
+        return $this->updatePersonalInformation($request) ? $this->back(true, 'update success') : $this->back(false, 'update fail');
         break;
       case 'change pprofile':
-        // return $this->updatePProfile($request) ? $success : $fail;
         return $this->updatePProfile($request) ? $this->back(true, 'update success') : $this->back(false, 'update fail');
         break;
       default:
@@ -83,9 +57,19 @@ class SettingController extends Controller
   }
 
   /**
-   * Method untuk update setting/chagnge Photo Profile
+   * Method untuk update setting/change User password
    */
-  private function updatePProfile(Request $request){
+  private function updatePassword($request){
+    $status = User::whereId(Auth::user()->id)->update([
+      'password' => Hash::make($request->newPassword),
+    ]);
+    return $status ? true : false;
+  }
+
+  /**
+   * Method untuk update setting/change Photo Profile
+   */
+  private function updatePProfile($request){
     $path = $request->file('pprofile')->path();
     $this->resizeImage($path, 100);
     if ($path = $request->pprofile->storeAs('photos', "pprofile/" . Auth::user()->username . "." . $request->pprofile->extension()) ){
@@ -99,12 +83,7 @@ class SettingController extends Controller
   /**
    * Method untuk update setting/change Personal Information
    */
-  private function updatePersonalInformation(ChangePersonalInformationRequest $request){
-    // $request->validateResolved();
-    // if($request->authorize()){
-    //   $request = $request->prepareForValidation();
-    //   $request = $request->rules();
-    // }
+  private function updatePersonalInformation($request){
     if (User::find(Auth::user()->id)->update([
       'username' => $request->username,
       'name' => $request->name,
@@ -128,11 +107,11 @@ class SettingController extends Controller
   /**
    * back with session
    */
-  private function back(bool $failOrSuccess, string $message){
+  private function back(bool $failOrSuccess, string $message, array $withInput = null){
     if ($failOrSuccess){
-      return back()->withInput()->with('success', $message);
+      return back()->withInput($withInput)->with('success', $message);
     }
-    return back()->withInput()->with('fail', $message);
+    return back()->withInput($withInput)->with('fail', $message);
   }
 
   /**
