@@ -25,22 +25,20 @@
     <body class="font-sans antialiased">
       <div class="flex justify-center">
         {{-- <div class="min-h-screen bg-white w-full sm:w-1/2 border-4 border-slate-500 rounded-lg p-1"> --}}
-        <div class="min-h-screen bg-gray-100 w-full sm:w-1/2">
+        <div class="min-h-screen bg-gray-100 max-w-7xl sm:w-1/2">
             {{-- @include('layouts.navigation') --}}
-            <x-navigation-layout title="{{ $title ?? null }}"></x-navigation-layout>
-
-
             <!-- Page Heading -->
-            @if (isset($header))
+            <x-navigation-layout title="{{ $title ?? null }}"></x-navigation-layout>
+            {{-- @if (isset($header))
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
-            @endif
+            @endif --}}
 
             <!-- Page Content -->
-            <main>
+            <main class="h-5/6">
                 {{ $slot }}
             </main>
         </div>

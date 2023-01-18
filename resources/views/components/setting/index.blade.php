@@ -1,16 +1,16 @@
 @php
 $menu_settings = [
   ['name' => 'Account', 'href' => url('/setting/account'), 'svg' => null],
-  ['name' => 'About', 'href' => null, 'svg' => null],
+  ['name' => 'About', 'href' => url('/about'), 'svg' => null],
   ['name' => 'FAQ', 'href' => null, 'svg' => null],
   ['name' => 'Help', 'href' => null, 'svg' => null],
   ['name' => 'Theme', 'href' => null, 'svg' => null]
 ]   
 @endphp
-<x-app-layout>
-  <x-slot:title>
+<x-app-layout title="Settings">
+  {{-- <x-slot:title>
     Setting
-  </x-slot>
+  </x-slot> --}}
   <div class="py-4">
     <ul class="ml-3">
       @foreach ($menu_settings as $menu)

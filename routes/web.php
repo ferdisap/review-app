@@ -24,8 +24,7 @@ Route::controller(SettingController::class)->group(function(){
   Route::put('/setting/{user}/update', 'update')->middleware('auth');
 });
 
-// Route::put('/setting/{user}/update', [SettingController::class, 'update'])->middleware('auth');
-// Route::get('/settings/{setting?}', [SettingController::class, 'index'])->middleware('auth')->name('setting');
+Route::get('/about', function(){return view('components.about.index');});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

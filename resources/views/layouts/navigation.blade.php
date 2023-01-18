@@ -16,7 +16,8 @@
             @auth
             <div class="w-auto" style="margin-top: -0.5em">
               <!-- back icon -->
-              <a href="#" class="back"></a>
+              {{-- <a href="#" class="back"></a> --}}
+              <button onclick="history.back()" class="back"></button>
             </div>
             <div>
               <a href="#" class="w-auto align-middle font-bold font-forte text-3xl">{{ $title ?? null }}</a>
