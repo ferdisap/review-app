@@ -11,8 +11,8 @@ $url = "/setting/". Auth::user()->id ."/update"
     <div class="block w-10/12 relative">      
 
       <!-- Session Notification succes or fail update -->
-      <x-session-status :status="session('success')" bgColor="green"/>
-      <x-session-status :status="session('fail')" bgColor="red"/>
+      <x-session-status :status="session('success')" bgColor="bg-green-200"/>
+      <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
       
       <!-- Form1: change password  -->
       <x-dropdown-form title="Change Password" open="{{ old('open_form1') ?? 'false' }}">

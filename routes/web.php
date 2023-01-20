@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,18 @@ Route::controller(SettingController::class)->group(function(){
 
 Route::get('/about', function(){return view('components.about.index');});
 
+Route::controller(PostController::class)->group(function () {
+  Route::get('/post','index');
+  Route::get('/mypost', 'myindex')->middleware('auth');
+  Route::get('/post/{uuid}', 'show');
+  Route::get('/post/create', 'create')->middleware('auth');
+});
+
+require __DIR__.'/auth.php';
+
+
+
+// TIDAK DIPAKAI
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -36,7 +49,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
 
 
 Route::get('test', function(){

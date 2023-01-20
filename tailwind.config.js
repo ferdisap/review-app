@@ -18,6 +18,19 @@ module.exports = {
             }
             
         },
+        // fontSize: {
+        //   dsm: ['0.5rem', '0.75rem'],
+        //   ssm: ['0.625rem', '0.5rem']
+        // },
+        fontSize: {
+          tsm: ['6px', '12px'],
+          dsm: ['8px', '14px'],
+          ssm: ['10px', '16px'],
+          sm: ['14px', '20px'],
+          base: ['16px', '24px'],
+          lg: ['20px', '28px'],
+          xl: ['24px', '32px'],
+        }
     },
 
     plugins: [require('@tailwindcss/forms')],
