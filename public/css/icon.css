@@ -40,3 +40,6 @@
   top: 0.5em;
   position: relative;
  }
+.plus::before {
+  content: url('/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg'); 
+ }

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Gumlet\ImageResize;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -34,7 +38,14 @@ class PostController extends Controller
    */
   public function create()
   {
-    //
+    // $post = Post::create([
+    //     'isDraft' => 1,
+    //     'author' => Auth::user()->id,
+    // ]);
+    $post = Post::find('846f12f5-7f42-465d-95b2-88c91cc7a0f9');
+    return view('components.post.create',[
+      'uuid' => $post->id,
+    ]);
   }
 
   /**
@@ -43,9 +54,16 @@ class PostController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(StorePostRequest $request)
   {
-    //
+    dd($request);
+    // foreach ($request->file('images') as $key => $image) {
+    //   $path = $image->path();
+    //   $this->resizeImage($path, 50);
+    //   $image->storeAs('postImages', "thumbnail/" . 'PostTitle1' . '_50_' . $key . '.' . $image->extension());
+    // }
+    // dd($request->file('images')[0]->path());
+    // dd($request->file('postImage'));
   }
 
   /**
@@ -56,7 +74,7 @@ class PostController extends Controller
    */
   public function show($id)
   {
-    //
+    dd('show');
   }
 
   /**
@@ -91,5 +109,16 @@ class PostController extends Controller
   public function destroy($id)
   {
     //
+  }
+  
+  /**
+   * @integer $width adalah PX
+   */  
+  public function resizeImage(String $path = null, Int $width){
+    if ($path){
+      $image = new ImageResize($path);
+      $image->resizeToWidth($width);
+      $image->save($path);
+    }
   }
 }

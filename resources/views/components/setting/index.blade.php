@@ -8,9 +8,6 @@ $menu_settings = [
 ]   
 @endphp
 <x-app-layout title="Settings">
-  {{-- <x-slot:title>
-    Setting
-  </x-slot> --}}
   <div class="py-4">
     <ul class="ml-3">
       @foreach ($menu_settings as $menu)

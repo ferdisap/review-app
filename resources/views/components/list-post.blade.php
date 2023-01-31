@@ -8,6 +8,6 @@
   </div>
   <div class="absolute right-3 top-0">
     {{-- <x-rating-slider/> --}}
-    <x-rating ratingValue="50"/>  
+    <x-rating ratingValue="70"/>  
   </div>
 </div>

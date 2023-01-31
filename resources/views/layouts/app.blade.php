@@ -25,7 +25,7 @@
     <body class="font-sans antialiased">
       <div class="flex justify-center">
         {{-- <div class="min-h-screen bg-white w-full sm:w-1/2 border-4 border-slate-500 rounded-lg p-1"> --}}
-        <div class="min-h-screen bg-gray-100 max-w-7xl sm:w-1/2">
+        <div class="min-h-screen bg-gray-100 max-w-7xl max-[320px]:w-11/12 max-[640px]:w-9/12 w-1/2 xl:w-4/12 relative">
             {{-- @include('layouts.navigation') --}}
             <!-- Page Heading -->
             <x-navigation-layout title="{{ $title ?? null }}"></x-navigation-layout>
@@ -38,9 +38,12 @@
             @endif --}}
 
             <!-- Page Content -->
-            <main class="h-5/6">
+            <main class="relative">
+            {{-- <main class="h-5/6 relative"> --}}
                 {{ $slot }}
             </main>
+
+            @stack('addPost')
         </div>
       </div>
     </body>

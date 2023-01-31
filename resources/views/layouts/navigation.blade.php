@@ -1,7 +1,7 @@
 @php
   // $menus = [['name' => 'Settings', 'href' => null, 'svg' => ''],
   $menus = [['name' => 'Settings', 'href' => '/setting', 'svg' => 'gear'],
-            ['name' => 'My Posts', 'href' => '/my-post', 'svg' => 'edit_doc'],
+            ['name' => 'My Posts', 'href' => '/mypost', 'svg' => 'edit_doc'],
             ['name' => 'Saved', 'href' => '/saved', 'svg' => 'bookmark'] , 
             ['name' => 'History', 'href' => '/history', 'svg' => 'history'], 
             ['name' => 'Help', 'href' => '/help', 'svg' => 'help']
@@ -20,7 +20,7 @@
               <button onclick="history.back()" class="back"></button>
             </div>
             <div>
-              <a href="#" class="w-auto align-middle font-bold font-forte text-3xl">{{ $title ?? null }}</a>
+              <a href="#" class="w-auto align-middle font-bold font-forte text-txl">{{ $title ?? null }}</a>
             </div>
             @else
             <div class="flex items-center">

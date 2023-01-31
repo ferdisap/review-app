@@ -30,8 +30,9 @@ Route::get('/about', function(){return view('components.about.index');});
 Route::controller(PostController::class)->group(function () {
   Route::get('/post','index');
   Route::get('/mypost', 'myindex')->middleware('auth');
-  Route::get('/post/{uuid}', 'show');
   Route::get('/post/create', 'create')->middleware('auth');
+  Route::get('/post/{uuid}', 'show');
+  Route::post('/post/store', 'store')->middleware('auth');
 });
 
 require __DIR__.'/auth.php';
@@ -49,11 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
 Route::get('test', function(){
-  // dd('foo');
-  // asset('storage/ferdisap.jpg');
   return view('test', [
     'par' => asset('storage/ferdisap.jpg'),
   ]);

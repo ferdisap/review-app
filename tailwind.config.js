@@ -23,13 +23,16 @@ module.exports = {
         //   ssm: ['0.625rem', '0.5rem']
         // },
         fontSize: {
-          tsm: ['6px', '12px'],
-          dsm: ['8px', '14px'],
-          ssm: ['10px', '16px'],
-          sm: ['14px', '20px'],
-          base: ['16px', '24px'],
-          lg: ['20px', '28px'],
-          xl: ['24px', '32px'],
+          tsm: ['0.375rem', '0.75rem'],
+          dsm: ['0.5rem', '0.75rem'],
+          ssm: ['0.625rem', '1rem'],
+          xs: ['0.75rem', '1rem'],
+          sm: ['0.875rem', '1.25rem'],
+          base: ['1rem', '1.5rem'],
+          lg: ['1.125rem', '1.75rem'],
+          xl: ['1.25rem', '1.75rem'],
+          dxl: ['1.5rem', '2rem'],
+          txl: ['1.875rem', '2.25rem'],
         }
     },
 

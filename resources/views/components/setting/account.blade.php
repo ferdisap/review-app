@@ -98,10 +98,7 @@ $url = "/setting/". Auth::user()->id ."/update"
       <x-dropdown-form title="Photo Profile" open="{{ old('open_form3') ?? 'false' }}">
         <x-slot name="form">
           @php
-          // dd(asset(Auth::user()->pprofile))
-          $user_pprofile = asset(Auth::user()->pprofile);
-          // $user_pprofile = asset('storage/photos/pprofile/ferdisap.jpg');
-          // $user_pprofile = "/" . Auth::user()->pprofile;
+          $user_pprofile = isset(Auth::user()->pprofile) ? asset(Auth::user()->pprofile) : null;
           @endphp
 
           <form action="{{ $url }}" method="post" id="form-photo-profile" enctype="multipart/form-data">
@@ -123,7 +120,6 @@ $url = "/setting/". Auth::user()->id ."/update"
 
                 FR.addEventListener('load', () => {
                   $el.querySelector('#pprofile-icon').src = FR.result;
-                  $el.querySelector('#btn-change-pprofile').classList.remove('plus-icon');
                 },false);
 
                 FR.readAsDataURL(thisEl.files[0]);
@@ -131,7 +127,7 @@ $url = "/setting/". Auth::user()->id ."/update"
             }">
               <div class="w-full flex justify-center relative align-center items-center">
                 <!-- image user -->
-                <div class="bg-black rounded-full absolute opacity-25 hover:hidden plus-icon" style="height: 100px; width:100px"></div>
+                <div class="bg-gray-300 rounded-full absolute opacity-25 hover:hidden z-10" style="height: 100px; width:100px"></div>
                 <img id="pprofile-icon" 
                      src="{{ $user_pprofile ?? 'http://review-app.test/svg/icon/account_circle_FILL1_wght400_GRAD0_opsz48.svg' }}" 
                      {!! $attributes->merge(['class' => $basic_css . ($error ? $error_css : $noerror_css) ]) !!} 
@@ -148,12 +144,6 @@ $url = "/setting/". Auth::user()->id ."/update"
                         class="absolute z-10" 
                         style="display: none" 
                         x-on:change="previewImage($el)">
-                
-                     <!-- button plus -->
-                     {{-- <div id="btn-change-pprofile" 
-                     class="plus-icon z-10 hover:scale-125 cursor-pointer absolute top-1/4" 
-                     style="width:50px; height: 4rem" 
-                     onclick="this.previousElementSibling.click()"></div> --}}
               </div>
               <x-input-error :messages="$errors->get('pprofile')" class="mt-2 text-center" />
             </div> 

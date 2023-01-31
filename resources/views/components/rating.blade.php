@@ -19,7 +19,7 @@
 </div>
 
 <style>
-    path {
+    #star > path {
         fill: url(#grad1)
     }
 </style>
