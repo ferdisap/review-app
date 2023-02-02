@@ -1,5 +1,7 @@
 <x-app-layout title="Create Post">
   <div class="md:px-6 px-2 mb-2">
+    <x-session-status :status="session('success')" bgColor="bg-green-200"/>
+    <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
     <form action="/post/store" method="post" enctype="multipart/form-data">
       @csrf
       <!-- uuid -->
@@ -98,13 +100,13 @@
       <div class="text-end mt-5 flex justify-between px-5">
         
         <!-- button Save -->
-        <x-primary-button name='save' bgColor=' from-purple-500 via-indigo-300 to-yellow-300'>
+        <x-primary-button name='submit' bgColor=' from-purple-500 via-indigo-300 to-yellow-300'>
           save
         </x-primary-button>
         
         <!-- button Submit -->
         <x-primary-button name='submit'>
-          Submit
+          publish
         </x-primary-button>
         
       </div>

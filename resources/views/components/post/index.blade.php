@@ -1,11 +1,25 @@
 <x-app-layout title="My Post">
-  @for ($i = 0; $i < 50; $i++)
+  {{-- @dd($posts) --}}
+  <x-session-status :status="session('success')" bgColor="bg-green-200"/>
+  <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
+  {{-- @for ($i = 0; $i < 50; $i++)
   <div class="md:px-6 px-2 mb-2">
     <a href="/post/1">
       <x-list-post imgsrc="{{ url('/contoh/nasigoreng.jpeg') }}" />
     </a>
   </div>
-  @endfor
+  @endfor --}}
+  @foreach ($posts as $post)
+  <div class="md:px-6 px-2 mb-2">
+    <a href="/post/1">
+      <x-list-post 
+      :title="$post->title"
+      :simpleDescription="$post->simpleDescription"
+      :ratingValue="$post->ratingValue"
+      imgsrc="{{ url('/contoh/nasigoreng.jpeg') }}" />
+    </a>
+  </div>
+  @endforeach
   @push('addPost')
     <!-- Dropdown Menu -->
     <div class="sticky flex justify-end bottom-5">

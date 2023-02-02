@@ -27,7 +27,9 @@ class PostController extends Controller
    */
   public function myindex()
   {
-    return view('components.post.index');
+    return view('components.post.index', [
+      'posts' => Post::where('isDraft', '=', 0)->where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->get(),
+    ]);
   }
 
 
@@ -38,11 +40,11 @@ class PostController extends Controller
    */
   public function create()
   {
-    // $post = Post::create([
-    //     'isDraft' => 1,
-    //     'author' => Auth::user()->id,
-    // ]);
-    $post = Post::find('846f12f5-7f42-465d-95b2-88c91cc7a0f9');
+    $post = Post::create([
+        'isDraft' => 1,
+        'author' => Auth::user()->id,
+    ]);
+    // $post = Post::find('846f12f5-7f42-465d-95b2-88c91cc7a0f9');
     return view('components.post.create',[
       'uuid' => $post->id,
     ]);
@@ -55,15 +57,18 @@ class PostController extends Controller
    * @return \Illuminate\Http\Response
    */
   public function store(StorePostRequest $request)
-  {
-    dd($request);
-    // foreach ($request->file('images') as $key => $image) {
-    //   $path = $image->path();
-    //   $this->resizeImage($path, 50);
-    //   $image->storeAs('postImages', "thumbnail/" . 'PostTitle1' . '_50_' . $key . '.' . $image->extension());
-    // }
-    // dd($request->file('images')[0]->path());
-    // dd($request->file('postImage'));
+  {    
+    if ($post = Post::find($request->id) ){
+      $post->title = $request->title;
+      $post->simpleDescription = $request->simpleDescription;
+      $post->detailDescription = $request->detailDescription;
+      $post->isDraft = $request->isDraft;
+      $post->save(); 
+      return $request->isDraft == true ? 
+          back()->withInput()->with('success', 'This Post has been saved.') :
+          redirect()->route('mypostindex')->with('success', 'New Post has been published.');
+    }
+    return back()->withInput()->with('fail', 'No post needed to action.');
   }
 
   /**

@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class StorePostRequest extends FormRequest
 {
+  public $title_rules;
+  public $eachImage_rules = ['mimes:jpeg, bmp, png, gif'];
+  public $simpleDescription_rules;
+  // public $simpleDescription_rules = [new MaxWord(100)];
+  public $detailDescription_rules;
+  // public $detailDescription_rules = [new MaxWord(100)];
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -29,8 +35,8 @@ class StorePostRequest extends FormRequest
   {
     return [
       'id' => 'required',
-      'title' => ['max:30'],
-      'images.*' => ['mimes:jpeg, bmp, png, gif'],
+      'title' => $this->title_rules,
+      'images.*' => $this->eachImage_rules,
       'images' => ['array', function($attribute, $value, $fail){
         foreach ($this->images as $key => $image){
           $path = $image->path();
@@ -43,8 +49,8 @@ class StorePostRequest extends FormRequest
           }
         }
       }],
-      'simpleDescription' => [new MaxWord(100)],
-      'detailDescription' => ['required', new MaxWord(1000)],
+      'simpleDescription' => $this->simpleDescription_rules,
+      'detailDescription' => $this->detailDescription_rules,
     ];
   }
 
@@ -53,16 +59,22 @@ class StorePostRequest extends FormRequest
    */
   protected function prepareForValidation()
   {
-    // dd($this);
-    // $this->old('simpleDescription', 'foo');
-    // session()->put('tilte', 'foo');
-    // if ($this->file('images')) {
-      // foreach ($this->file('images') as $key => $image) {
-      //   $path = $image->path();
-      //   $this->resizeImage($path, 50);
-      //   $path = $image->storeAs('postImages', Auth::user()->username . "/thumbnail/" . '/' . $this->id . '_50_' . $key . '.' . $image->extension());
-      // }
-    // }
+    if ($this->submit === 'publish'){
+      $this->title_rules = ['required', 'max:30'];
+      $this->simpleDescription_rules = ['required', new MaxWord(100)];
+      $this->detailDescription_rules = ['required', new MaxWord(100)];
+      $this->merge([
+        'isDraft' => 0,
+      ]);
+    }
+    else {
+      $this->title_rules = ['max:30'];
+      $this->simpleDescription_rules = [new MaxWord(100)];
+      $this->detailDescription_rules = [new MaxWord(100)];
+      $this->merge([
+        'isDraft' => 1
+      ]);
+    }
   }
 
   /**
