@@ -6,11 +6,13 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MaxWord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\MessageBag;
 
 class StorePostRequest extends FormRequest
 {
   public $title_rules;
-  public $eachImage_rules = ['mimes:jpg, bmp, png, gif'];
+  // public $eachImage_rules = ['mimes:jpg, bmp, png, gif', 'file', 'bail' ,'max:128'];
+  public $eachImage_rules = 'mimes:jpg, bmp, png, gif|file|max:128';
   public $simpleDescription_rules;
   // public $simpleDescription_rules = [new MaxWord(100)];
   public $detailDescription_rules;
@@ -36,19 +38,18 @@ class StorePostRequest extends FormRequest
       'uuid' => 'required',
       'title' => $this->title_rules,
       'images.*' => $this->eachImage_rules,
-      'images' => ['array', function ($attribute, $value, $fail) {
+      'images' => ['required','array', function ($attribute, $value, $fail) {
         foreach ($this->images as $key => $image) {
-          $path_w50 = $image->storeAs('postImages', Auth::user()->username . "/thumbnail" . '/' . $this->uuid . '_50_' . $key . '.' . $image->extension());
-          $path_w400 = $image->storeAs('postImages', Auth::user()->username . "/display" . '/' . $this->uuid . '_400_' . $key . '.' . $image->extension());
 
-          $resized_w50 = $this->resizeImage($path_w50, 50);
-          $resized_w400 = $this->resizeImage($path_w400, 400);
-          
-          // jika (!T||!T) == F
-          if (!$resized_w50 || !$resized_w400){
-            dd('tesg');
-            Storage::delete([$path_w50, $path_w400]);
-            $fail(ucfirst($attribute) . ' of ' . $key+1 . ' has problem. Error:01');
+          // selanjutnya, jika validation 'images.* fail, maka jangan lakukan validasi ini (jangan menyimpan file)
+          dd($this->errorBag('default'));
+          dd($this);
+          if ($image->isValid()){
+            $path = storage_path() . "\app\postImages\\ferdisap\\thumbnail\\" . $this->uuid . '_50_' . $key . '.' . 'jpg';
+            $this->setFormatImg($image->path(), $path);
+            $this->resizeImage($path, 50);
+          } else {
+            $fail('The ' . $attribute . '.' . $key . ' is invalid file.');
           }
         }
       }],
@@ -81,75 +82,32 @@ class StorePostRequest extends FormRequest
     }
   }
 
-  // /**
-  //  * @integer $width adalah PX
-  //  * @return true if the resize is done
-  //  * @return false if no path provided
-  //  * @return string if the error gotten
-  //  */
-  // private function resizeImage(String $path = null, Int $width)
-  // {
-  //   if ($path) {
-  //     try {
-  //       $image = new ImageResize($path);
-  //       $image->resizeToWidth($width);
-  //       $image->save($path);
-  //       return true;
-  //     } catch (\Throwable $e) {
-  //       return (string) $e->getMessage();
-  //     }
-  //   }
-  //   return false;
-  // }
+  /**
+   * @return true if success, otherwise false
+   */
+  function resizeImage($imagePath, $width, $imageFormat = 'jpg', $filterType = \Imagick::FILTER_LANCZOS, $blur = 1, $bestFit = false)
+  {
+    $im = new \Imagick($imagePath);
+    $height = (int) ($im->getImageHeight() * ($width /  $im->getImageWidth()));
+    $im->resizeImage($width, $height, $filterType, $blur, $bestFit);
+    return $im->writeImage($imagePath) ?? false;
+  }
 
   /**
-   * (int) $height = 0 berarti resizeToWidth
+   * @return true on success, otherwise false
    */
-  function resizeImage($imagePath, $width, $height = 0, $filterType = \Imagick::FILTER_LANCZOS, $blur = 1, $bestFit = false , $cropZoom = false)
+  function setFormatImg($imagePath, $storePath)
   {
-    // $imagick = new \Imagick(realpath($imagePath));
-    $imagick = new \Imagick($imagePath);
-
-    $cropWidth = $imagick->getImageWidth();
-    $cropHeight = $imagick->getImageHeight();
-
-    if ($height == 0){
-      $ratio  = $width / $cropWidth;
-      $height = (int) ($cropHeight * $ratio);
-    }
-
-    $imagick->resizeImage($width, $height, $filterType, $blur, $bestFit);
-
-    if ($cropZoom) {
-      $newWidth = $cropWidth / 2;
-      $newHeight = $cropHeight / 2;
-
-      $imagick->cropimage(
-        $newWidth,
-        $newHeight,
-        ($cropWidth - $newWidth) / 2,
-        ($cropHeight - $newHeight) / 2
-      );
-
-      $imagick->scaleimage(
-        $imagick->getImageWidth() * 4,
-        $imagick->getImageHeight() * 4
-      );
-    }
-    $path_wo_ext = preg_replace('/\.\w+$/m', '' ,$imagePath);
-    dd($imagick->getImageFormat());
-
-    if($imagick->getImageFormat() == 'JPEG' || $imagick->getImageFormat() == 'JPG'){
-      return false;
-    }
-    $imagick->setImageFormat('jpg');
-    if ($imagick->writeImageFile(fopen ($path_wo_ext . '.jpg', "wb"))){
-      Storage::delete([$imagePath]);
+    $im = new \Imagick($imagePath);
+    // if ($im->getImageFormat() == 'JPEG' || $im->getImageFormat() == 'JPG') {
+    //   return false;
+    // }
+    try {
+      $im->setImageFormat('jpg');
+      $im->writeImageFile(fopen($storePath, "wb"));
       return true;
-    } else {
-      // dd('foo');
+    } catch (\Throwable $e) {
       return false;
     }
-    
   }
 }

@@ -88,7 +88,13 @@
         });
       </script> --}}
       <div class="font-medium text-ssm text-gray-700" style="margin-top:-0.75rem">*fist image will become a thumbnail</div>
-      <div><x-input-error :messages="$errors->get('images')" class="mt-2" /></div>
+      <div><x-input-error :messages="$errors->get('images')" class="mt-2" /></div>      
+      <div><x-input-error :messages="$errors->get('images.0')" class="mt-2" /></div>      
+      <div><x-input-error :messages="$errors->get('images.1')" class="mt-2" /></div>      
+      <div><x-input-error :messages="$errors->get('images.2')" class="mt-2" /></div>      
+      <div><x-input-error :messages="$errors->get('images.3')" class="mt-2" /></div>      
+      <div><x-input-error :messages="$errors->get('images.4')" class="mt-2" /></div>      
+      <div><x-input-error :messages="$errors->get('images.5')" class="mt-2" /></div>      
 
       <!-- Simple Description -->
       <div class="w-full mb-5 mt-5">
