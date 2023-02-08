@@ -9,17 +9,20 @@
     </a>
   </div>
   @endfor --}}
-  @foreach ($posts as $post)
+  @foreach ($posts as $key => $post)
+  {{-- @if ($key == 0) --}}
   <div class="md:px-6 px-2 mb-2">
     <a href="/post/1">
       <x-list-post 
       :title="$post->title"
       :simpleDescription="$post->simpleDescription"
       :ratingValue="$post->ratingValue"
-      imgsrc="{{ url('/contoh/nasigoreng.jpeg') }}" />
+      imgsrc="{{ url('/contoh/' . $post->uuid . '_50_' . $key . '.jpg')}}" />
     </a>
   </div>
+  {{-- @endif --}}
   @endforeach
+
   @push('addPost')
     <!-- Dropdown Menu -->
     <div class="sticky flex justify-end bottom-5">

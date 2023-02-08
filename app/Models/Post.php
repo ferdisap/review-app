@@ -21,6 +21,13 @@ class Post extends Model
       'author',
   ];
 
+   /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'uuid';
+
   /**
    * Generate a new UUID for the model.
    *
@@ -38,6 +45,6 @@ class Post extends Model
    */
   public function uniqueIds()
   {
-    return ['id'];
+    return ['uuid'];
   }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('uuid');
             $table->string('title')->nullable();
             $table->string('slug')->nullable();
             $table->text('simpleDescription')->nullable();

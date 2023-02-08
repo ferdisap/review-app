@@ -9,3 +9,13 @@ cara gunakan ext-gd:
 3. tambahkan extension=php_gd2.dll
 4. restart server
 5. run script again
+
+2. pakai extension=php_imagick.dll
+caranya:
+1. download ex: php_imagick-3.7.0-8.1-ts-vs16-x64
+2. move php_imagick.dll into php ext folder
+3. Put the extracted downloaded file into somewhere
+4. Set the "Path" of windows environment variable by the the path of those files (3);
+5. Enable the extension in php.ini
+6. restart
+

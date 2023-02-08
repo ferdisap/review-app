@@ -1,13 +1,16 @@
 <x-app-layout title="Create Post">
+  {{-- @dd($uuid) --}}
   <div class="md:px-6 px-2 mb-2">
     <x-session-status :status="session('success')" bgColor="bg-green-200"/>
     <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
     <form action="/post/store" method="post" enctype="multipart/form-data">
       @csrf
       <!-- uuid -->
-      <p class="text-gray-300 text-center">{{ old('id') ?? $uuid }}</p>
-      <input type="hidden" name="id" value="{{ old('id') ?? $uuid }}">
-
+      <p class="text-gray-300 text-center">{{ $uuid }}</p>
+      {{-- <p class="text-gray-300 text-center">{{ old('uuid') ?? $uuid }}</p> --}}
+      <input type="hidden" name="uuid" value="{{ $uuid }}">
+      {{-- <input type="hidden" name="uuid" value="{{ old('uuid') ?? $uuid }}"> --}}
+      
       <!-- Title -->
       <div class="mb-5 mt-5">
         <x-input-label for="title" :value="__('Post Title')" />
@@ -31,18 +34,24 @@
             FR.readAsDataURL(thisEl.files[0]);
           }
         }">
-          <div class="bg-neutral-100 hover:bg-transparent border rounded-lg flex justify-center items-center w-20 h-20 max-[640px]:w-16 max-[640px]:h-16 max-[320px]:w-8 max-[320px]:h-8">
+          <div class="bg-neutral-100 hover:bg-transparent border rounded-lg flex justify-center items-center w-20 h-20 max-[640px]:w-16 max-[640px]:h-16 max-[320px]:w-8 max-[320px]:h-8"
+                style="position: relative; background-color:white">
 
             @php
             // $thumbnailSrc = asset('postImages/ferdisap/thumbnail/846f12f5-7f42-465d-95b2-88c91cc7a0f9_50_01.jpg')
             @endphp
-            {{-- <img src="{{ $thumbnailSrc ?? 'http://review-app.test/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg' }}"  --}}
-            <img src="http://review-app.test/postImages/ferdisap/thumbnail/{{ $uuid }}_50_{{ $i }}.png" 
+            <img src="/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg" 
                   alt=""
                   class="thumbnail-img rounded-sm shadow-md"
                   role="button"
                   onclick="this.nextElementSibling.click()"
                   style="max-height: 100%; min-width: inherit;">
+
+            <img src="http://{{ request()->getHttpHost() }}/postImages/ferdisap/thumbnail/{{ $uuid }}_50_{{ $i }}.jpg" 
+                  alt="" 
+                  srcset="" 
+                  style="position: absolute"
+                  onclick="this.nextElementSibling.click()">
                   
             <input  type="file" 
                     name="images[]" 
@@ -54,7 +63,7 @@
         </div>
       @endfor
       </div>
-      <script>
+      {{-- <script>
         function changeSRC(el,src, imgFormats=[]){
           if (typeof imgFormats[0] == 'undefined'){
             return el.src =  window.location.origin + "/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg";
@@ -66,7 +75,7 @@
           });
         }
 
-        const formats = ['.jpg', '.gif', '.bmp'];
+        const formats = ['.jpg', '.gif', '.bmp', '.jpg'];
         const regex = /\.\w+$/gm;
 
         let imgs = document.querySelectorAll('.thumbnail-img');
@@ -77,7 +86,7 @@
             changeSRC(this, src, imgFormats);
           });
         });
-      </script>
+      </script> --}}
       <div class="font-medium text-ssm text-gray-700" style="margin-top:-0.75rem">*fist image will become a thumbnail</div>
       <div><x-input-error :messages="$errors->get('images')" class="mt-2" /></div>
 

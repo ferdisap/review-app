@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+    // dd(phpinfo());
 });
 
 Route::controller(SettingController::class)->group(function(){

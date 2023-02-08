@@ -96,30 +96,23 @@ window.Alpine = Alpine;
 // })
 
 Alpine.store('changeSRC', {
-  formats: [],
-  regex: /\.\w+$/gm,
-  execute(el,src){
-    if (typeof this.formats[0] == 'undefined'){
-      return el.src =  window.location.origin + "/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg";
-    }  
-    el.src = src + this.formats[0];
-    this.formats.shift();
-    el.addEventListener('error', function(){
-      changeSRC(el, src, this.formats);
-    });
+  execute(img, altSRC = '/svg/icon/lunch_dining_FILL0_wght400_GRAD0_opsz48.svg', altExtension = [] ){
+    // const altExtension = ['.png', '.gif', '.bmp',];
+    const regex = /\.\w+$/gm;
+    let pathWithoutExtension = img.src.replace(regex, '');
+    
+    function setSRC(){
+      if (typeof altExtension[0] == 'undefined'){
+        // img.src =  window.location.origin + '/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg';
+        img.src =  window.location.origin + altSRC;
+        return img.removeEventListener('error', setSRC);
+      }
+      img.src = pathWithoutExtension + altExtension[0];
+      altExtension.shift();
+    }
+
+    img.addEventListener('error', setSRC);
   },
-  setFormats(formats = []){
-    this.formats = formats;
-  },
-  // changeSRC(){
-    // let imgs = document.querySelectorAll('.thumbnail-img');
-    //     imgs.forEach(img => {  
-    //       let src = img.src.replace(regex, '');
-    //       let imgFormats = formats.slice();
-    //       img.addEventListener('error', function(){
-    //         changeSRC(this, src, imgFormats);
-    //       });
-  // }
 });
 
 Alpine.start();
