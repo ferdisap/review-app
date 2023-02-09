@@ -118,7 +118,7 @@ class SettingRequest extends FormRequest
     }
     else {
       $this->rules = [
-        'pprofile' => 'required|mimes:jpeg, bmp, png, gif',
+        'pprofile' => 'required|mimes:jpeg, jpg, png|file|max:4048',
       ];
     }
   }

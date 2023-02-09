@@ -95,24 +95,35 @@ window.Alpine = Alpine;
 
 // })
 
-Alpine.store('changeSRC', {
-  execute(img, altSRC = '/svg/icon/lunch_dining_FILL0_wght400_GRAD0_opsz48.svg', altExtension = [] ){
-    // const altExtension = ['.png', '.gif', '.bmp',];
-    const regex = /\.\w+$/gm;
-    let pathWithoutExtension = img.src.replace(regex, '');
+// Alpine.store('changeSRC', {
+//   execute(img, altSRC = '/svg/icon/lunch_dining_FILL0_wght400_GRAD0_opsz48.svg', altExtension = [] ){
+//     // const altExtension = ['.png', '.gif', '.bmp',];
+//     const regex = /\.\w+$/gm;
+//     let pathWithoutExtension = img.src.replace(regex, '');
     
-    function setSRC(){
-      if (typeof altExtension[0] == 'undefined'){
-        // img.src =  window.location.origin + '/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg';
-        img.src =  window.location.origin + altSRC;
-        return img.removeEventListener('error', setSRC);
-      }
-      img.src = pathWithoutExtension + altExtension[0];
-      altExtension.shift();
-    }
+//     function setSRC(){
+//       if (typeof altExtension[0] == 'undefined'){
+//         // img.src =  window.location.origin + '/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg';
+//         img.src =  window.location.origin + altSRC;
+//         return img.removeEventListener('error', setSRC);
+//       }
+//       img.src = pathWithoutExtension + altExtension[0];
+//       altExtension.shift();
+//     }
 
-    img.addEventListener('error', setSRC);
-  },
+//     img.addEventListener('error', setSRC);
+//   },
+// });
+
+Alpine.store('previewThumbnail',{
+  show(imgFile, imgTag){
+    console.log('foo');
+    const FR = new FileReader();
+    FR.addEventListener('load', () => {
+      document.querySelector(imgTag).src = FR.result;
+    }, false);
+    FR.readAsDataURL(imgFile.files[0]);
+  }
 });
 
 Alpine.start();

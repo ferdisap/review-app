@@ -95,7 +95,7 @@ $url = "/setting/". Auth::user()->id ."/update"
       </x-dropdown-form>   
       
       <!-- Form3: Profile Photo -->
-      <x-dropdown-form title="Photo Profile" open="{{ old('open_form3') ?? 'false' }}">
+      <x-dropdown-form title="Photo Profile" open="{{ old('open_form3') ?? 'true' }}">
         <x-slot name="form">
           @php
           $user_pprofile = isset(Auth::user()->pprofile) ? asset(Auth::user()->pprofile) : null;
@@ -113,40 +113,33 @@ $url = "/setting/". Auth::user()->id ."/update"
               'noerror_css' => ' focus:ring-sky-500 focus:border-sky-500 focus:outline-none focus:ring-2',
               'basic_css' => 'border-gray-300 rounded-full shadow-sm bg-slate-100 pprofile-img',
             ])
-                        
-            <div class="mb-2" x-data="{
-              previewImage: function(thisEl){
-                const FR = new FileReader();
+            {{-- @dd(request()->getSchemeAndHttpHost()) --}}
+            <div x-data class="mb-2 w-full flex justify-center relative align-center items-center cursor-pointer"
+                 onclick="this.querySelector('input').click()">
+                 <!-- image user -->
+                 <div class="bg-gray-300 rounded-full absolute opacity-25 hover:bg-gray-400 z-10" style="height: 100px; width:100px"></div>
+                 <img id="pprofile-icon" 
+                      src="{{ '/svg/icon/account_circle_FILL1_wght400_GRAD0_opsz48.svg' }}" 
+                      {!! $attributes->merge(['class' => $basic_css . ($error ? $error_css : $noerror_css) ]) !!} 
+                      style="width: 100px; height:100px"
+                      alt="photo profile">
 
-                FR.addEventListener('load', () => {
-                  $el.querySelector('#pprofile-icon').src = FR.result;
-                },false);
+                 <img id="pprofile-icon" 
+                      src="{{ request()->getSchemeAndHttpHost() }}/photos/pprofile/{{ Auth::user()->username }}.jpg" 
+                      {!! $attributes->merge(['class' => $basic_css . ($error ? $error_css : $noerror_css) ]) !!} 
+                      style="width: 100px; height:100px"
+                      alt="photo profile">   
 
-                FR.readAsDataURL(thisEl.files[0]);
-              }
-            }">
-              <div class="w-full flex justify-center relative align-center items-center">
-                <!-- image user -->
-                <div class="bg-gray-300 rounded-full absolute opacity-25 hover:hidden z-10" style="height: 100px; width:100px"></div>
-                <img id="pprofile-icon" 
-                     src="{{ $user_pprofile ?? 'http://review-app.test/svg/icon/account_circle_FILL1_wght400_GRAD0_opsz48.svg' }}" 
-                     {!! $attributes->merge(['class' => $basic_css . ($error ? $error_css : $noerror_css) ]) !!} 
-                     style="width: 100px; height:100px"  
-                     alt="photo profile"
-                     role="button"
-                     onclick="this.nextElementSibling.click()"
-                     tabIndex="0">
-             
-                <input  type="file" 
-                        name="pprofile" 
-                        accept="image/png, image/gif, image/jpeg, image/bmp" 
-                        id="pprofile" 
-                        class="absolute z-10" 
-                        style="display: none" 
-                        x-on:change="previewImage($el)">
-              </div>
-              <x-input-error :messages="$errors->get('pprofile')" class="mt-2 text-center" />
-            </div> 
+                 <input  type="file" 
+                         name="pprofile" 
+                         accept="image/png, image/gif, image/jpeg, image/bmp" 
+                         id="pprofile" 
+                         class="absolute z-10" 
+                         style="display: none" 
+                         {{-- x-on:change="previewImage($el)"> --}}
+                         x-on:change="$store.previewThumbnail.show($el, '#pprofile-icon')">
+            </div>
+            <x-input-error :messages="$errors->get('pprofile')" class="mt-2 text-center" />
 
             <!-- button UPDATE -->
             <div class="text-end mt-5">

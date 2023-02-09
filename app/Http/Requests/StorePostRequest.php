@@ -6,17 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MaxWord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 
 class StorePostRequest extends FormRequest
 {
   public $title_rules;
-  // public $eachImage_rules = ['mimes:jpg, bmp, png, gif', 'file', 'bail' ,'max:128'];
-  public $eachImage_rules = 'mimes:jpg, bmp, png, gif|file|max:128';
   public $simpleDescription_rules;
-  // public $simpleDescription_rules = [new MaxWord(100)];
   public $detailDescription_rules;
-  // public $detailDescription_rules = [new MaxWord(100)];
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -37,20 +34,16 @@ class StorePostRequest extends FormRequest
     return [
       'uuid' => 'required',
       'title' => $this->title_rules,
-      'images.*' => $this->eachImage_rules,
-      'images' => ['required','array', function ($attribute, $value, $fail) {
-        foreach ($this->images as $key => $image) {
+      'images.*' => ['mimes:jpg,png', 'max:128', function ($attribute, $image, $fail) {
 
-          // selanjutnya, jika validation 'images.* fail, maka jangan lakukan validasi ini (jangan menyimpan file)
-          dd($this->errorBag('default'));
-          dd($this);
-          if ($image->isValid()){
-            $path = storage_path() . "\app\postImages\\ferdisap\\thumbnail\\" . $this->uuid . '_50_' . $key . '.' . 'jpg';
-            $this->setFormatImg($image->path(), $path);
-            $this->resizeImage($path, 50);
-          } else {
-            $fail('The ' . $attribute . '.' . $key . ' is invalid file.');
-          }
+        if ($this->validator->errors()->get($attribute) == []) {
+          $path = storage_path() . "\app\postImages\\ferdisap\\thumbnail\\" . $this->uuid . '_50_' . $attribute . '.' . 'jpg';
+          $this->setFormatImg($image->path(), $path);
+          $this->resizeImage($path, 50);
+
+          $path = storage_path() . "\app\postImages\\ferdisap\\display\\" . $this->uuid . '_400_' . $attribute . '.' . 'jpg';
+          $this->setFormatImg($image->path(), $path);
+          $this->resizeImage($path, 400);
         }
       }],
       'simpleDescription' => $this->simpleDescription_rules,
@@ -99,9 +92,9 @@ class StorePostRequest extends FormRequest
   function setFormatImg($imagePath, $storePath)
   {
     $im = new \Imagick($imagePath);
-    // if ($im->getImageFormat() == 'JPEG' || $im->getImageFormat() == 'JPG') {
-    //   return false;
-    // }
+    if ($im->getImageFormat() == 'JPEG' || $im->getImageFormat() == 'JPG') {
+      return false;
+    }
     try {
       $im->setImageFormat('jpg');
       $im->writeImageFile(fopen($storePath, "wb"));

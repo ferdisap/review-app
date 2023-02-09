@@ -20,81 +20,34 @@
       <!-- images -->
       <div class="flex justify-between mb-5">
         @for ($i = 0 ; $i<5 ; $i++)
-        {{-- <div class="border rounded-lg flex justify-center items-center w-20 h-20 max-[640px]:w-16 max-[640px]:h-16 max-[320px]:w-8 max-[320px]:h-8">
-          <img src="http://review-app.test/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg" alt="" class="rounded-sm shadow-md">
-        </div> --}}
-        <div class="mb-2" x-data="{
-          previewImage: function(thisEl){
-            const FR = new FileReader();
+        <div x-data class="bg-neutral-100 cursor-pointer hover:bg-transparent border rounded-lg flex justify-center items-center w-20 h-20 max-[640px]:w-16 max-[640px]:h-16 max-[320px]:w-8 max-[320px]:h-8"
+             style="position: relative; background-color:white"
+             onclick="this.querySelector('input').click()">
 
-            FR.addEventListener('load', () => {
-              $el.querySelector('img').src = FR.result;
-            },false);
+            <img src="{{ request()->getSchemeAndHttpHost() }}/postImages/ferdisap/thumbnail/{{ $uuid }}_50_images.{{ $i }}.jpg" 
+                  id="thumbnail_{{ $i }}"
+                  alt="" 
+                  srcset="" 
+                  style="position:absolute;max-height:100%">
 
-            FR.readAsDataURL(thisEl.files[0]);
-          }
-        }">
-          <div class="bg-neutral-100 hover:bg-transparent border rounded-lg flex justify-center items-center w-20 h-20 max-[640px]:w-16 max-[640px]:h-16 max-[320px]:w-8 max-[320px]:h-8"
-                style="position: relative; background-color:white">
-
-            @php
-            // $thumbnailSrc = asset('postImages/ferdisap/thumbnail/846f12f5-7f42-465d-95b2-88c91cc7a0f9_50_01.jpg')
-            @endphp
             <img src="/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg" 
                   alt=""
                   class="thumbnail-img rounded-sm shadow-md"
-                  role="button"
-                  onclick="this.nextElementSibling.click()"
                   style="max-height: 100%; min-width: inherit;">
-
-            <img src="http://{{ request()->getHttpHost() }}/postImages/ferdisap/thumbnail/{{ $uuid }}_50_{{ $i }}.jpg" 
-                  alt="" 
-                  srcset="" 
-                  style="position: absolute"
-                  onclick="this.nextElementSibling.click()">
                   
             <input  type="file" 
                     name="images[]" 
                     accept="image/png, image/gif, image/jpeg, image/bmp"  
                     class="absolute z-10 " 
                     style="display: none" 
-                    x-on:change="previewImage($el)">
+                    x-on:change="$store.previewThumbnail.show($el, '#thumbnail_{{ $i }}')">
           </div>
-        </div>
       @endfor
       </div>
-      {{-- <script>
-        function changeSRC(el,src, imgFormats=[]){
-          if (typeof imgFormats[0] == 'undefined'){
-            return el.src =  window.location.origin + "/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg";
-          }  
-          el.src = src + imgFormats[0];
-          imgFormats.shift();
-          el.addEventListener('error', function(){
-            changeSRC(el, src, imgFormats);
-          });
-        }
-
-        const formats = ['.jpg', '.gif', '.bmp', '.jpg'];
-        const regex = /\.\w+$/gm;
-
-        let imgs = document.querySelectorAll('.thumbnail-img');
-        imgs.forEach(img => {  
-          let src = img.src.replace(regex, '');
-          let imgFormats = formats.slice();
-          img.addEventListener('error', function(){
-            changeSRC(this, src, imgFormats);
-          });
-        });
-      </script> --}}
       <div class="font-medium text-ssm text-gray-700" style="margin-top:-0.75rem">*fist image will become a thumbnail</div>
-      <div><x-input-error :messages="$errors->get('images')" class="mt-2" /></div>      
-      <div><x-input-error :messages="$errors->get('images.0')" class="mt-2" /></div>      
-      <div><x-input-error :messages="$errors->get('images.1')" class="mt-2" /></div>      
-      <div><x-input-error :messages="$errors->get('images.2')" class="mt-2" /></div>      
-      <div><x-input-error :messages="$errors->get('images.3')" class="mt-2" /></div>      
-      <div><x-input-error :messages="$errors->get('images.4')" class="mt-2" /></div>      
-      <div><x-input-error :messages="$errors->get('images.5')" class="mt-2" /></div>      
+      @foreach($errors->get('images.*') as $n => $img)
+      <div><x-input-error :messages="$errors->get($n)" class="mt-2" /></div>      
+      @endforeach
 
       <!-- Simple Description -->
       <div class="w-full mb-5 mt-5">
@@ -115,7 +68,7 @@
       <div class="text-end mt-5 flex justify-between px-5">
         
         <!-- button Save -->
-        <x-primary-button name='submit' bgColor=' from-purple-500 via-indigo-300 to-yellow-300'>
+        <x-primary-button name='submit' bgColor=' from-purple-500 via-indigo-300 to-yellow-300 hover:from-purple-800 hover:via-indigo-800 hover:to-yellow-800'>
           save
         </x-primary-button>
         
