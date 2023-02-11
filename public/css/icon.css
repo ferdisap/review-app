@@ -1,45 +1,77 @@
 .gear::before {
- content: url('/svg/icon/settings_FILL0_wght200_GRAD0_opsz20.svg');
- margin-left: 3px;
- margin-right: 3px;
- top: 0.5em;
- position: relative;
-}
-.edit_doc::before {
- content: url('/svg/icon/edit_document_FILL0_wght400_GRAD0_opsz20.svg'); 
- margin-left: 3px;
- margin-right: 3px;
- top: 0.5em;
- position: relative;
-}
-.help::before {
- content: url('/svg/icon/help_FILL0_wght400_GRAD0_opsz20.svg'); 
- margin-left: 3px;
- margin-right: 3px;
- top: 0.5em;
- position: relative;
-}
-.history::before {
- content: url('/svg/icon/history_FILL0_wght400_GRAD0_opsz20.svg'); 
- margin-left: 3px;
- margin-right: 3px;
- top: 0.5em;
- position: relative;
-}
-.bookmark::before {
- content: url('/svg/icon/bookmark_FILL0_wght400_GRAD0_opsz20.svg'); 
- margin-left: 3px;
- margin-right: 3px;
- top: 0.5em;
- position: relative;
-}
-.back::before {
-  content: url('/svg/icon/reply_FILL0_wght400_GRAD0_opsz24.svg'); 
+  content: url('/svg/icon/settings_FILL0_wght200_GRAD0_opsz20.svg');
   margin-left: 3px;
   margin-right: 3px;
   top: 0.5em;
   position: relative;
- }
+}
+
+.edit_doc::before {
+  content: url('/svg/icon/edit_document_FILL0_wght400_GRAD0_opsz20.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.5em;
+  position: relative;
+}
+
+.help::before {
+  content: url('/svg/icon/help_FILL0_wght400_GRAD0_opsz20.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.5em;
+  position: relative;
+}
+
+.history::before {
+  content: url('/svg/icon/history_FILL0_wght400_GRAD0_opsz20.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.5em;
+  position: relative;
+}
+
+.bookmark::before {
+  content: url('/svg/icon/bookmark_FILL0_wght400_GRAD0_opsz20.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.5em;
+  position: relative;
+}
+
+.back::before {
+  content: url('/svg/icon/reply_FILL0_wght400_GRAD0_opsz24.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.5em;
+  position: relative;
+}
+
 .plus::before {
-  content: url('/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg'); 
- }
+  content: url('/svg/icon/add_FILL1_wght400_GRAD0_opsz20.svg');
+}
+
+.star::after {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  content: '';
+  -webkit-mask: url('/svg/icon/star_black_24dp.svg') no-repeat 50% 50%;
+  mask: url('/svg/icon/star_black_24dp.svg') no-repeat 50% 50%;
+  -webkit-mask-size: cover;
+  mask-size: cover;
+}
+.red:after {
+  background-color: red;
+}
+.green:after {
+  background-color: green;
+}
+.orange:after {
+  background-color: orange;
+}
+.black:after {
+  background-color: black;
+}
+.orange-to-black:after {
+  background-image: linear-gradient(90deg, orange 0 50%, black 50% 100%);
+}

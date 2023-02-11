@@ -1,25 +1,24 @@
-{{-- <svg id="star1" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
-    <path
-        d="m8.85 17.825 3.15-1.9 3.15 1.925-.825-3.6 2.775-2.4-3.65-.325-1.45-3.4-1.45 3.375-3.65.325 2.775 2.425ZM7.775 19.3 8.9 14.5l-3.725-3.225 4.9-.425L12 6.325l1.925 4.525 4.9.425L15.1 14.5l1.125 4.8L12 16.75ZM12 13.25Z" />
-</svg> --}}
+
 @props(['ratingValue'])
-<div class="flex justify-center items-end">
-  <svg id="star" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
-    <defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="{{ $ratingValue }}%" style="stop-color:rgb(255, 255, 0)" />
-            <stop offset="{{ $ratingValue + 10 }}%" style="stop-color:rgb(255,0,0)" />
-        </linearGradient>
-    </defs>
-    <path d="M7.775 19.3 8.9 14.5l-3.725-3.225 4.9-.425L12 6.325l1.925 4.525 4.9.425L15.1 14.5l1.125 4.8L12 16.75Z" />
-</svg>
-<p style="margin-top: 0;
+<div class="flex justify-center items-end"
+      x-data="{
+        ratingValue: function(container, value){
+          value = value/2;
+          value - 10 >= 0 ? this.createStar(container, 'orange') : (value - 10 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
+          value - 20 >= 0 ? this.createStar(container, 'orange') : (value - 20 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
+          value - 30 >= 0 ? this.createStar(container, 'orange') : (value - 30 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
+          value - 40 >= 0 ? this.createStar(container, 'orange') : (value - 40 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
+          value - 50 >= 0 ? this.createStar(container, 'orange') : (value - 50 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
+        },
+        createStar(container, color){
+          let el = document.createElement('span');
+          el.classList.add('star', color);
+          container.appendChild(el);
+        },
+      }">
+  <div x-init="ratingValue($el, {{ $ratingValue }})"></div>
+  <p style="margin-top: 0;
         font-size:8px"
         >{{ $ratingValue }}</p>
 </div>
 
-<style>
-    #star > path {
-        fill: url(#grad1)
-    }
-</style>

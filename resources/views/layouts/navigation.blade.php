@@ -8,11 +8,10 @@
            ]
 @endphp
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 mb-2">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 pb-2">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto">
-    {{-- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> --}}
-        <div class="flex justify-between h-16 bg-gradient-to-r from-cyan-500 to-blue-500 items-center">
+        <div class="flex justify-between bg-gradient-to-r from-cyan-500 to-blue-500 items-center" style="height: 4rem">
             @auth
             <div class="w-auto" style="margin-top: -0.5em">
               <!-- back icon -->

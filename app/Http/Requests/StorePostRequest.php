@@ -4,10 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MaxWord;
+use Fimage\ImageResizer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
+use Fimage\Resizer;
+use Fimage\Formatter;
 
 class StorePostRequest extends FormRequest
 {
@@ -34,16 +37,16 @@ class StorePostRequest extends FormRequest
     return [
       'uuid' => 'required',
       'title' => $this->title_rules,
-      'images.*' => ['mimes:jpg,png', 'max:128', function ($attribute, $image, $fail) {
+      'images.*' => ['mimes:jpg,png', 'max:4048', function ($attribute, $image, $fail) {
 
         if ($this->validator->errors()->get($attribute) == []) {
-          $path = storage_path() . "\app\postImages\\ferdisap\\thumbnail\\" . $this->uuid . '_50_' . $attribute . '.' . 'jpg';
-          $this->setFormatImg($image->path(), $path);
-          $this->resizeImage($path, 50);
-
-          $path = storage_path() . "\app\postImages\\ferdisap\\display\\" . $this->uuid . '_400_' . $attribute . '.' . 'jpg';
-          $this->setFormatImg($image->path(), $path);
-          $this->resizeImage($path, 400);
+          $storePath = storage_path() . "\app\postImages\\ferdisap\\thumbnail\\" . $this->uuid . '_50_' . $attribute . '.' . 'jpg';
+          Formatter::reformat('jpg', $image->path(), $storePath);
+          Resizer::resizeToWidth($storePath, 50);
+          
+          $storePath = storage_path() . "\app\postImages\\ferdisap\\display\\" . $this->uuid . '_400_' . $attribute . '.' . 'jpg';
+          Formatter::reformat('jpg', $image->path(), $storePath);
+          Resizer::resizeToWidth($storePath, 400);
         }
       }],
       'simpleDescription' => $this->simpleDescription_rules,
@@ -75,32 +78,4 @@ class StorePostRequest extends FormRequest
     }
   }
 
-  /**
-   * @return true if success, otherwise false
-   */
-  function resizeImage($imagePath, $width, $imageFormat = 'jpg', $filterType = \Imagick::FILTER_LANCZOS, $blur = 1, $bestFit = false)
-  {
-    $im = new \Imagick($imagePath);
-    $height = (int) ($im->getImageHeight() * ($width /  $im->getImageWidth()));
-    $im->resizeImage($width, $height, $filterType, $blur, $bestFit);
-    return $im->writeImage($imagePath) ?? false;
-  }
-
-  /**
-   * @return true on success, otherwise false
-   */
-  function setFormatImg($imagePath, $storePath)
-  {
-    $im = new \Imagick($imagePath);
-    if ($im->getImageFormat() == 'JPEG' || $im->getImageFormat() == 'JPG') {
-      return false;
-    }
-    try {
-      $im->setImageFormat('jpg');
-      $im->writeImageFile(fopen($storePath, "wb"));
-      return true;
-    } catch (\Throwable $e) {
-      return false;
-    }
-  }
 }

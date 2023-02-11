@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8232336344df74a27768dd9990b2c0c9",
+    "content-hash": "62a6996285dd568145ed593f0c75c82c",
     "packages": [
         {
             "name": "brick/math",
@@ -431,6 +431,44 @@
                 }
             ],
             "time": "2023-01-14T14:17:03+00:00"
+        },
+        {
+            "name": "fimage/image-editor",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ferdisap/fimage.git",
+                "reference": "bd6cb0896c159e7f04056aa0f412c3bd997977a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ferdisap/fimage/zipball/bd6cb0896c159e7f04056aa0f412c3bd997977a9",
+                "reference": "bd6cb0896c159e7f04056aa0f412c3bd997977a9",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Fimage\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ferdi Saptoko",
+                    "email": "ferdisaptoko@gmail.com"
+                }
+            ],
+            "description": "A library for resizing and reformating image",
+            "support": {
+                "issues": "https://github.com/ferdisap/fimage/issues",
+                "source": "https://github.com/ferdisap/fimage/tree/master"
+            },
+            "time": "2023-02-11T02:55:56+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -5797,16 +5835,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.20.0",
+            "version": "v1.20.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "65dc0556d5809f47f7c39267df4e93f3cc59c512"
+                "reference": "4b85dbfa3dceeaf7227e3029707562fd60297e86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/65dc0556d5809f47f7c39267df4e93f3cc59c512",
-                "reference": "65dc0556d5809f47f7c39267df4e93f3cc59c512",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/4b85dbfa3dceeaf7227e3029707562fd60297e86",
+                "reference": "4b85dbfa3dceeaf7227e3029707562fd60297e86",
                 "shasum": ""
             },
             "require": {
@@ -5854,7 +5892,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2023-02-05T15:12:03+00:00"
+            "time": "2023-02-08T02:08:37+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -7992,7 +8030,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "fimage/image-editor": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -4,6 +4,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
+use Fimage\ImageResizer;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+  // dd(new \Imagick());
+  // dd(new ImageResizer('hello world'));
     return view('welcome');
     // dd(phpinfo());
 });
