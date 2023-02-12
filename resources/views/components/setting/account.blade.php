@@ -95,12 +95,8 @@ $url = "/setting/". Auth::user()->id ."/update"
       </x-dropdown-form>   
       
       <!-- Form3: Profile Photo -->
-      <x-dropdown-form title="Photo Profile" open="{{ old('open_form3') ?? 'true' }}">
+      <x-dropdown-form title="Photo Profile" open="{{ old('open_form3') ?? 'false' }}">
         <x-slot name="form">
-          @php
-          $user_pprofile = isset(Auth::user()->pprofile) ? asset(Auth::user()->pprofile) : null;
-          @endphp
-
           <form action="{{ $url }}" method="post" id="form-photo-profile" enctype="multipart/form-data">
             @csrf
             @method('put')
@@ -113,22 +109,18 @@ $url = "/setting/". Auth::user()->id ."/update"
               'noerror_css' => ' focus:ring-sky-500 focus:border-sky-500 focus:outline-none focus:ring-2',
               'basic_css' => 'border-gray-300 rounded-full shadow-sm bg-slate-100 pprofile-img',
             ])
-            {{-- @dd(request()->getSchemeAndHttpHost()) --}}
-            <div x-data class="mb-2 w-full flex justify-center relative align-center items-center cursor-pointer"
+            
+            <div x-data="{changeSRC(el){el.src = '/svg/icon/account_circle_FILL1_wght400_GRAD0_opsz48.svg'}}"
+                 class="mb-2 w-full flex justify-center relative align-center items-center cursor-pointer"
                  onclick="this.querySelector('input').click()">
                  <!-- image user -->
                  <div class="bg-gray-300 rounded-full absolute opacity-25 hover:bg-gray-400 z-10" style="height: 100px; width:100px"></div>
                  <img id="pprofile-icon" 
-                      src="{{ '/svg/icon/account_circle_FILL1_wght400_GRAD0_opsz48.svg' }}" 
+                      src="{{ request()->getSchemeAndHttpHost() }}/photos/pprofile/{{ Auth::user()->username }}.jpgs"
                       {!! $attributes->merge(['class' => $basic_css . ($error ? $error_css : $noerror_css) ]) !!} 
                       style="width: 100px; height:100px"
-                      alt="photo profile">
-
-                 <img id="pprofile-icon" 
-                      src="{{ request()->getSchemeAndHttpHost() }}/photos/pprofile/{{ Auth::user()->username }}.jpg" 
-                      {!! $attributes->merge(['class' => $basic_css . ($error ? $error_css : $noerror_css) ]) !!} 
-                      style="width: 100px; height:100px"
-                      alt="photo profile">   
+                      alt="photo profile"
+                      x-on:error="changeSRC($el)">
 
                  <input  type="file" 
                          name="pprofile" 
