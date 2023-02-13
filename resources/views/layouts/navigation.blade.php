@@ -16,10 +16,10 @@
             <div class="w-auto" style="margin-top: -0.5em">
               <!-- back icon -->
               {{-- <a href="#" class="back"></a> --}}
-              <button onclick="history.back()" class="back"></button>
+              <button onclick="history.back()" class="back black scale-11 transition-05 mt-1"></button>
             </div>
             <div>
-              <a href="#" class="w-auto align-middle font-bold font-forte text-txl">{{ $title ?? null }}</a>
+              <a href="#" class=" w-auto align-middle font-bold font-forte text-txl">{{ $title ?? null }}</a>
             </div>
             @else
             <div class="flex items-center">
