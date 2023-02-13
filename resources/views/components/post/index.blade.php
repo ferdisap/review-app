@@ -4,15 +4,39 @@
   <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
   @php
   $active = 'published';
-  $checked = true;
+  $checked = false;
   @endphp
+  {{-- 1. selanjutnya jika hideCkBox, jalankan juga @diselectAllBox dan @dsaSwitch --}}
+  {{-- 2. selanjutnya tambahkan algoritma pada @selectBox jika yang di check jumlahnya sama dgn qtyPost maka jalankan @dsaSwitch / @saSwitch --}}
+  {{-- 3. selanjutnya, jika di toogle maka jalankan @selectAllBox / @diselectAllbox --}}
+  {{-- 4. selanjutnya jika pindah category, hilangkan semuanya (termasuk @diselectAllBox, @dsaSwitch, @hideCkBox,) dan mulai lagi dari awal, yakni @mousedownEvent --}}
+  
   <div x-data="{
      postCategory: function(draftOrPublished){
         this.postCategory == 'undefined' ? this.hideAllPost() : null;
         this.postCategory = draftOrPublished.getAttribute('for');
         return this.showAllPost();
       },
-
+      
+      qtyPost:{
+        draft: function(){
+          this.draft = document.querySelectorAll('#draft .list-post').length;
+        },
+        published: function(){
+          this.published = document.querySelectorAll('#published .list-post').length;
+        }
+      },
+      mousedownEvent(){
+        this.mousedownHandler = () => {
+          setTimeout(this.showCkBox.bind(this),500);
+        };
+        document.getElementById('content').addEventListener('mousedown', this.mousedownHandler);
+      },
+      init(){
+        this.qtyPost.draft();
+        this.qtyPost.published();
+        this.mousedownEvent();
+      },
       showAllPost(draftOrPublished = null){
         if (draftOrPublished != null){
           this.hideAllPost();
@@ -25,38 +49,60 @@
         document.querySelector('button[for=' + this.postCategory +']').classList.remove('border-b-4', 'border-sky-400');
         document.getElementById(this.postCategory).style.display = 'none';
       },
-
-      mousedown(){
-        document.getElementById('content').addEventListener('mousedown' , evt => {
-          let to = setTimeout(this.showCkBox.bind(this, evt.target),500);
-        });
-      },
-
-      draftPostQty: function(){return document.querySelectorAll('#draft .list-post').length},
-      publishedPostQty: function(){return document.querySelectorAll('#published .list-post').length},
-
       showCkBox(){
-        console.log('foo');
         document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
           el.style.display = 'block';
         });
-        document.querySelector('#content').addEventListener('click', this.selectBox);
+        this.selectBoxHandler = this.selectBox.bind(this);
+        document.querySelector('#content').addEventListener('click', this.selectBoxHandler);
+        
       },
       hideCkBox(){
         document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
           el.style.display = 'none';
         });
-        document.querySelector('#content').removeEventListener('click', this.selectBox);
+        document.querySelector('#content').removeEventListener('click', this.selectBoxHandler);
+        this.mousedownEvent();
+        
       },
-      selectBox(e){
+            
+      {{-- handler(context){
+        console.log('context: ', context);
+      },
+      addHandler(){
+        document.getElementById('content').removeEventListener('mousedown', this.mousedownHandler);
+
+        this.handlerBinded = this.handler.bind(this);
+        document.querySelector('nav').addEventListener('click', this.handlerBinded);
+
+        
+        window.content = document.querySelector('#published');
+        this.selectBoxHandler = this.selectBox.bind(this);
+        window.content.addEventListener('click', this.selectBoxHandler);
+      },
+      removeHandler(){
+        document.querySelector('nav').removeEventListener('click', this.handlerBinded);
+        window.content.removeEventListener('click', this.selectBoxHandler);
+      }, --}}
+
+
+      selectBox(e, executor){
+        {{-- console.log('selectBox', this); --}}
         e.preventDefault();
+        document.getElementById('content').removeEventListener('mousedown', this.mousedownHandler);
         targetBox = e.target.nodeName == 'A' ? e :
             e.target.parentElement.nodeName == 'A' ? e.target.parentElement :
             e.target.parentElement.parentElement.nodeName == 'A' ? e.target.parentElement.parentElement :
             e.target.parentElement.parentElement.parentElement.nodeName == 'A' ? e.target.parentElement.parentElement.parentElement :
             e.target.parentElement.parentElement.parentElement.parentElement.nodeName == 'A' ? e.target.parentElement.parentElement.parentElement.parentElement : null;
         let input = targetBox.previousSibling.previousSibling.nodeName == 'INPUT' ? targetBox.previousSibling.previousSibling : targetBox.parentElement.querySelector('.list-post-checklist');
-        input.checked = !input.checked;        
+        input.checked = !input.checked;       
+        {{-- return console.log('executor', executor , e ,this); --}}
+
+        {{-- // untuk menghitung jumlah yang dichecked --}}
+        {{-- input.checked ? (this.postCategory == 'draft' ? (this.qtyPost.draft += 1) : (this.qtyPost.published += 1)) :  (this.postCategory == 'draft' ? (this.qtyPost.draft -= 1) : (this.qtyPost.published -= 1)); --}}
+        {{-- console.log(this); --}}
+        console.log('jumlah post: ', this.qtyPost.published);
       },
       selectAllBox(){
         document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
@@ -77,8 +123,7 @@
       toogle(isSelectAll){
         isSelectAll ? this.selectAllBox() : this.diselectAllBox();
       }
-    }"
-      x-init="mousedown()">
+    }">
     <div class="grid grid-cols-2 gap-x-16 mb-2 mt-1 mx-16">
       <button class="text-center pb-3 transition delay-100 ease-out" 
               x-on:click="showAllPost('draft')" 
@@ -87,11 +132,16 @@
               x-on:click="showAllPost('published')" 
               for="published">published</button>
     </div>
-    <div><button x-on:click="hideCkBox()">removeCkBox</button></div>
+
+    <div><button x-on:click="addHandler()">addHandler()</button></div>
+    <div><button x-on:click="removeHandler()">removeHandler()</button></div>
+    
+    {{-- <div><button x-on:click="hideCkBox()">removeCkBox</button></div> --}}
     <div><button x-on:click="selectAllBox()">Select All Box</button></div>
     <div><button x-on:click="diselectAllBox()">Diselect All Box</button></div>
     <div><button x-on:click="saSwitch()">SA Switch</button></div>
     <div><button x-on:click="dsaSwitch()">DSA Switch</button></div>
+    <div><button x-on:click="hideCkBox()">Hide Ck Box</button></div>
     
     <x-toogle-slider class="" :checkValue="$checked ?? false" name="select-all-post" id="select-all-post">Select All</x-toogle-slider>
     <div id="content" class="" x-init="postCategory(document.querySelector('button[for={{ $active }}]'))">      
@@ -100,7 +150,7 @@
         @foreach ($posts as $key => $post)
         <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
           <input type="checkbox" class="list-post-checklist appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $key }}"/>
-          <a href="/post/1" class="list-posts w-full">
+          <a href="/post/1" class="list-post w-full">
             <x-list-post 
             :inputValue="$key"
             :title="$post->title"
@@ -117,7 +167,7 @@
         @for ($key = 0; $key < 5; $key++)
         <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
           <input type="checkbox" class="list-post-checklist appearance-none checked:bg-blue-500 mx-2" style="display: none"/>
-          <a href="/post/1" class="list-posts w-full">
+          <a href="/post/1" class="list-post w-full">
             <x-list-post 
             :inputValue="$key"
             :title="__('foobar').$key"
