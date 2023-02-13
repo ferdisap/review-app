@@ -3,31 +3,106 @@
   <x-session-status :status="session('success')" bgColor="bg-green-200"/>
   <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
   @php
-  $active = 'draft';
+  $active = 'published';
   $checked = true;
   @endphp
-  <div>
+  <div x-data="{
+     postCategory: function(draftOrPublished){
+        this.postCategory == 'undefined' ? this.hideAllPost() : null;
+        this.postCategory = draftOrPublished.getAttribute('for');
+        return this.showAllPost();
+      },
+
+      showAllPost(draftOrPublished = null){
+        if (draftOrPublished != null){
+          this.hideAllPost();
+          this.postCategory = draftOrPublished;
+        }
+        document.querySelector('button[for=' + this.postCategory +']').classList.add('border-b-4', 'border-sky-400');
+        document.getElementById(this.postCategory).style.display = 'block';
+      },
+      hideAllPost(){
+        document.querySelector('button[for=' + this.postCategory +']').classList.remove('border-b-4', 'border-sky-400');
+        document.getElementById(this.postCategory).style.display = 'none';
+      },
+
+      mousedown(){
+        document.getElementById('content').addEventListener('mousedown' , evt => {
+          let to = setTimeout(this.showCkBox.bind(this, evt.target),500);
+        });
+      },
+
+      draftPostQty: function(){return document.querySelectorAll('#draft .list-post').length},
+      publishedPostQty: function(){return document.querySelectorAll('#published .list-post').length},
+
+      showCkBox(){
+        console.log('foo');
+        document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
+          el.style.display = 'block';
+        });
+        document.querySelector('#content').addEventListener('click', this.selectBox);
+      },
+      hideCkBox(){
+        document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
+          el.style.display = 'none';
+        });
+        document.querySelector('#content').removeEventListener('click', this.selectBox);
+      },
+      selectBox(e){
+        e.preventDefault();
+        targetBox = e.target.nodeName == 'A' ? e :
+            e.target.parentElement.nodeName == 'A' ? e.target.parentElement :
+            e.target.parentElement.parentElement.nodeName == 'A' ? e.target.parentElement.parentElement :
+            e.target.parentElement.parentElement.parentElement.nodeName == 'A' ? e.target.parentElement.parentElement.parentElement :
+            e.target.parentElement.parentElement.parentElement.parentElement.nodeName == 'A' ? e.target.parentElement.parentElement.parentElement.parentElement : null;
+        let input = targetBox.previousSibling.previousSibling.nodeName == 'INPUT' ? targetBox.previousSibling.previousSibling : targetBox.parentElement.querySelector('.list-post-checklist');
+        input.checked = !input.checked;        
+      },
+      selectAllBox(){
+        document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
+          el.checked = true;
+        });
+      },
+      diselectAllBox(){
+        document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
+          el.checked = false;
+        });
+      },
+      saSwitch(){
+        document.querySelector('#select-all-post').checked = true;
+      },
+      dsaSwitch(){
+        document.querySelector('#select-all-post').checked = false;
+      },
+      toogle(isSelectAll){
+        isSelectAll ? this.selectAllBox() : this.diselectAllBox();
+      }
+    }"
+      x-init="mousedown()">
     <div class="grid grid-cols-2 gap-x-16 mb-2 mt-1 mx-16">
       <button class="text-center pb-3 transition delay-100 ease-out" 
-              x-on:click="active($el)" 
+              x-on:click="showAllPost('draft')" 
               for="draft">draft</button>
       <button class="text-center pb-3 transition delay-100 ease-out" 
-              x-on:click="active($el)" 
+              x-on:click="showAllPost('published')" 
               for="published">published</button>
     </div>
+    <div><button x-on:click="hideCkBox()">removeCkBox</button></div>
+    <div><button x-on:click="selectAllBox()">Select All Box</button></div>
+    <div><button x-on:click="diselectAllBox()">Diselect All Box</button></div>
+    <div><button x-on:click="saSwitch()">SA Switch</button></div>
+    <div><button x-on:click="dsaSwitch()">DSA Switch</button></div>
     
-    <div id="content" class="">
-      
-      <x-toogle-slider class="" :checkValue="$checked ?? false" name="select-all-post" id="select-all-post">Select All</x-toogle-slider>
-
+    <x-toogle-slider class="" :checkValue="$checked ?? false" name="select-all-post" id="select-all-post">Select All</x-toogle-slider>
+    <div id="content" class="" x-init="postCategory(document.querySelector('button[for={{ $active }}]'))">      
       <!-- Draft post -->
-      <div id="draft" style="display: block">
+      <div id="draft" style="display: none">
         @foreach ($posts as $key => $post)
         <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
-          <input type="checkbox" class="list-post-checklist appearance-none checked:bg-blue-500 mx-2" style="display: block" value="{{ $key }}"/>
+          <input type="checkbox" class="list-post-checklist appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $key }}"/>
           <a href="/post/1" class="list-posts w-full">
-          {{-- <a href="javascript:;" class="w-full"> --}}
             <x-list-post 
+            :inputValue="$key"
             :title="$post->title"
             :simpleDescription="$post->simpleDescription"
             :ratingValue="$post->ratingValue"
@@ -38,13 +113,14 @@
       </div>
       
       <!-- Published post -->
-      <div id="published" style="display: block">
-        @for ($i = 0; $i < 5; $i++)
+      <div id="published" style="display: none">
+        @for ($key = 0; $key < 5; $key++)
         <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
-          <input type="checkbox" class="list-post-checklist appearance-none checked:bg-blue-500 mx-2" style="display: block"/>
+          <input type="checkbox" class="list-post-checklist appearance-none checked:bg-blue-500 mx-2" style="display: none"/>
           <a href="/post/1" class="list-posts w-full">
             <x-list-post 
-            :title="__('foobar').$i"
+            :inputValue="$key"
+            :title="__('foobar').$key"
             :simpleDescription="__('foobar')"
             :ratingValue="85"
             imgsrc="{{ url('/contoh/nasigoreng.jpeg')}}"/>
