@@ -25,12 +25,11 @@
           this.published = document.querySelectorAll('#published .list-post');
         }
       },
-      mousedownEvent(addMouseDownEvent = true){
+      mousedownEvent(){
         this.mousedownHandler = () => {
-          console.log('mousedown Handler');
           setTimeout(this.showCkBox.bind(this),500);
         };
-        addMouseDownEvent ? document.getElementById('content').addEventListener('mousedown', this.mousedownHandler) : null;
+        document.getElementById('content').addEventListener('mousedown', this.mousedownHandler);
       },
       init(){
         this.qtyPost.draft();
@@ -48,18 +47,13 @@
       hideAllPost(){
         document.querySelector('button[for=' + this.postCategory +']').classList.remove('border-b-4', 'border-sky-400');
         document.getElementById(this.postCategory).style.display = 'none';
-
-        {{-- this.diselectAllBox(true);
-        document.getElementById('content').removeEventListener('mousedown', this.mousedownHandler);
-        document.querySelector('#content').removeEventListener('click', this.selectBoxHandler);  --}}
       },
       showCkBox(){
         document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
           el.style.display = 'block';
         });
-          this.selectBoxHandler = this.selectBox.bind(this);
-          document.querySelector('#content').addEventListener('click', this.selectBoxHandler);      
-        
+        this.selectBoxHandler = this.selectBox.bind(this);
+        document.querySelector('#content').addEventListener('click', this.selectBoxHandler);      
       },
       hideCkBox(isDiselectAll = true){
         document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
@@ -74,7 +68,6 @@
       },
       selectBox(e, executor){
         e.preventDefault();
-        console.log('selectBox');
         document.getElementById('content').removeEventListener('mousedown', this.mousedownHandler);
         e.target.type == 'checkbox' ? setTimeout(() => e.target.checked = !e.target.checked, 0) : (() => {
           input = this.getTheCheckBox(e.target);
@@ -90,13 +83,13 @@
         document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
           el.checked = true;
         });
-        isOpenCkBox ? this.showCkBox() : null;
+        {{-- isOpenCkBox ? this.showCkBox() : null; --}}
       },
       diselectAllBox(isCloseCkBox = false){
         document.querySelectorAll('#' + this.postCategory + ' .list-post-checklist').forEach(el => {
           el.checked = false;
         });
-        isCloseCkBox ? this.hideCkBox() : null;
+        {{-- isCloseCkBox ? this.hideCkBox() : null; --}}
       },
       saSwitch(){
         document.querySelector('#select-all-post').checked = true;
@@ -105,10 +98,7 @@
         document.querySelector('#select-all-post').checked = false;
       },
       toogle(isSelectAll){
-        isSelectAll ? (()=>{
-          this.selectAllBox(true);
-          document.getElementById('content').removeEventListener('mousedown', this.mousedownHandler);
-        })() : this.diselectAllBox(true);
+        isSelectAll ? this.selectAllBox(true) : this.diselectAllBox(true);
       },
       getCheckedQty(){
         // return [qty, fill];

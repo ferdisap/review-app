@@ -43,7 +43,7 @@
                 {{ $slot }}
             </main>
 
-            @stack('floatBtn')
+            {{-- @stack('floatBtn') --}}
         </div>
       </div>
     </body>
