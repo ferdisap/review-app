@@ -4,11 +4,130 @@
   <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
   @php
   $active = 'published';
-  $checked = false;
+  $checked = true;
   @endphp
   
   <div x-data="{
-     
+      ckboxDisplay: 'none',
+      qtyPostDraft: null,
+      qtyPostPublished: null,
+
+      showAllPost(cat = null){
+        console.log('showAllPost', this);
+        this.category == undefined ? (this.category = document.getElementById('content').getAttribute('active')) : this.hideAllPost();
+        cat != undefined ? (this.category = cat) : null;
+        document.getElementById(this.category).style.display = 'block';
+        document.querySelector('button[for=' + this.category +']').classList.add('border-b-4', 'border-sky-400');
+      },
+
+      hideAllPost(){
+        document.getElementById(this.category).style.display = 'none';
+        this.toogle(false);
+        document.querySelector('button[for=' + this.category +']').classList.remove('border-b-4', 'border-sky-400');
+      },
+
+      init(){
+        console.log('init');
+
+        this.qtyPostDraft = document.querySelectorAll('#draft .list-post');
+        this.qtyPostPublished = document.querySelectorAll('#published .list-post');
+
+        x = document.getElementById('content');
+        x.addEventListener('mousedown', (e) => {
+          console.log('mousedown', this);
+          
+          if (this.ckboxDisplay == 'none'){
+            to = setTimeout(this.showCkBox.bind(this, e), 1000);
+          } else {
+            to = setTimeout(this.hideCkBox.bind(this, e), 1000);
+          }
+
+          clsTimeoutHandler = function(){
+            console.log('clsTimeoutHandler', this);
+            clearTimeout(to);
+            x.removeEventListener('mouseup', clsTimeoutHandler);
+          }.bind(this);
+
+          x.addEventListener('mouseup', clsTimeoutHandler);
+        });
+
+        this.showAllPost();
+
+        {{-- // jika ingin otomatis selected All/not jika pindah category, taruh ini di dalam @showAllPost --}}
+        this.toogle(document.getElementById('toogle-switch'));
+      },
+
+      showCkBox(){
+        console.log('showCkBox', this.category);
+        this.selectBoxHandler = this.selectBox.bind(this);
+        document.getElementById('content').addEventListener('click', this.selectBoxHandler);
+
+        document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.style.display = 'block');
+        this.ckboxDisplay = 'block';
+      },
+
+      hideCkBox(){
+        console.log('hideCkBox', this);
+        document.getElementById('content').removeEventListener('click', this.selectBoxHandler);
+
+        document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.style.display = 'none');
+        this.ckboxDisplay = 'none';
+      },
+
+      selectBox(e){
+        e.preventDefault();
+        
+        e.target.type == 'checkbox' ? setTimeout(() => e.target.checked = !e.target.checked, 0) : (() => {
+          input = this.getTheCheckBox(e.target);
+          input.checked = !input.checked; 
+        })();
+
+        sum = this.getCheckedQty();
+        console.log('sum', sum, this.qtyPostDraft);
+        if(sum[1].length == sum[0].length){
+          this.toogle(true);
+        } 
+        else if (sum[1].length == 0) {
+          this.toogle(false);
+        }
+      },
+      toogle(v){
+        document.getElementById('toogle-switch').checked = v;
+        if(v){
+          this.selectAll();
+          if (this.ckboxDisplay == 'none'){
+            this.showCkBox();
+          }
+        } else {
+          this.deselectAll();
+          this.hideCkBox();
+        }
+      },
+      selectAll(){
+        document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.checked = true);
+      },
+      deselectAll(){
+        document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.checked = false);
+      },
+
+      {{-- // Fungsi Pendukung --}}
+      getCheckedQty(){
+        // return [qty, fill];
+        console.log('getCheckedQty',this.qtyPostDraft);
+        return this.category == 'draft' ? 
+        [this.qtyPostDraft, [].filter.call( document.querySelectorAll('#draft .list-post'), el => this.getTheCheckBox(el).checked)] : 
+        [this.qtyPostPublished, [].filter.call( document.querySelectorAll('#published .list-post'), el => this.getTheCheckBox(el).checked)];
+
+      },
+      getTheCheckBox(el){
+        targetBox = el.nodeName == 'A' ? el :
+        el.parentElement.nodeName == 'A' ? el.parentElement :
+        el.parentElement.parentElement.nodeName == 'A' ? el.parentElement.parentElement :
+        el.parentElement.parentElement.parentElement.nodeName == 'A' ? el.parentElement.parentElement.parentElement :
+        el.parentElement.parentElement.parentElement.parentElement.nodeName == 'A' ? el.parentElement.parentElement.parentElement.parentElement : null;
+        input = targetBox.previousSibling.previousSibling.nodeName == 'INPUT' ? targetBox.previousSibling.previousSibling : targetBox.parentElement.querySelector('.list-post-checklist');
+        return input;
+      },
     }">
     <div class="grid grid-cols-2 gap-x-16 mb-2 mt-1 mx-16">
       <button class="text-center pb-3 transition delay-100 ease-out" 
@@ -32,13 +151,12 @@
     
     <x-toogle-slider class="" :checkValue="$checked ?? false" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
     <div id="content" class="" active="{{ $active }}"
-    {{-- x-init="postCategory(document.querySelector('button[for={{ $active }}]'))" --}}
     > 
       <!-- Draft post -->
       <div id="draft" style="display: none">
         @foreach ($posts as $key => $post)
         <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
-          <input type="checkbox" class="list-post-checklist appearance-none checked:bg-blue-500 mx-2" style="display: none" x-on:clicks="onclickCB($el)"/>
+          <input type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" x-on:clicks="onclickCB($el)"/>
           <a href="/post/1" class="list-post w-full">
             <x-list-post 
             :inputValue="$key"
@@ -55,7 +173,7 @@
       <div id="published" style="display: none">
         @for ($key = 0; $key < 5; $key++)
         <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
-          <input type="checkbox" class="list-post-checklist appearance-none checked:bg-blue-500 mx-2" style="display: none" x-on:clicks="onclickCB($el)"/>
+          <input type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" x-on:clicks="onclickCB($el)"/>
           <a href="/post/1" class="list-post w-full">
             <x-list-post 
             :inputValue="$key"
@@ -75,7 +193,7 @@
     let a = document.querySelectorAll('.list-post-container > a');
     a.forEach((el,akey) => {
       el.addEventListener('mouseup', function(e){
-        let cbs = document.querySelectorAll('.list-post-checklist'); 
+        let cbs = document.querySelectorAll('.list-post-cb'); 
         cbs.forEach(cb => {
           cb.style.display = 'block';
           cbs[akey].checked = !cbs[akey].checked;
