@@ -11,69 +11,76 @@
       ckboxDisplay: 'none',
       qtyPostDraft: null,
       qtyPostPublished: null,
-
       showAllPost(cat = null){
-        console.log('showAllPost', this);
         this.category == undefined ? (this.category = document.getElementById('content').getAttribute('active')) : this.hideAllPost();
         cat != undefined ? (this.category = cat) : null;
         document.getElementById(this.category).style.display = 'block';
         document.querySelector('button[for=' + this.category +']').classList.add('border-b-4', 'border-sky-400');
       },
-
       hideAllPost(){
         document.getElementById(this.category).style.display = 'none';
         this.toogle(false);
         document.querySelector('button[for=' + this.category +']').classList.remove('border-b-4', 'border-sky-400');
       },
-
       init(){
-        console.log('init');
-
         this.qtyPostDraft = document.querySelectorAll('#draft .list-post');
         this.qtyPostPublished = document.querySelectorAll('#published .list-post');
+        
+        content = document.getElementById('content');
 
-        x = document.getElementById('content');
-        x.addEventListener('mousedown', (e) => {
-          console.log('mousedown', this);
-          
-          if (this.ckboxDisplay == 'none'){
-            to = setTimeout(this.showCkBox.bind(this, e), 1000);
-          } else {
-            to = setTimeout(this.hideCkBox.bind(this, e), 1000);
-          }
+        if (content.getAttribute('mousedownHandler') == 'false'){
+          content.setAttribute('mousedownHandler', 'true');
+          content.addEventListener('mousedown', (e) => {
+            
+            if (this.ckboxDisplay == 'none'){
+              to = setTimeout(this.showCkBox.bind(this, e), 500);
+              content.onclick = null;
+            } 
+            else {
+              to = setTimeout(() => {
+                this.toogle(false);
+                this.hideCkBox();
+              }, 500);
+              content.onclick = (e) => e.preventDefault();
+            } 
+            clsTimeoutHandler = function(){
+              clearTimeout(to);
+              if(content.getAttribute('mouseupHandler') == 'true'){
+                content.setAttribute('mouseupHandler', false);
+                content.removeEventListener('mouseup', clsTimeoutHandler);
 
-          clsTimeoutHandler = function(){
-            console.log('clsTimeoutHandler', this);
-            clearTimeout(to);
-            x.removeEventListener('mouseup', clsTimeoutHandler);
-          }.bind(this);
-
-          x.addEventListener('mouseup', clsTimeoutHandler);
-        });
+              }
+            }.bind(this);
+  
+            if(content.getAttribute('mouseupHandler') == 'false'){
+              content.setAttribute('mouseupHandler', true);
+              content.addEventListener('mouseup', clsTimeoutHandler);
+            }
+          });
+        }
 
         this.showAllPost();
 
         {{-- // jika ingin otomatis selected All/not jika pindah category, taruh ini di dalam @showAllPost --}}
         this.toogle(document.getElementById('toogle-switch'));
       },
-
       showCkBox(){
-        console.log('showCkBox', this.category);
         this.selectBoxHandler = this.selectBox.bind(this);
-        document.getElementById('content').addEventListener('click', this.selectBoxHandler);
-
+        if((content = document.getElementById('content')).getAttribute('clickHandler') == 'false'){
+          content.setAttribute('clickHandler', 'true');
+          document.getElementById('content').addEventListener('click', this.selectBoxHandler);
+        }
         document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.style.display = 'block');
         this.ckboxDisplay = 'block';
       },
-
       hideCkBox(){
-        console.log('hideCkBox', this);
-        document.getElementById('content').removeEventListener('click', this.selectBoxHandler);
-
+        if((content = document.getElementById('content')).getAttribute('clickHandler') == 'true'){
+          content.setAttribute('clickHandler', 'false');
+          document.getElementById('content').removeEventListener('click', this.selectBoxHandler);
+        }
         document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.style.display = 'none');
         this.ckboxDisplay = 'none';
       },
-
       selectBox(e){
         e.preventDefault();
         
@@ -81,14 +88,15 @@
           input = this.getTheCheckBox(e.target);
           input.checked = !input.checked; 
         })();
-
         sum = this.getCheckedQty();
-        console.log('sum', sum, this.qtyPostDraft);
         if(sum[1].length == sum[0].length){
           this.toogle(true);
         } 
         else if (sum[1].length == 0) {
           this.toogle(false);
+        } 
+        else if (sum[1].length < sum[0].length){
+          document.getElementById('toogle-switch').checked = false;
         }
       },
       toogle(v){
@@ -109,15 +117,12 @@
       deselectAll(){
         document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.checked = false);
       },
-
       {{-- // Fungsi Pendukung --}}
       getCheckedQty(){
         // return [qty, fill];
-        console.log('getCheckedQty',this.qtyPostDraft);
         return this.category == 'draft' ? 
         [this.qtyPostDraft, [].filter.call( document.querySelectorAll('#draft .list-post'), el => this.getTheCheckBox(el).checked)] : 
         [this.qtyPostPublished, [].filter.call( document.querySelectorAll('#published .list-post'), el => this.getTheCheckBox(el).checked)];
-
       },
       getTheCheckBox(el){
         targetBox = el.nodeName == 'A' ? el :
@@ -150,8 +155,7 @@
     <div><button x-on:click="getCheckedQty()">getCheckedQty</button></div>
     
     <x-toogle-slider class="" :checkValue="$checked ?? false" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
-    <div id="content" class="" active="{{ $active }}"
-    > 
+    <div id="content" class="" active="{{ $active }}" mousedownHandler="false" clickHandler="false" mouseupHandler="false"> 
       <!-- Draft post -->
       <div id="draft" style="display: none">
         @foreach ($posts as $key => $post)
