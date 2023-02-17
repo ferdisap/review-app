@@ -8,7 +8,7 @@
            ]
 @endphp
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 pb-2">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto">
         <div class="flex justify-between bg-gradient-to-r from-cyan-500 to-blue-500 items-center" style="height: 4rem">
@@ -16,7 +16,7 @@
             <div class="w-auto" style="margin-top: -0.5em">
               <!-- back icon -->
               {{-- <a href="#" class="back"></a> --}}
-              <button onclick="history.back()" class="back black scale-11 transition-05 mt-1"></button>
+              <button onclick="history.back()" class="back black scale-11 mt-1"></button>
             </div>
             <div>
               <a href="#" class=" w-auto align-middle font-bold font-forte text-txl">{{ $title ?? null }}</a>

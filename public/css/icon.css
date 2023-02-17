@@ -38,13 +38,24 @@
   position: relative;
 }
 
-/* .back::before {
-  content: url('/svg/icon/reply_FILL0_wght400_GRAD0_opsz24.svg');
+.bookmark::before {
+  content: url('/svg/icon/more_horiz_FILL0_wght400_GRAD0_opsz48.svg');
   margin-left: 3px;
   margin-right: 3px;
   top: 0.5em;
   position: relative;
-} */
+}
+
+.more::before{
+  content: url('/svg/icon/more_horiz_FILL0_wght700_GRAD0_opsz20.svg');
+  position: relative;
+}
+.add::before{
+  content: url('/svg/icon/addpost.svg');
+  transition: scale(0.5);
+  display: inline-block;
+}
+
 .back::after {
   width: 24px;
   height: 24px;

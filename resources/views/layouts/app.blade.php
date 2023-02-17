@@ -17,6 +17,9 @@
           .dump_red{
             border: 1px solid red !important;
           }
+          .dump_blue{
+            border: 1px solid blue !important;
+          }
         </style>
 
         <!-- Scripts -->
@@ -24,26 +27,23 @@
     </head>
     <body class="font-sans antialiased">
       <div class="flex justify-center">
-        {{-- <div class="min-h-screen bg-white w-full sm:w-1/2 border-4 border-slate-500 rounded-lg p-1"> --}}
         <div class="h-screen bg-gray-100 max-w-7xl max-[320px]:w-11/12 max-[640px]:w-9/12 w-1/2 xl:w-4/12 relative overflow-hidden">
-            {{-- @include('layouts.navigation') --}}
             <!-- Page Heading -->
             <x-navigation-layout title="{{ $title ?? null }}"></x-navigation-layout>
-            {{-- @if (isset($header))
+            @if (isset($header))
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
-            @endif --}}
+            @endif
 
             <!-- Page Content -->
             <main class="relative overflow-auto" style="height: calc(100% - 4rem)">
-            {{-- <main class="h-5/6 relative"> --}}
                 {{ $slot }}
             </main>
+            @stack('floatBtn') 
 
-            {{-- @stack('floatBtn') --}}
         </div>
       </div>
     </body>

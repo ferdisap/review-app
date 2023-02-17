@@ -26,7 +26,7 @@ switch ($width) {
 @endphp
 
 <div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
-    <div @click="open = ! open">
+    <div @click="open = ! open" class="w-fit">
         {{ $trigger }}
     </div>
 
@@ -40,7 +40,7 @@ switch ($width) {
             class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }} mb-5"
             style="display: none; bottom: {{ $bottom }}"
             @click="open = false">
-        <div class="mr-3 rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }}">
+        <div class="rounded-md ring-1 ring-black ring-opacity-5 bg-neutral-100 shadow-lg {{ $contentClasses }}">
             {{ $content }}
         </div>
     </div>

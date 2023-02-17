@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Gumlet\ImageResize;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -115,17 +114,14 @@ class PostController extends Controller
    */
   public function destroy($id)
   {
-    //
+    dd($id);
   }
   
   /**
-   * @integer $width adalah PX
-   */  
-  public function resizeImage(String $path = null, Int $width){
-    if ($path){
-      $image = new ImageResize($path);
-      $image->resizeToWidth($width);
-      $image->save($path);
-    }
+   * Receives the posts which want to @destroy from DB
+   */
+  public function delete(Request $request)
+  {
+    dd($request);
   }
 }

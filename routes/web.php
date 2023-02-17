@@ -4,7 +4,6 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
-use Fimage\ImageResizer;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +17,7 @@ use Fimage\ImageResizer;
 */
 
 Route::get('/', function () {
-  // dd(new \Imagick());
-  // dd(new ImageResizer('hello world'));
     return view('welcome');
-    // dd(phpinfo());
 });
 
 Route::controller(SettingController::class)->group(function(){
@@ -35,8 +31,9 @@ Route::controller(PostController::class)->group(function () {
   Route::get('/post','index');
   Route::get('/mypost', 'myindex')->middleware('auth')->name('mypostindex');
   Route::get('/post/create', 'create')->middleware('auth');
-  Route::get('/post/{uuid}', 'show');
+  Route::get('/post/{uuid}', 'show'); 
   Route::post('/post/store', 'store')->middleware('auth');
+  Route::post('/post/delete', 'delete'); 
 });
 
 require __DIR__.'/auth.php';
