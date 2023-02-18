@@ -4,8 +4,12 @@
   <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
   @php
   $active = 'published';
-  $checked = true;
+  $checked = false;
   @endphp
+  
+  <form action="" style="height: 100%; width:inherit" method="post" id="form-mypost-index">
+    @csrf
+
   
   <div x-data="{
       ckboxDisplay: 'none',
@@ -15,12 +19,12 @@
         this.category == undefined ? (this.category = document.getElementById('content').getAttribute('active')) : this.hideAllPost();
         cat != undefined ? (this.category = cat) : null;
         document.getElementById(this.category).style.display = 'block';
-        document.querySelector('button[for=' + this.category +']').classList.add('border-b-4', 'border-sky-400');
+        document.querySelector('div[for=' + this.category +']').classList.add('border-b-4', 'border-sky-400');
       },
       hideAllPost(){
         document.getElementById(this.category).style.display = 'none';
         this.toogle(false);
-        document.querySelector('button[for=' + this.category +']').classList.remove('border-b-4', 'border-sky-400');
+        document.querySelector('div[for=' + this.category +']').classList.remove('border-b-4', 'border-sky-400');
       },
       init(){
         this.qtyPostDraft = document.querySelectorAll('#draft .list-post');
@@ -61,8 +65,8 @@
 
         this.showAllPost();
 
-        {{-- // jika ingin otomatis selected All/not jika pindah category, taruh ini di dalam @showAllPost --}}
-        this.toogle(document.getElementById('toogle-switch'));
+        // jika ingin otomatis selected All/not jika pindah category, taruh ini di dalam @showAllPost
+        this.toogle(document.getElementById('toogle-switch').checked);
       },
       showCkBox(){
         this.selectBoxHandler = this.selectBox.bind(this);
@@ -117,7 +121,7 @@
       deselectAll(){
         document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.checked = false);
       },
-      {{-- // Fungsi Pendukung --}}
+      // Fungsi Pendukung
       getCheckedQty(){
         // return [qty, fill];
         return this.category == 'draft' ? 
@@ -135,12 +139,14 @@
       },
     }">
     <div class="grid grid-cols-2 gap-x-16 mb-2 mt-1 mx-16">
-      <button class="text-center pb-3 transition delay-100 ease-out" 
+      <div class="text-center pb-3 transition delay-100 ease-out" 
               x-on:click="showAllPost('draft')" 
-              for="draft">draft</button>
-      <button class="text-center pb-3 transition delay-100 ease-out" 
+              for="draft"
+              role="button">draft</div>
+      <div class="text-center pb-3 transition delay-100 ease-out" 
               x-on:click="showAllPost('published')" 
-              for="published">published</button>
+              for="published"
+              role="button">published</div>
     </div>
 
     <x-toogle-slider class="" :checkValue="$checked ?? false" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
@@ -164,7 +170,7 @@
       
       <!-- Published post -->
       <div id="published" style="display: none">
-        @for ($key = 0; $key < 25; $key++)
+        @for ($key = 0; $key < 5; $key++)
         <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
           <input type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" x-on:clicks="onclickCB($el)"/>
           <a href="/post/1" class="list-post w-full">
@@ -182,30 +188,29 @@
     
   </div>
 
-  @push('floatBtn')
-    <div class="absolute bottom-4 right-6">
-      <x-dropdown align="right" bottom="100%" width="48">
-        <x-slot name="trigger">
-          <button  style="cursor: pointer" id="float-btn" 
-                class="more bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full shadow-lg px-2 pt-1 active:ring-4 scale-11 transition-05">
-            
-        </button>
-        </x-slot>
-
-        @php
-          $menus = [['name' => 'Add Post', 'href' => '/post/create', 'icon' => 'add'],
-                    ['name' => 'Delete Post', 'href' => '/post/delete', 'icon' => 'more']
-                   ]
-        @endphp
-        
-        <x-slot name="content">            
-          @foreach ($menus as $menu)
-          <x-dropdown-link :href="$menu['href']" :icon="$menu['icon']">
-            {{ __($menu['name']) }}
-          </x-dropdown-link>
-        @endforeach
-        </x-slot>
-    </x-dropdown>
+  <div class="sticky bottom-4 mr-4 float-right" style="top: calc(100% - 4rem)">
+    <x-dropdown align="right" bottom="100%" width="48">
+      <x-slot:trigger>
+        <div  style="cursor: pointer" id="float-btn" 
+              class="more bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full shadow-lg px-2 pt-1 active:ring-4 scale-11 transition-05"
+              role="button">          
     </div>
-  @endPush
+      </x-slot>
+
+      @php
+        $menus = [['name' => 'Add Post', 'href' => '/post/create', 'icon' => 'add', 'method' => 'get'],
+                  ['name' => 'Delete Post', 'href' => '/post/delete', 'icon' => 'more', 'method' => 'post']
+                 ]
+      @endphp
+      
+      <x-slot:content>            
+        @foreach ($menus as $menu)
+        <x-dropdown-link :href="$menu['href']" :icon="$menu['icon']" :method="$menu['method']">
+          {{ __($menu['name']) }}
+        </x-dropdown-link>
+        @endforeach
+      </x-slot>
+    </x-dropdown>
+  </div>
+</form>
 </x-app-layout>

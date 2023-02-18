@@ -122,6 +122,7 @@ class PostController extends Controller
    */
   public function delete(Request $request)
   {
+    dd('delete');
     dd($request);
   }
 }

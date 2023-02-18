@@ -42,7 +42,6 @@
             <main class="relative overflow-auto" style="height: calc(100% - 4rem)">
                 {{ $slot }}
             </main>
-            @stack('floatBtn') 
 
         </div>
       </div>
