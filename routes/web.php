@@ -30,10 +30,10 @@ Route::get('/about', function(){return view('components.about.index');});
 Route::controller(PostController::class)->group(function () {
   Route::get('/post','index');
   Route::get('/mypost', 'myindex')->middleware('auth')->name('mypostindex');
-  // Route::get('/post/create', 'create')->middleware('auth');
+  Route::get('/post/create', 'create')->middleware('auth');
+  Route::get('/post/{uuid}', 'show'); 
+  Route::post('/post/store', 'store')->middleware('auth');
   Route::post('/post/delete', 'delete')->middleware('auth'); 
-  // Route::get('/post/{uuid}', 'show'); 
-  // Route::post('/post/store', 'store')->middleware('auth');
 });
 
 require __DIR__.'/auth.php';

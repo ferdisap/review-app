@@ -3,159 +3,38 @@
   <x-session-status :status="session('success')" bgColor="bg-green-200"/>
   <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
   @php
-  $active = 'published';
-  $checked = false;
+  $active =  old('active-content') ?? 'draft';
+  $checked = old('toogle-switch') ?? false; // old('toogle-switch') @return 'some' / 'on'
   @endphp
   
   <form action="" style="height: 100%; width:inherit" method="post" id="form-mypost-index">
     @csrf
 
   
-  <div x-data="{
-      ckboxDisplay: 'none',
-      qtyPostDraft: null,
-      qtyPostPublished: null,
-      showAllPost(cat = null){
-        this.category == undefined ? (this.category = document.getElementById('content').getAttribute('active')) : this.hideAllPost();
-        cat != undefined ? (this.category = cat) : null;
-        document.getElementById(this.category).style.display = 'block';
-        document.querySelector('div[for=' + this.category +']').classList.add('border-b-4', 'border-sky-400');
-      },
-      hideAllPost(){
-        document.getElementById(this.category).style.display = 'none';
-        this.toogle(false);
-        document.querySelector('div[for=' + this.category +']').classList.remove('border-b-4', 'border-sky-400');
-      },
-      init(){
-        this.qtyPostDraft = document.querySelectorAll('#draft .list-post');
-        this.qtyPostPublished = document.querySelectorAll('#published .list-post');
-        
-        content = document.getElementById('content');
-
-        if (content.getAttribute('mousedownHandler') == 'false'){
-          content.setAttribute('mousedownHandler', 'true');
-          content.addEventListener('mousedown', (e) => {
-            
-            if (this.ckboxDisplay == 'none'){
-              to = setTimeout(this.showCkBox.bind(this, e), 500);
-              content.onclick = null;
-            } 
-            else {
-              to = setTimeout(() => {
-                this.toogle(false);
-                this.hideCkBox();
-              }, 500);
-              content.onclick = (e) => e.preventDefault();
-            } 
-            clsTimeoutHandler = function(){
-              clearTimeout(to);
-              if(content.getAttribute('mouseupHandler') == 'true'){
-                content.setAttribute('mouseupHandler', false);
-                content.removeEventListener('mouseup', clsTimeoutHandler);
-
-              }
-            }.bind(this);
-  
-            if(content.getAttribute('mouseupHandler') == 'false'){
-              content.setAttribute('mouseupHandler', true);
-              content.addEventListener('mouseup', clsTimeoutHandler);
-            }
-          });
-        }
-
-        this.showAllPost();
-
-        // jika ingin otomatis selected All/not jika pindah category, taruh ini di dalam @showAllPost
-        this.toogle(document.getElementById('toogle-switch').checked);
-      },
-      showCkBox(){
-        this.selectBoxHandler = this.selectBox.bind(this);
-        if((content = document.getElementById('content')).getAttribute('clickHandler') == 'false'){
-          content.setAttribute('clickHandler', 'true');
-          document.getElementById('content').addEventListener('click', this.selectBoxHandler);
-        }
-        document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.style.display = 'block');
-        this.ckboxDisplay = 'block';
-      },
-      hideCkBox(){
-        if((content = document.getElementById('content')).getAttribute('clickHandler') == 'true'){
-          content.setAttribute('clickHandler', 'false');
-          document.getElementById('content').removeEventListener('click', this.selectBoxHandler);
-        }
-        document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.style.display = 'none');
-        this.ckboxDisplay = 'none';
-      },
-      selectBox(e){
-        e.preventDefault();
-        
-        e.target.type == 'checkbox' ? setTimeout(() => e.target.checked = !e.target.checked, 0) : (() => {
-          input = this.getTheCheckBox(e.target);
-          input.checked = !input.checked; 
-        })();
-        sum = this.getCheckedQty();
-        if(sum[1].length == sum[0].length){
-          this.toogle(true);
-        } 
-        else if (sum[1].length == 0) {
-          this.toogle(false);
-        } 
-        else if (sum[1].length < sum[0].length){
-          document.getElementById('toogle-switch').checked = false;
-        }
-      },
-      toogle(v){
-        document.getElementById('toogle-switch').checked = v;
-        if(v){
-          this.selectAll();
-          if (this.ckboxDisplay == 'none'){
-            this.showCkBox();
-          }
-        } else {
-          this.deselectAll();
-          this.hideCkBox();
-        }
-      },
-      selectAll(){
-        document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.checked = true);
-      },
-      deselectAll(){
-        document.querySelectorAll('#' + this.category + ' .list-post-cb').forEach( el => el.checked = false);
-      },
-      // Fungsi Pendukung
-      getCheckedQty(){
-        // return [qty, fill];
-        return this.category == 'draft' ? 
-        [this.qtyPostDraft, [].filter.call( document.querySelectorAll('#draft .list-post'), el => this.getTheCheckBox(el).checked)] : 
-        [this.qtyPostPublished, [].filter.call( document.querySelectorAll('#published .list-post'), el => this.getTheCheckBox(el).checked)];
-      },
-      getTheCheckBox(el){
-        targetBox = el.nodeName == 'A' ? el :
-        el.parentElement.nodeName == 'A' ? el.parentElement :
-        el.parentElement.parentElement.nodeName == 'A' ? el.parentElement.parentElement :
-        el.parentElement.parentElement.parentElement.nodeName == 'A' ? el.parentElement.parentElement.parentElement :
-        el.parentElement.parentElement.parentElement.parentElement.nodeName == 'A' ? el.parentElement.parentElement.parentElement.parentElement : null;
-        input = targetBox.previousSibling.previousSibling.nodeName == 'INPUT' ? targetBox.previousSibling.previousSibling : targetBox.parentElement.querySelector('.list-post-checklist');
-        return input;
-      },
-    }">
+  <div id="main-content" x-data x-init="$store.selectDiselectFeature.initialization()"
+    >
     <div class="grid grid-cols-2 gap-x-16 mb-2 mt-1 mx-16">
       <div class="text-center pb-3 transition delay-100 ease-out" 
-              x-on:click="showAllPost('draft')" 
+              x-on:click="$store.selectDiselectFeature.showAllPost('draft')" 
               for="draft"
               role="button">draft</div>
       <div class="text-center pb-3 transition delay-100 ease-out" 
-              x-on:click="showAllPost('published')" 
+              x-on:click="$store.selectDiselectFeature.showAllPost('published')" 
               for="published"
               role="button">published</div>
     </div>
 
-    <x-toogle-slider class="" :checkValue="$checked ?? false" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
+    {{-- <div><x-input-error :messages="$errors->get('list-post-cb')" class="mt-2" /></div>       --}}
+    {{-- <x-toogle-slider class="" :checkValue="$checked ?? false" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider> --}}
+    <x-toogle-slider class="" :checkValue="$checked" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
     <div id="content" class="" active="{{ $active }}" mousedownHandler="false" clickHandler="false" mouseupHandler="false"> 
+    <input type="hidden" id="active-content" name="active-content" value="{{ $active }}"> 
       <!-- Draft post -->
       <div id="draft" style="display: none">
-        @foreach ($posts as $key => $post)
+        @foreach ($postsDraft as $key => $post)
+        {{-- @if($post->isDraft == 1) --}}
         <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
-          <input type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" x-on:clicks="onclickCB($el)"/>
+          <input name="list-post-cb[]" type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $post->uuid }}" {{ old($post->uuid) ?? '' }}/>
           <a href="/post/1" class="list-post w-full">
             <x-list-post 
             :inputValue="$key"
@@ -165,14 +44,30 @@
             imgsrc="{{ url('/postImages/'. Auth::user()->username . '/thumbnail/' . $post->uuid . '_50_images.0.jpg')}}" />
           </a>
         </div>
+        {{-- @endif --}}
         @endforeach
       </div>
       
       <!-- Published post -->
       <div id="published" style="display: none">
-        @for ($key = 0; $key < 5; $key++)
+        @foreach ($postsPublished as $key => $post)
+        {{-- @if($post->isDraft == 0) --}}
         <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
-          <input type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" x-on:clicks="onclickCB($el)"/>
+          <input name="list-post-cb[]" type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $post->uuid }}" {{ old($post->uuid) ?? '' }}/>
+          <a href="/post/1" class="list-post w-full">
+            <x-list-post 
+            :inputValue="$key"
+            :title="$post->title"
+            :simpleDescription="$post->simpleDescription"
+            :ratingValue="$post->ratingValue"
+            imgsrc="{{ url('/postImages/'. Auth::user()->username . '/thumbnail/' . $post->uuid . '_50_images.0.jpg')}}" />
+          </a>
+        </div>
+        {{-- @endif --}}
+        @endforeach
+        {{-- @for ($key = 0; $key < 5; $key++)
+        <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
+          <input name="list-post-cb[]" type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $post->uuid }}" {{ old($post->uuid) ?? '' }}/>
           <a href="/post/1" class="list-post w-full">
             <x-list-post 
             :inputValue="$key"
@@ -182,7 +77,7 @@
             imgsrc="{{ url('/contoh/nasigoreng.jpeg')}}"/>
           </a>
         </div>
-        @endfor
+        @endfor --}}
       </div>
     </div>
     

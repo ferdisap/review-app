@@ -2,9 +2,9 @@
 
 @if ($status)
   <div 
-    {!! $attributes->class([$bgColor . " rounded-md pl-4 pt-3 pb-4 shadow-sm mb-3 relative flex justify-between align-top"]) !!}
+    {!! $attributes->class([$bgColor . " items-center pl-4 shadow-sm relative flex justify-between align-top"]) !!}
   >
     {{ $status }}
-    <button class="close-icon w-20" onclick="this.parentNode.remove()"></button>
+    <button class="close scale-50" onclick="this.parentNode.remove()"></button>
   </div>
 @endif

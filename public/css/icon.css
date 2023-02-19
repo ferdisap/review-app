@@ -38,12 +38,19 @@
   position: relative;
 }
 
-.bookmark::before {
+/* .bookmark::before {
   content: url('/svg/icon/more_horiz_FILL0_wght400_GRAD0_opsz48.svg');
   margin-left: 3px;
   margin-right: 3px;
   top: 0.5em;
   position: relative;
+} */
+
+.close::before {
+  content: url('/svg/icon/close_FILL0_wght400_GRAD0_opsz48.svg');
+  /* margin-left: 3px;
+  margin-right: 3px;
+  position: relative; */
 }
 
 .more::before{
