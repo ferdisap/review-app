@@ -15,6 +15,10 @@
   font-family: forte;
 }
 
+.active-content{
+  border-bottom: 4px solid #38bdf8;
+}
+
 .collapse-icon::after{
   content: url('http://review-app.test/svg/icon/chevron_right_FILL0_wght400_GRAD0_opsz48.svg');
   transform: scale(.3);

@@ -39,7 +39,7 @@
             @endif
 
             <!-- Page Content -->
-            <main class="relative overflow-auto" style="height: calc(100% - 4rem)">
+            <main class="relative" style="height: calc(100% - 4rem)">
                 {{ $slot }}
             </main>
 

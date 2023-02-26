@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'password' => '$2y$10$eXI2mcuX.TgQENrdmwQfQep6F1R.Dt0ET9acG0aO.LNRpoCDmbDv6' // password
         ]);
         
-        Post::factory(80)->create();
+        Post::factory(150)->create();
 
         // \App\Models\Post::factory(50)->create([
         //   'isDraft' => 0,

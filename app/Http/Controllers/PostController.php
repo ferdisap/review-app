@@ -28,12 +28,17 @@ class PostController extends Controller
    */
   public function myindex()
   {
+    $postsDraft = Post::where('isDraft', '=', 1)->where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(9,['*'], 'draft')->withQueryString()->onEachSide(2);
+    $postsPublished = Post::where('isDraft', '=', 0)->where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(9, ['*'], 'published')->withQueryString()->onEachSide(2);
+
+    // dd(request()->active);
+    // dd($postsDraft);
+    // dd($postsPublished);
+
     return view('components.post.index', [
-      'postsDraft' => Post::where('isDraft', '=', 1)->where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(10),
-      'postsPublished' => Post::where('isDraft', '=', 0)->where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(10),
-      // 'postsDraft' => Post::where('isDraft', '=', 1)->where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->get(),
-      // 'postsPublished' => Post::where('isDraft', '=', 0)->where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->get(),
-      // 'posts' => Post::where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->get(),
+      'active' => request()->active ?? null,
+      'postsDraft' => $postsDraft,
+      'postsPublished' => $postsPublished,
     ]);
   }
 

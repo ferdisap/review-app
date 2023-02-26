@@ -1,9 +1,12 @@
 <x-app-layout title="My Post">
 
+  {{-- @dd($postsDraft) --}}
+  
   <x-session-status :status="session('success')" bgColor="bg-green-200"/>
   <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
   @php
-  $active =  old('active-content') ?? 'draft';
+  // dd($active);
+  $active =  $active ?? (old('active-content') ?? 'draft');
   $checked = old('toogle-switch') ?? false; // old('toogle-switch') @return 'some' / 'on'
   @endphp
   
@@ -28,7 +31,7 @@
     {{-- <x-toogle-slider class="" :checkValue="$checked ?? false" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider> --}}
     <x-toogle-slider class="" :checkValue="$checked" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
     <div id="content" class="" active="{{ $active }}" mousedownHandler="false" clickHandler="false" mouseupHandler="false"> 
-    <input type="hidden" id="active-content" name="active-content" value="{{ $active }}"> 
+      <input type="hidden" id="active-content" name="active-content" value="{{ $active }}"> 
       <!-- Draft post -->
       <div id="draft" style="display: none">
         @foreach ($postsDraft as $key => $post)
@@ -46,7 +49,9 @@
         </div>
         {{-- @endif --}}
         @endforeach
+        {{ $postsDraft->links() }}      
       </div>
+
       
       <!-- Published post -->
       <div id="published" style="display: none">
@@ -65,19 +70,7 @@
         </div>
         {{-- @endif --}}
         @endforeach
-        {{-- @for ($key = 0; $key < 5; $key++)
-        <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
-          <input name="list-post-cb[]" type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $post->uuid }}" {{ old($post->uuid) ?? '' }}/>
-          <a href="/post/1" class="list-post w-full">
-            <x-list-post 
-            :inputValue="$key"
-            :title="__('foobar').$key"
-            :simpleDescription="__('foobar')"
-            :ratingValue="85"
-            imgsrc="{{ url('/contoh/nasigoreng.jpeg')}}"/>
-          </a>
-        </div>
-        @endfor --}}
+        {{ $postsPublished->links() }}
       </div>
     </div>
     

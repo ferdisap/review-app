@@ -6,6 +6,16 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
+Alpine.store('paginationURL',{
+  chgURL(e, url){
+    e.preventDefault();
+    url = (new URL(url));
+    // url.searchParams.set('active', $store.selectDiselectFeature.category);
+    url.searchParams.set('active', Alpine.store('selectDiselectFeature').category);
+    window.location.href = url;
+  }
+})
+
 Alpine.store('selectDiselectFeature', {
   ckboxDisplay: 'none',
   qtyPostDraft: null,
@@ -14,13 +24,13 @@ Alpine.store('selectDiselectFeature', {
     this.category == undefined ? (this.category = document.getElementById('content').getAttribute('active')) : this.hideAllPost();
     cat != undefined ? (this.category = cat) : null;
     document.getElementById(this.category).style.display = 'block';
-    document.querySelector('div[for=' + this.category + ']').classList.add('border-b-4', 'border-sky-400');
     document.getElementById('active-content').value = this.category;
+    document.querySelector('div[for=' + this.category + ']').classList.add('active-content');
   },
   hideAllPost() {
     document.getElementById(this.category).style.display = 'none';
     this.toogle(false);
-    document.querySelector('div[for=' + this.category + ']').classList.remove('border-b-4', 'border-sky-400');
+    document.querySelector('div[for=' + this.category + ']').classList.remove('active-content');
   },
   initialization() {
     this.qtyPostDraft = document.querySelectorAll('#draft .list-post');
