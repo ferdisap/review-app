@@ -1,3 +1,56 @@
+
+
+.collapse-icon::after{
+  content: url('http://review-app.test/svg/icon/chevron_right_FILL0_wght400_GRAD0_opsz48.svg');
+  transform: scale(.3);
+  position: absolute;
+  top: -5px;
+  right: 0;
+}
+
+.expand-icon::after{
+  content: url('http://review-app.test/svg/icon/expand_more_FILL0_wght400_GRAD0_opsz48.svg');
+  transform: scale(.3);
+  position: absolute;
+  top: -5px;
+  right: 0;
+}
+
+.close-icon::after{
+  content: url('http://review-app.test/svg/icon/close_FILL0_wght400_GRAD0_opsz48.svg');
+  transform: scale(.3);
+  position: absolute;
+  top: -5px;
+  right:-10px;
+  transform-origin: center;
+}
+
+/** .plus-icon TIDAK DIPAKAI */
+.plus-icon::before{
+  content: url('http://review-app.test/svg/icon/add_FILL1_wght400_GRAD0_opsz48.svg');
+  position: absolute;
+  /* left: 25%;
+  right: 25%; */
+  transform-origin: center;
+  /* transform: scale(0.5); */
+}
+.hourglass_empty-icon::before{
+  content: url('http://review-app.test/svg/icon/hourglass_empty_FILL0_wght400_GRAD0_opsz48.svg');
+  position: absolute;
+  /* left: 25%;
+  right: 25%; */
+  transform: scale(0.5);
+  transform-origin: center;
+}
+.hourglass_full-icon::before{
+  content: url('http://review-app.test/svg/icon/hourglass_full_FILL0_wght400_GRAD0_opsz48.svg');
+  position: absolute;
+  /* left: 25%;
+  right: 25%; */
+  transform: scale(0.5);
+  transform-origin: center;
+}
+
 .gear::before {
   content: url('/svg/icon/settings_FILL0_wght200_GRAD0_opsz20.svg');
   margin-left: 3px;
@@ -46,11 +99,18 @@
   position: relative;
 } */
 
-.close::before {
-  content: url('/svg/icon/close_FILL0_wght400_GRAD0_opsz48.svg');
-  /* margin-left: 3px;
-  margin-right: 3px;
-  position: relative; */
+.close::after {
+  z-index: 10;
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  content: "";
+  -webkit-mask: url('/svg/icon/close_FILL0_wght400_GRAD0_opsz48.svg') no-repeat 50% 50%;
+  mask: url('/svg/icon/close_FILL0_wght400_GRAD0_opsz48.svg') no-repeat 50% 50%;
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  transform-origin: center;
+  transform: scale(0.5);
 }
 
 .more::before{
@@ -108,22 +168,34 @@
   mask-size: cover;
 }
 
-.red:after {
+.red::after {
   background-color: red;
 }
 
-.green:after {
+.green::after {
   background-color: green;
 }
 
-.orange:after {
+.orange::after {
   background-color: orange;
 }
 
-.black:after {
+.black::after {
   background-color: black;
 }
+.gray::after {
+  background-color: rgb(82 82 91);
+}
+
 
 .orange-to-black:after {
   background-image: linear-gradient(90deg, orange 0 50%, black 50% 100%);
+}
+
+.search::after{
+  content: url('/svg/icon/search_FILL0_wght400_GRAD0_opsz20.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.5em;
+  position: relative;
 }

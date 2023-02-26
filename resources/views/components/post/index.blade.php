@@ -14,8 +14,7 @@
     @csrf
 
   
-  <div id="main-content" x-data x-init="$store.selectDiselectFeature.initialization()"
-    >
+  <div id="main-content" x-data x-init="$store.selectDiselectFeature.initialization()">
     <div class="grid grid-cols-2 gap-x-16 mb-2 mt-1 mx-16">
       <div class="text-center pb-3 transition delay-100 ease-out" 
               x-on:click="$store.selectDiselectFeature.showAllPost('draft')" 
@@ -29,7 +28,10 @@
 
     {{-- <div><x-input-error :messages="$errors->get('list-post-cb')" class="mt-2" /></div>       --}}
     {{-- <x-toogle-slider class="" :checkValue="$checked ?? false" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider> --}}
-    <x-toogle-slider class="" :checkValue="$checked" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
+    <div class="flex justify-between">
+      <x-toogle-slider class="" :checkValue="$checked" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
+      <span class="search" role="button" x-on:click="$store.search.open()"></span>
+    </div>
     <div id="content" class="" active="{{ $active }}" mousedownHandler="false" clickHandler="false" mouseupHandler="false"> 
       <input type="hidden" id="active-content" name="active-content" value="{{ $active }}"> 
       <!-- Draft post -->

@@ -25,7 +25,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
+    <body class="relative font-sans antialiased">
       <div class="flex justify-center">
         <div class="h-screen bg-gray-100 max-w-7xl max-[320px]:w-11/12 max-[640px]:w-9/12 w-1/2 xl:w-4/12 relative overflow-hidden">
             <!-- Page Heading -->
@@ -42,8 +42,8 @@
             <main class="relative" style="height: calc(100% - 4rem)">
                 {{ $slot }}
             </main>
-
         </div>
+        <x-search></x-search>
       </div>
     </body>
 </html>
