@@ -34,4 +34,81 @@
   border-radius: 0.5rem;
 }
 
+.list-post-container{
+  border-radius: 0.5rem;
+  display: block;
+  color: rgb(0 0 0);
+  padding-left: 0.5rem; /* 8px */
+  padding-right: 0.5rem; /* 8px */
+  margin-bottom: 0.5rem; /* 8px */
+  margin-top: 0.25rem;
+}
+
+.list-post-container > div {
+  width: 100%;
+  z-index: 30;
+  position: relative;
+}
+
+.list-post-container > div > div {
+  position: relative;
+  width: 100%;
+  padding: 0.5rem; /* 8px */
+  border-width: 1px;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  background-color: rgb(248 250 252);
+  height: max-content;
+  display: flex;
+  background-image:rgba(0,0,0,0)
+}
+
+.list-post-container > div > div > div:nth-child(1) {
+  height: 5rem; /* 80px */
+  display: flex;
+  align-items: center;
+  border-radius: 0.125rem; /* 2px */
+  background-color: rgb(229 231 235);
+  margin-right: 0.5rem;
+}
+
+.list-post-container > div > div > div:nth-child(1) > img {
+  max-height: 100%;
+  max-width: 50px;
+  border-radius: 0.125rem; /* 2px */
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+.list-post-container > div > div > div:nth-child(2) {
+  height: 5rem; /* 80px */
+}
+
+.list-post-container > div > div > div:nth-child(2) > h6 {
+  font-weight: 700;
+}
+
+.list-post-container > div > div > div:nth-child(3) {
+  position: absolute;
+  right: 0.75rem; /* 12px */
+  top: 0px;
+}
+.list-post-container > div > div > div:nth-child(3) > div {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.list-post-container > div > div > div:nth-child(3) > div > p {
+  margin-top: 0px;
+}
+
+.more_result {
+  width: 100%;
+  z-index: 30;
+  position: relative;
+  color: rgb(255 255 255);
+}
+
+
+
 

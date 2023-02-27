@@ -20,6 +20,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/post/search', [PostController::class, 'search']);
+
 Route::controller(SettingController::class)->group(function(){
   Route::get('/setting/{setting?}', 'index')->middleware('auth')->name('setting');
   Route::put('/setting/{user}/update', 'update')->middleware('auth');
@@ -27,7 +29,8 @@ Route::controller(SettingController::class)->group(function(){
 
 Route::get('/about', function(){return view('components.about.index');});
 
-Route::controller(PostController::class)->group(function () {
+Route::controller(PostController::class)->group(function () {  
+  Route::get('/post/search', 'search')->middleware('auth');
   Route::get('/post','index');
   Route::get('/mypost', 'myindex')->middleware('auth')->name('mypostindex');
   Route::get('/post/create', 'create')->middleware('auth');

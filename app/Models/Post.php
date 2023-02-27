@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,5 +47,15 @@ class Post extends Model
   public function uniqueIds()
   {
     return ['uuid'];
+  }
+
+  /**
+   * scope a query for search fiture
+   */
+  public function scopeSearch($query, $keyword)
+  {
+    return $query->where('title', 'like', '%' . $keyword . '%')
+    ->orWhere('simpleDescription', 'like', '%' . $keyword . '%')
+    ->orWhere('detailDescription', 'like', '%' . $keyword . '%');    
   }
 }

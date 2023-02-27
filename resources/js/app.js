@@ -6,14 +6,14 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
-Alpine.store('paginationURL',{
-  chgURL(e, url){
+Alpine.store('paginationURL', {
+  chgURL(e, url) {
     e.preventDefault();
     url = (new URL(url));
     url.searchParams.set('active', Alpine.store('selectDiselectFeature').category);
     window.location.href = url;
   }
-})
+});
 
 Alpine.store('selectDiselectFeature', {
   ckboxDisplay: 'none',
@@ -34,7 +34,7 @@ Alpine.store('selectDiselectFeature', {
   initialization() {
     this.qtyPostDraft = document.querySelectorAll('#draft .list-post');
     this.qtyPostPublished = document.querySelectorAll('#published .list-post');
-    
+
     this.content = document.getElementById('content');
 
     let content = this.content;
@@ -73,7 +73,7 @@ Alpine.store('selectDiselectFeature', {
     // jika ingin otomatis selected All/not jika pindah category, taruh ini di dalam @showAllPost
     // alert(document.getElementById('toogle-switch').checked);
     let checked = document.getElementById('toogle-switch').checked;
-    if(checked){
+    if (checked) {
       this.toogle(checked);
     }
     // this.toogle(document.getElementById('toogle-switch').checked);
@@ -163,24 +163,115 @@ Alpine.store('previewThumbnail', {
 });
 
 Alpine.store('search', {
-  open(){
-    modal = document.getElementById('modal-search');
-    modal.classList.remove('hidden');
-    modal.addEventListener('keydown', keydownHandler);
+  modal: document.getElementById('modal-search'),
+  inputText: document.getElementById('search-input'),
+  open(e) {
+    this.modal.classList.remove('hidden');
+    this.keyupHandler = this.keyupHandler.bind(this);
+    this.modal.addEventListener('keyup', this.keyupHandler);
+    this.inputText.value = "";
+    this.inputText.focus();
+    e.preventDefault();
   },
-  close(){
-    modal = document.getElementById('modal-search');
-    modal.classList.add('hidden');
-    modal.removeEventListener('keydown', keydownHandler);
+  close() {
+    this.modal.classList.add('hidden');
+    this.modal.removeEventListener('keyup', this.keyupHandler);
   },
-  keydownHandler(){
-    document.querySelectorAll("#modal-search *[tabindex='0']");
+  init() {
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case "/":
+          // console.log('/');
+          if (this.modal.classList.contains('hidden')) {
+            this.open(e);
+          } else {
+            if (e.target.nodeName != "INPUT") {
+              e.preventDefault();
+              this.inputText.focus();
+            }
+          }
+          break;
+
+        case "ArrowDown":
+          console.log(e.target)
+          e.target.nextElementSibling.focus();
+          break;
+
+        case "ArrowUp":
+          e.target.previousElementSibling.focus();
+          break;
+
+        case "Escape":
+          this.close();
+          break;
+
+        default:
+          break;
+      }
+    });
+  },
+  keyupHandler(e) {
+    if (e.key == 'ArrowUp' || e.key == 'ArrowDown' || e.key == 'Escape' || e.key == 'Tab' ){
+      return undefined;
+    }
+    this.delay(500, () => {
+      fetch('/post/search?key=' + this.inputText.value)
+        .then(rsp => rsp.json())
+        .then(rst => {
+          document.querySelectorAll('#modal-search > div > a').forEach(list => list.remove());
+          for (let i = 0; i < 4; i++) {
+            let ratingValue = 40 / 2 // rst.posts[i].ratingValue/2
+            let star1 = ratingValue - 10 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 10 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
+            let star2 = ratingValue - 20 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 20 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
+            let star3 = ratingValue - 30 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 30 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
+            let star4 = ratingValue - 40 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 40 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
+            let star5 = ratingValue - 50 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 50 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
+            var str = `<div>          
+                        <div>
+                          <div>
+                            <img loading="lazy" src="/svg/icon/lunch_dining_FILL0_wght400_GRAD0_opsz48.svg" alt="" class="scale-11 transition-05">
+                          </div>
+                          <div>
+                            <h6 class="md:text-md lg:text-lg">${rst.posts[i].title}</h6>
+                            <p class="text-ssm sm:text-sm md:text-md lg:text-lg xl:text-xl">${rst.posts[i].simpleDescription}</p>
+                          </div>
+                          <div>
+                            <div>
+                              <div>
+                                ${star1}
+                                ${star2}
+                                ${star3}
+                                ${star4}
+                                ${star5}
+                              </div>
+                              <p class="text-dsm">${ratingValue * 2}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>`;
+            let list = document.createElement('a');
+            list.classList.add('list-post-container');
+            list.href = `/post/${rst.posts[i].uuid}`;
+            list.innerHTML = str;
+            document.querySelector('#modal-search div').appendChild(list);
+          }
+          if (rst.posts.length > 4) {
+            var str = ` <div class="more_result">
+                            ${rst.posts.length} posts found.
+                          </div>`;
+            let more = document.createElement('a');
+            more.classList.add('list-post-container');
+            more.href = `javascript:void`;
+            more.innerHTML = str;
+            document.querySelector('#modal-search div').appendChild(more);
+          }
+        });
+    });
   },
 
-  
-
-  init(){
-
+  delay(t, callback) {
+    clearTimeout(this.to);
+    this.to = setTimeout(callback, t);
   }
 });
 

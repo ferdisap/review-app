@@ -165,4 +165,19 @@ class PostController extends Controller
     // jika semua post berhasil di destroy dary DB, maka:
     return back()->withInput()->with('success', 'The selected post(s) has been deleted.' );
   }
+
+  /**
+   * 
+   */
+  public function search(Request $request)
+  {
+    if ($request->key == '' || $request->key == null ){
+      $posts = null;
+    } else {
+      $posts = Post::search($request->key)->orderBy('updated_at')->get(['uuid', 'title', 'simpleDescription', 'detailDescription', 'isDraft']);
+    }
+    return response()->json([
+      'posts' => $posts,
+    ]);
+  }
 }
