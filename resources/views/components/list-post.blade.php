@@ -4,7 +4,7 @@
      :inputValue="{{ $inputValue }}"
      style="background-image:rgba(0,0,0,0)">
   <div class="h-20 flex items-center bg-gray-200 rounded-sm">
-    <img loading="lazy" src="{{ $imgsrc }}" alt="" style="max-height:100%" class="rounded-sm scale-11 transition-05" style="max-width: 50px"
+    <img loading="lazy" src="{{ $imgsrc }}" alt="" style="max-height:100%; max-width: 50px" class="rounded-sm scale-11 transition-05"
     x-on:error="changeSRC($el)">
   </div>
   <div class="h-20">

@@ -19,7 +19,7 @@ class PostFactory extends Factory
         return [
           'isDraft' => rand(0,1),
           'title' => fake()->word(),
-          'author' => 1
+          'author_id' => 1
         ];
     }
 }

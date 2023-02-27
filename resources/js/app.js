@@ -153,7 +153,7 @@ Alpine.store('selectDiselectFeature', {
 
 Alpine.store('previewThumbnail', {
   show(imgFile, imgTag) {
-    console.log('foo');
+    // console.log('foo');
     const FR = new FileReader();
     FR.addEventListener('load', () => {
       document.querySelector(imgTag).src = FR.result;
@@ -193,7 +193,7 @@ Alpine.store('search', {
           break;
 
         case "ArrowDown":
-          console.log(e.target)
+          // console.log(e.target)
           e.target.nextElementSibling.focus();
           break;
 

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('simpleDescription')->nullable();
             $table->text('detailDescription')->nullable();
             $table->boolean('isDraft');
-            $table->integer('author');
+            $table->integer('author_id');
             $table->timestamps();
         });
     }

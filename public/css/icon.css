@@ -199,3 +199,18 @@
   top: 0.5em;
   position: relative;
 }
+
+.arrowhead_lh::before{  
+  content: url('/svg/icon/arrow_head_left_FILL_48.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.5em;
+  position: relative;
+}
+.arrowhead_rh::before{  
+  content: url('/svg/icon/arrow_head_right_FILL_48.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.5em;
+  position: relative;
+}

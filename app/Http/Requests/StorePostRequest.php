@@ -62,18 +62,18 @@ class StorePostRequest extends FormRequest
     if ($this->submit === 'publish') {
       $this->title_rules = ['required', 'max:30'];
       $this->simpleDescription_rules = ['required', new MaxWord(100)];
-      $this->detailDescription_rules = ['required', new MaxWord(100)];
+      $this->detailDescription_rules = ['required', new MaxWord(1000)];
       $this->merge([
         'isDraft' => 0,
-        'author' => Auth::user()->id,
+        'author_id' => Auth::user()->id,
       ]);
     } else {
       $this->title_rules = ['max:30'];
       $this->simpleDescription_rules = [new MaxWord(100)];
-      $this->detailDescription_rules = [new MaxWord(100)];
+      $this->detailDescription_rules = [new MaxWord(1000)];
       $this->merge([
         'isDraft' => 1,
-        'author' => Auth::user()->id,
+        'author_id' => Auth::user()->id,
       ]);
     }
   }

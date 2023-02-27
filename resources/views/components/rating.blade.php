@@ -1,6 +1,6 @@
 
 @props(['ratingValue'])
-<div class="flex justify-center items-end"
+<div class="flex justify-center items-end m-1"
       x-data="{
         ratingValue: function(container, value){
           value = value/2;

@@ -6,7 +6,7 @@
   <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
   @php
   // dd($active);
-  $active =  $active ?? (old('active-content') ?? 'draft');
+  $active =  $active ?? (old('active-content') ?? 'published');
   $checked = old('toogle-switch') ?? false; // old('toogle-switch') @return 'some' / 'on'
   @endphp
   
@@ -38,11 +38,11 @@
           {{-- @if($post->isDraft == 1) --}}
           <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
             <input name="list-post-cb[]" type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $post->uuid }}" {{ old($post->uuid) ?? '' }}/>
-            <a href="/post/1" class="list-post w-full">
+            <a href="/post/{{ $post->uuid }}" class="list-post w-full">
               <x-list-post 
               :inputValue="$key"
               :title="$post->title"
-              :simpleDescription="$post->simpleDescription"
+              :simpleDescription="Str::limit($post->simpleDescription, 125, '...')"
               :ratingValue="$post->ratingValue"
               imgsrc="{{ url('/postImages/'. Auth::user()->username . '/thumbnail/' . $post->uuid . '_50_images.0.jpg')}}" />
             </a>
@@ -59,11 +59,11 @@
           {{-- @if($post->isDraft == 0) --}}
           <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
             <input name="list-post-cb[]" type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $post->uuid }}" {{ old($post->uuid) ?? '' }}/>
-            <a href="/post/1" class="list-post w-full">
+            <a href="/post/{{ $post->uuid }}" class="list-post w-full">
               <x-list-post 
               :inputValue="$key"
               :title="$post->title"
-              :simpleDescription="$post->simpleDescription"
+              :simpleDescription="Str::limit($post->simpleDescription, 125, '...')"
               :ratingValue="$post->ratingValue"
               imgsrc="{{ url('/postImages/'. Auth::user()->username . '/thumbnail/' . $post->uuid . '_50_images.0.jpg')}}" />
             </a>

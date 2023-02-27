@@ -28,12 +28,8 @@ class PostController extends Controller
    */
   public function myindex()
   {
-    $postsDraft = Post::where('isDraft', '=', 1)->where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(9,['*'], 'draft')->withQueryString()->onEachSide(2);
-    $postsPublished = Post::where('isDraft', '=', 0)->where('author', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(9, ['*'], 'published')->withQueryString()->onEachSide(2);
-
-    // dd(request()->active);
-    // dd($postsDraft);
-    // dd($postsPublished);
+    $postsDraft = Post::where('isDraft', '=', 1)->where('author_id', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(9,['*'], 'draft')->withQueryString()->onEachSide(2);
+    $postsPublished = Post::where('isDraft', '=', 0)->where('author_id', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(9, ['*'], 'published')->withQueryString()->onEachSide(2);
 
     return view('components.post.index', [
       'active' => request()->active ?? null,
@@ -54,7 +50,7 @@ class PostController extends Controller
       'uuid' => old('uuid') ?? 
                 (Post::create([
                   'isDraft' => 1,
-                  'author' => Auth::user()->id,
+                  'author_id' => Auth::user()->id,
                 ]))->uuid,
     ]);
   }
@@ -72,7 +68,7 @@ class PostController extends Controller
       $post->simpleDescription = $request->simpleDescription;
       $post->detailDescription = $request->detailDescription;
       $post->isDraft = $request->isDraft;
-      $post->author = $request->author;
+      $post->author_id = $request->author_id;
       $post->save(); 
       return $request->isDraft == true ? 
           back()->withInput()->with('success', 'This Post has been saved.') :
@@ -90,7 +86,9 @@ class PostController extends Controller
    */
   public function show($id)
   {
-    dd('show');
+    return view('components.post.show', [
+      'post' => Post::with('author')->findOrFail($id),
+    ]);
   }
 
   /**

@@ -19,7 +19,7 @@ class Post extends Model
      */
     protected $fillable = [
       'isDraft',
-      'author',
+      'author_id',
   ];
 
    /**
@@ -57,5 +57,13 @@ class Post extends Model
     return $query->where('title', 'like', '%' . $keyword . '%')
     ->orWhere('simpleDescription', 'like', '%' . $keyword . '%')
     ->orWhere('detailDescription', 'like', '%' . $keyword . '%');    
+  }
+
+  /**
+   * Belongs to User
+   */
+  public function author()
+  {
+    return $this->belongsTo(User::class, 'author_id');
   }
 }
