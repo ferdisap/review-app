@@ -214,3 +214,16 @@
   top: 0.5em;
   position: relative;
 }
+
+.circle::after {
+  width: 18px;
+  height: 18px;
+  z-index: 10;
+  display: inline-block;
+  content: '';
+  -webkit-mask: url('/svg/icon/circle_FILL1_18.svg') no-repeat 50% 50%;
+  mask: url('/svg/icon/circle_FILL1_18.svg') no-repeat 50% 50%;
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  transform-origin: center;
+}

@@ -1,2 +1,7 @@
 1. mklink /d D:\application\php-app\review-app\public\postImages D:\application\php-app\review-app\storage\app\postImages
+
+mklink /d D:\application\review-app\public\postImages D:\application\review-app\storage\app\postImages
+
 2. mklink /d D:\application\php-app\review-app\public\photos D:\application\php-app\review-app\storage\app\photos
+
+mklink /d D:\application\review-app\public\photos D:\application\review-app\storage\app\photos

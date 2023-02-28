@@ -1,5 +1,28 @@
 <x-app-layout>
-  <div class="block overflow-auto h-full w-inherit">
+  <div  class="block overflow-auto h-full w-inherit"
+        x-data="{
+          nextimg(){
+            this.img.classList.add('hidden');
+            this.img.nextElementSibling.classList.remove('hidden');
+            this.img = this.img.nextElementSibling;
+
+            this.circle.setAttribute('fill', 'rgba(0,0,0,0.2)');
+            this.circle.nextElementSibling.setAttribute('fill', 'rgba(0,0,0,0.9)');
+            this.circle = this.circle.nextElementSibling;
+          },
+          previmg(){
+            this.img.classList.add('hidden');
+            this.img.previousElementSibling.classList.remove('hidden');
+            this.img = this.img.previousElementSibling;
+            
+            this.circle.setAttribute('fill', 'rgba(0,0,0,0.2)');
+            this.circle.previousElementSibling.setAttribute('fill', 'rgba(0,0,0,0.9)');
+            this.circle = this.circle.previousElementSibling;
+          },
+          img: document.querySelector('.img-post-display'),
+          circle: document.querySelector('circle'),
+        }"
+  >
 
     <h1 class="m-3 text-center text-txl">{{ $post->title }}</h1>
 
@@ -7,22 +30,28 @@
 
     <div class="grid grid-cols-6 gap-4 place-content-center place-items-center">
       <div class="col-start-1">
-        <span class="arrowhead_lh" role="button"></span>
+        <span class="arrowhead_lh" role="button" x-on:click="previmg()"></span>
       </div>
       <div class="col-start-2 col-span-4 h-max">
-        <img src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.1.jpg"
-          alt="{{ $post->title }}" class="rounded-lg shadow-lg">
         <div>
-          <!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In  -->
-          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="13px" height="13px"
-            viewBox="0 0 13 13" xml:space="preserve">
-            <circle fill="none" stroke="#000000" cx="6.5" cy="6.5" r="6" />
+          <img class="img-post-display rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.0.jpg" alt="{{ $post->title }}">
+          <img class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.1.jpg" alt="{{ $post->title }}">
+          <img class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.2.jpg" alt="{{ $post->title }}">
+          <img class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.3.jpg" alt="{{ $post->title }}">
+          <img class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.4.jpg" alt="{{ $post->title }}">
+        </div>
+        <div class="w-full flex justify-center">
+          <svg class="mt-2" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="85px" height="13px" viewBox="0 0 87 13" xml:space="preserve">
+            <circle fill="rgba(0,0,0,0.9)" stroke="none" cx="6.5" cy="6.5" r="6" />
+            <circle fill="rgba(0,0,0,0.2)" stroke="none" cx="24.5" cy="6.5" r="6" />
+            <circle fill="rgba(0,0,0,0.2)" stroke="none" cx="42.5" cy="6.5" r="6" />
+            <circle fill="rgba(0,0,0,0.2)" stroke="none" cx="61" cy="6.5" r="6" />
+            <circle fill="rgba(0,0,0,0.2)" stroke="none" cx="79.5" cy="6.5" r="6" />
           </svg>
-
         </div>
       </div>
       <div class="col-end-7 col-span-1">
-        <span class="arrowhead_rh" role="button"></span>
+        <span class="arrowhead_rh" role="button" x-on:click="nextimg()"></span>
       </div>
     </div>
 
