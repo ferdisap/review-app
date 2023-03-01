@@ -15,13 +15,9 @@ module.exports = {
             },
             minWidth: {
               '100px' : '100px'
-            }
+            },
             
         },
-        // fontSize: {
-        //   dsm: ['0.5rem', '0.75rem'],
-        //   ssm: ['0.625rem', '0.5rem']
-        // },
         fontSize: {
           tsm: ['0.375rem', '0.75rem'],
           dsm: ['0.5rem', '0.75rem'],

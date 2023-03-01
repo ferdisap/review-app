@@ -1,28 +1,39 @@
-<x-app-layout>
-  <div  class="block overflow-auto h-full w-inherit"
-        x-data="{
-          nextimg(){
-            this.img.classList.add('hidden');
-            this.img.nextElementSibling.classList.remove('hidden');
-            this.img = this.img.nextElementSibling;
-
-            this.circle.setAttribute('fill', 'rgba(0,0,0,0.2)');
-            this.circle.nextElementSibling.setAttribute('fill', 'rgba(0,0,0,0.9)');
-            this.circle = this.circle.nextElementSibling;
-          },
-          previmg(){
-            this.img.classList.add('hidden');
-            this.img.previousElementSibling.classList.remove('hidden');
-            this.img = this.img.previousElementSibling;
-            
-            this.circle.setAttribute('fill', 'rgba(0,0,0,0.2)');
-            this.circle.previousElementSibling.setAttribute('fill', 'rgba(0,0,0,0.9)');
-            this.circle = this.circle.previousElementSibling;
-          },
+<x-app-layout title="Detail Post">
+  <div  class="block h-full w-inherit"
+        x-data="{          
           img: document.querySelector('.img-post-display'),
           circle: document.querySelector('circle'),
+          circleAll: document.querySelectorAll('circle'),
+          nextimg(){
+            if(this.img.nextElementSibling != null){
+              this.img.classList.add('hidden');
+              this.img.nextElementSibling.classList.remove('hidden');
+              this.img = this.img.nextElementSibling;
+  
+              this.circle.setAttribute('fill', 'rgba(0,0,0,0.2)');
+              this.circle.nextElementSibling.setAttribute('fill', 'rgba(0,0,0,0.9)');
+              this.circle = this.circle.nextElementSibling;
+            }
+          },
+          previmg(){
+            if(this.img.previousElementSibling != null){
+              this.img.classList.add('hidden');
+              this.img.previousElementSibling.classList.remove('hidden');
+              this.img = this.img.previousElementSibling;
+              
+              this.circle.setAttribute('fill', 'rgba(0,0,0,0.2)');
+              this.circle.previousElementSibling.setAttribute('fill', 'rgba(0,0,0,0.9)');
+              this.circle = this.circle.previousElementSibling;
+            }
+          },
+          deleteEl(el){
+            console.log(el);
+            this.circleAll[el.getAttribute('circle')].remove();
+            el.remove();
+          }
         }"
   >
+
 
     <h1 class="m-3 text-center text-txl">{{ $post->title }}</h1>
 
@@ -34,11 +45,11 @@
       </div>
       <div class="col-start-2 col-span-4 h-max">
         <div>
-          <img class="img-post-display rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.0.jpg" alt="{{ $post->title }}">
-          <img class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.1.jpg" alt="{{ $post->title }}">
-          <img class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.2.jpg" alt="{{ $post->title }}">
-          <img class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.3.jpg" alt="{{ $post->title }}">
-          <img class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.4.jpg" alt="{{ $post->title }}">
+          <img circle="0" class="img-post-display rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.0.jpg" alt="{{ $post->title }}">
+          <img x-on:error="deleteEl($el)" circle="1" class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.1.jpg" alt="{{ $post->title }}">
+          <img x-on:error="deleteEl($el)" circle="2" class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.2.jpg" alt="{{ $post->title }}">
+          <img x-on:error="deleteEl($el)" circle="3" class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.3.jpg" alt="{{ $post->title }}">
+          <img x-on:error="deleteEl($el)" circle="4" class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem" src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.4.jpg" alt="{{ $post->title }}">
         </div>
         <div class="w-full flex justify-center">
           <svg class="mt-2" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="85px" height="13px" viewBox="0 0 87 13" xml:space="preserve">
@@ -55,84 +66,98 @@
       </div>
     </div>
 
-    <hr class="m-3">
+  {{-- rating form --}}
+  <div class="mt-5 mb-5 w-full flex justify-center flex-wrap">
+    <h6 class="text-center mx-3 font-bold">give your rating:</h6>
+    <div class="w-60 rounded-md grid grid-cols-5 place-content-center place-items-center">
+      <div class="hover:scale-150 col-start-1" role="button">1</div>
+      <div class="hover:scale-150 col-start-2" role="button">2</div>
+      <div class="hover:scale-150 col-start-3" role="button">3</div>
+      <div class="hover:scale-150 col-start-4" role="button">4</div>
+      <div class="hover:scale-150 col-start-5" role="button">5</div>
+    </div>
+  </div>
 
-    <div class="p-3">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui quis accusantium
-      reiciendis
-      earum praesentium vitae saepe, sed tenetur quam, modi dolores nihil? Quod, non. Ducimus perspiciatis a labore
-      tempore est minus alias voluptatem tempora, similique deserunt. Recusandae dolores quaerat quas. Cum nihil beatae
-      ducimus ipsum, exercitationem eum commodi, corporis ipsam tempora assumenda explicabo soluta repudiandae vero amet
-      delectus aspernatur officiis maiores odio possimus minus pariatur. Illo totam quia impedit qui ratione velit sunt
-      facilis expedita modi minus sint, quasi, corrupti deleniti distinctio nihil. Modi placeat ex et, quasi voluptatem
-      atque in explicabo doloribus. Explicabo enim aut repellat dicta, amet corrupti.</div>
-    <div class="m-3">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat sapiente similique
-      sequi
-      repudiandae assumenda inventore voluptas ipsa minima ducimus quidem aspernatur, quisquam, quia eveniet modi non
-      neque praesentium doloremque, nostrum odio magni. Porro quaerat aliquid ut aut sit aliquam aspernatur, ea in,
-      facere ipsa ullam deleniti animi? Sed nostrum magni atque reprehenderit. At blanditiis obcaecati aspernatur
-      accusantium consectetur, sed iure neque repellendus accusamus natus explicabo quis magni? Aspernatur, incidunt!
-      Iure vitae vel, quasi nisi id quas molestias porro ipsum cupiditate saepe quidem quisquam quae nobis doloribus
-      deserunt amet in, incidunt harum ab quaerat assumenda minima ipsam? Suscipit esse impedit deserunt? Perspiciatis
-      suscipit adipisci, totam error ipsam cupiditate? Id earum accusantium doloremque, ut perferendis deserunt
-      voluptates voluptas officia eius repellendus vitae numquam labore hic laudantium sunt iure aspernatur itaque sed
-      mollitia illum. Voluptatum, deserunt vitae omnis ab ipsum, nesciunt maiores enim sunt quis pariatur nisi corporis
-      asperiores rem officia fuga sapiente ducimus quas quisquam deleniti nulla harum voluptates. Eos architecto,
-      facilis laboriosam corrupti accusamus reiciendis expedita quasi id nobis distinctio cupiditate, magnam repellendus
-      excepturi vitae, praesentium nostrum vero minima officia. Impedit, aliquam, corporis deserunt, blanditiis quia
-      eius ipsam tenetur exercitationem atque magnam ullam. Nihil, expedita vitae eaque aliquid natus neque distinctio
-      architecto deleniti quisquam unde corrupti quod, deserunt est quaerat ab accusantium, accusamus porro commodi
-      dolor recusandae magni ducimus pariatur! Omnis deserunt, quo ea ad maiores sapiente accusamus! Quia consequatur
-      dignissimos unde tempora natus temporibus! Minima nam nihil porro eum excepturi optio fugit, pariatur dolore sunt
-      eius qui modi nulla quidem esse doloremque placeat id deleniti, quis praesentium illum, distinctio amet velit!
-      Voluptatum totam exercitationem aspernatur non animi iusto suscipit dolore ex odit laborum doloremque recusandae
-      maiores velit inventore officia natus earum quidem nemo assumenda harum quo iste, consectetur similique doloribus.
-      Nemo nobis fugiat error autem molestiae fuga, deleniti architecto consectetur eveniet consequatur debitis
-      recusandae, est nihil repellat dignissimos ad exercitationem. Odio quibusdam itaque numquam eius quisquam
-      doloremque non labore. Dolor velit nemo saepe, nostrum voluptas vero voluptate totam at nisi excepturi tempore
-      molestias impedit, nulla tempora veritatis. Aliquam commodi provident iste placeat itaque adipisci at unde,
-      dolorum ad possimus nam? Eligendi asperiores a est sit, magni ipsa non placeat officiis quae eum, id cum quos
-      incidunt accusantium, odit totam natus culpa fugiat perspiciatis? Optio asperiores adipisci minima nemo qui quo,
-      voluptatum omnis vitae earum tempore at consequatur voluptate dolores, doloremque blanditiis. Dolorem ullam,
-      temporibus commodi quisquam aut amet cumque modi dignissimos debitis, facere numquam, nostrum quis repudiandae.
-      Eligendi similique veniam quo, rerum repellendus dolorem eum vitae reiciendis suscipit reprehenderit, commodi,
-      ullam laboriosam ex soluta. Nihil, accusamus, asperiores doloremque inventore ex consequatur exercitationem facere
-      reprehenderit sed saepe, ipsum excepturi nulla voluptatem sapiente eaque odit illo sequi quo recusandae. Quidem
-      asperiores modi, mollitia alias sint voluptatem hic non ratione voluptate recusandae perspiciatis exercitationem
-      quo unde quia, voluptas eos ullam repellat nam, impedit aliquid tempore nulla! Quidem corporis, tenetur odit
-      possimus nobis sit, laborum illo dolorum eaque magni adipisci nemo beatae quisquam molestiae hic eum soluta
-      deserunt nesciunt facere quod! Nihil culpa fuga, provident iure fugiat optio dolorum iste sunt qui enim nostrum
-      magnam ipsam accusamus numquam quibusdam! Placeat doloribus amet molestias ducimus excepturi fuga porro eligendi
-      id eveniet? Officiis assumenda consequatur a molestias! Impedit voluptatibus expedita qui aliquid totam culpa.
-      Magni quae, fugit minus quidem quisquam nam, ad incidunt sit dolorum illo possimus perspiciatis. Quo omnis optio
-      sunt, facere neque pariatur eum assumenda, exercitationem cupiditate deleniti libero fugiat ducimus cum ratione
-      delectus. Qui, commodi et aliquam cumque assumenda similique eaque, aut fugit, eius iure aperiam magnam sunt
-      corporis error unde illo facilis perferendis amet impedit nihil. Quod omnis ipsam, esse dolor amet est animi
-      temporibus ex modi vitae ut autem, non nulla? Non quibusdam laudantium esse ut veritatis similique quia tempore
-      voluptas totam sequi dolorem, dolor, obcaecati, placeat iure vel. Voluptas sequi, architecto soluta ullam porro,
-      enim aperiam tenetur consectetur fugit ut quod dolorem consequuntur beatae eos, excepturi vel? Adipisci tempora
-      eveniet quaerat, iste architecto incidunt voluptatum voluptates facere reiciendis vero animi? Odio, optio
-      architecto atque similique repudiandae ipsa illo nisi libero ipsam hic ut corporis consequatur quidem quas soluta
-      veritatis quam. Modi eum porro natus rem voluptatibus inventore! Neque magni minus facere dicta. Obcaecati dolorem
-      ratione incidunt libero praesentium alias consequuntur ea ipsa recusandae culpa. Vel aliquam nisi ea perspiciatis
-      eos quaerat magnam neque labore nam iure voluptas quod nihil ipsum explicabo, tempora, nulla quo quam placeat
-      praesentium rerum et ducimus debitis amet possimus. Quas quasi, quae voluptas itaque sint veritatis error?
-      Reiciendis quaerat dignissimos quas asperiores, in optio perferendis ad, ratione ipsum alias vero, quam magni
-      accusantium. Repellat saepe quasi, fuga cum corporis consequatur quaerat reprehenderit, nobis consequuntur
-      reiciendis suscipit. Laboriosam aliquid consequuntur, accusantium sit sequi commodi nihil quas recusandae ipsum
-      harum, mollitia quia nostrum tempora voluptatum voluptate unde distinctio voluptatem odio iste. Animi at quod
-      quisquam, sint minima neque, libero aut vel ullam mollitia repudiandae excepturi sequi minus reiciendis. Ullam
-      necessitatibus dicta dolor, error adipisci animi consequatur nesciunt. Hic, aut dolorum. A expedita distinctio
-      deserunt quo itaque temporibus dignissimos illum quidem laboriosam. Voluptate alias tenetur facilis illum
-      accusantium eius ad pariatur laboriosam, sequi, asperiores aspernatur. Debitis, quam ipsam earum quis et, corrupti
-      tempore nostrum eum aliquid nam iusto reprehenderit aliquam sunt nobis labore ea repellat. Accusantium non eos est
-      odio quod, nulla perferendis ratione iusto porro sunt beatae? Fugit et quam mollitia, eius repellendus est impedit
-      reprehenderit similique quae velit quas ex aperiam ratione aut consectetur rem consequuntur, corporis illum?
-      Incidunt ipsum error mollitia officiis praesentium culpa consectetur quae saepe modi ducimus maiores iure
-      distinctio eligendi omnis optio corrupti provident voluptatem consequatur consequuntur, similique laboriosam rem
-      itaque rerum? Porro, non accusantium, impedit ea obcaecati sed provident tempora magni dolorem commodi pariatur
-      harum, esse ducimus. Id quis sed, alias eum voluptates quas tempora pariatur, dolorum placeat unde, perspiciatis
-      error! Architecto voluptatum fugiat maiores error repellat voluptate dolor earum optio placeat, dolores sed nihil
-      rerum distinctio, id praesentium quasi ea amet facere accusantium aliquid! Ut, quidem voluptate autem optio
-      perferendis ad iusto cum? Saepe ut ipsa, ea doloribus accusantium modi rerum.</div>
+  {{-- short description --}}
+  <div x-data="{open: true}" class="px-8 my-4">
+    <h5 class="text-dxl font-bold my-2" x-on:click="open = ! open" role="button">Short Description <span class="expand" x-init="$watch('open', v => v ? ($el.setAttribute('class', 'expand')) : ($el.setAttribute('class', 'arrow_rh')))"></span></h5>
+    <div x-show="open" class="">
+      {{ $post->simpleDescription }}
+    </div>
+  </div>
+  
+  {{-- Reviews Comment --}}
+  <div x-data="{open: false}" class="px-8 my-4">
+    <h5 class="text-dxl font-bold my-2" x-on:click="open = ! open" role="button">Review <span class="expand" x-init="$watch('open', v => v ? ($el.setAttribute('class', 'expand')) : ($el.setAttribute('class', 'arrow_rh')))"></span></h5>
+    <div x-show="open" class="">
+      <x-comment :isCommenting="false"/>
+      <x-comment :isCommenting="true"/>
+    </div>
+  </div>
+
+  {{-- Author Contact --}}
+  <div x-data="{open: false}" class="px-8 my-4">
+    <h5 class="text-dxl font-bold my-2" x-on:click="open = ! open" role="button">Author Contact <span class="arrow_rh" x-init="$watch('open', v => v ? ($el.setAttribute('class', 'expand')) : ($el.setAttribute('class', 'arrow_rh')))"></span></h5>
+    <div x-show="open" class="">
+      <div>
+        <span>Email: </span>
+        <span>{{ $post->author->email }}</span>
+      </div>
+      <div>
+        <span>Address: </span>
+        <span>{{ $post->author->address }}</span>
+      </div>
+      <div>
+        <span>Bio: </span>
+        <span>{{ $post->author->bio }}</span>
+      </div>
+    </div>
+  </div>
+
+  {{-- suggested --}}
+  <div class="px-8 my-4">
+    <h5 class="text-dxl font-bold my-2">Other Post</h5>
+    @if ($otherPosts)
+    @foreach($otherPosts as $key => $post)
+    <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
+      <a href="/post/{{ $post->uuid }}" class="list-post w-full">
+        <x-list-post 
+        :inputValue="$key"
+        :title="$post->title"
+        :simpleDescription="$post->simpleDescription"
+        :ratingValue="80"
+        imgsrc="{{ url('/postImages/'. Auth::user()->username . '/thumbnail/' . $post->uuid . '_50_images.0.jpg')}}" />
+      </a>
+    </div>
+    @endforeach
+    @endif
+  </div>
+
+  {{-- more button --}}
+  <div class="sticky bottom-4 mr-8 float-right" style="top: calc(100% - 4rem)">
+    <x-dropdown align="right" bottom="100%" width="48">
+      <x-slot:trigger>
+        <div  style="cursor: pointer" id="float-btn" 
+              class="more bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full shadow-lg px-2 pt-1 active:ring-4 scale-11 transition-05"
+              role="button">          
+    </div>
+      </x-slot>
+
+      @php
+        $menus = [['name' => 'Add Post', 'href' => '/post/create', 'icon' => 'add', 'method' => 'get'],
+                  ['name' => 'Edit  Post', 'href' => '/post/edit/' . $post->uuid, 'icon' => 'more', 'method' => 'get'],
+                  ['name' => 'Delete Post', 'href' => '/post/delete/' . $post->uuid, 'icon' => 'more', 'method' => 'get'],
+                  ['name' => 'Show QR Code', 'href' => '/post/qrcode/' . $post->uuid, 'icon' => 'more', 'method' => 'get'],
+                ]
+      @endphp
+      
+      <x-slot:content>            
+        @foreach ($menus as $menu)
+        <x-dropdown-link :href="$menu['href']" :icon="$menu['icon']" :method="$menu['method']">
+          {{ __($menu['name']) }}
+        </x-dropdown-link>
+        @endforeach
+      </x-slot>
+    </x-dropdown>
   </div>
 </x-app-layout>

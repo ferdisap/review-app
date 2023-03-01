@@ -227,3 +227,25 @@
   mask-size: cover;
   transform-origin: center;
 }
+.expand::before{  
+  content: url('/svg/icon/expand_more_FILL0_wght400_GRAD0_opsz20.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0;
+  position: relative;
+}
+.arrow_rh::before{  
+  content: url('/svg/icon/chevron_right_FILL0_wght400_GRAD0_opsz20.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0;
+  position: relative;
+}
+.send::before{  
+  content: url('/svg/icon/send_FILL0_wght400_GRAD0_opsz20.svg');
+  margin-left: 3px;
+  margin-right: 3px;
+  top: 0.3rem;
+  position: relative;
+  transform-origin: center;
+}

@@ -27,7 +27,7 @@
     </head>
     <body class="relative font-sans antialiased">
       <div class="flex justify-center">
-        <div class="h-screen bg-gray-1 max-w-7xl max-[320px]:w-11/12 max-[640px]:w-10/12 w-3/4 xl:w-6/12 relative overflow-hidden">
+        <div class="h-screen bg-gray-1 max-w-7xl max-[320px]:w-11/12 max-[640px]:w-10/12 w-3/4 xl:w-6/12 relative">
         {{-- <div class="h-screen bg-gray-1 00 max-w-7xl max-[320px]:w-11/12 max-[640px]:w-9/12 w-1/2 xl:w-4/12 relative overflow-hidden"> --}}
             <!-- Page Heading -->
             <x-navigation-layout title="{{ $title ?? null }}"></x-navigation-layout>

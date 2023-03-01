@@ -20,6 +20,7 @@ class Post extends Model
     protected $fillable = [
       'isDraft',
       'author_id',
+      'category_id',
   ];
 
    /**

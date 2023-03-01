@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Database\Seeder;
 use PharIo\Manifest\Author;
@@ -32,6 +33,8 @@ class DatabaseSeeder extends Seeder
         ]);
         
         Post::factory(150)->create();
+
+        Category::factory(1)->create();
 
         // \App\Models\Post::factory(50)->create([
         //   'isDraft' => 0,

@@ -10,7 +10,7 @@
   $checked = old('toogle-switch') ?? false; // old('toogle-switch') @return 'some' / 'on'
   @endphp
   
-  <form action="" style="height: 100%; width:inherit" class="overflow-auto" method="post" id="form-mypost-index">
+  <form action="" style="height: 100%; width:inherit" method="post" id="form-mypost-index">
     @csrf  
     <div id="main-content" x-data x-init="$store.selectDiselectFeature.initialization()">
       <div class="grid grid-cols-2 gap-x-16 mb-2 mt-1 mx-16">
@@ -24,8 +24,6 @@
                 role="button">published</div>
       </div>
 
-      {{-- <div><x-input-error :messages="$errors->get('list-post-cb')" class="mt-2" /></div>       --}}
-      {{-- <x-toogle-slider class="" :checkValue="$checked ?? false" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider> --}}
       <div class="flex justify-between">
         <x-toogle-slider class="" :checkValue="$checked" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
         <span class="search" role="button" x-on:click="$store.search.open()"></span>
@@ -76,7 +74,7 @@
       
     </div>
 
-    <div class="sticky bottom-4 mr-4 float-right" style="top: calc(100% - 4rem)">
+    <div class="absolute right-4 bottom-4" style="top: calc(100% - 4rem)">
       <x-dropdown align="right" bottom="100%" width="48">
         <x-slot:trigger>
           <div  style="cursor: pointer" id="float-btn" 

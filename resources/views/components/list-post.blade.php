@@ -1,4 +1,3 @@
-{{-- class "scale-11, transition-05" ada di icon.css --}}
 <div class="relative w-full p-2 border rounded-lg shadow-md bg-slate-50 h-max flex space-x-2"
      x-data="{changeSRC(el){el.src = '/svg/icon/lunch_dining_FILL0_wght400_GRAD0_opsz48.svg'}}"
      :inputValue="{{ $inputValue }}"

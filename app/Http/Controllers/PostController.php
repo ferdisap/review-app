@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,6 +70,7 @@ class PostController extends Controller
       $post->detailDescription = $request->detailDescription;
       $post->isDraft = $request->isDraft;
       $post->author_id = $request->author_id;
+      $post->category_id = Category::where('name', '=', $request->category)->pluck('id')[0];
       $post->save(); 
       return $request->isDraft == true ? 
           back()->withInput()->with('success', 'This Post has been saved.') :
@@ -86,8 +88,12 @@ class PostController extends Controller
    */
   public function show($id)
   {
+    $post = Post::with('author')->findOrFail($id);
+    $otherPost = Post::where('author_id', '=', Auth::user()->id)->where('isDraft', '=', 0)->orderBy('updated_at', 'desc')->limit(3)->get();
+    
     return view('components.post.show', [
-      'post' => Post::with('author')->findOrFail($id),
+      'post' => $post,
+      'otherPosts' => $otherPost,
     ]);
   }
 

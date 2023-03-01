@@ -51,6 +51,7 @@ class StorePostRequest extends FormRequest
       }],
       'simpleDescription' => $this->simpleDescription_rules,
       'detailDescription' => $this->detailDescription_rules,
+      'category' => 'exists:categories,name',
     ];
   }
 
@@ -62,18 +63,20 @@ class StorePostRequest extends FormRequest
     if ($this->submit === 'publish') {
       $this->title_rules = ['required', 'max:30'];
       $this->simpleDescription_rules = ['required', new MaxWord(100)];
-      $this->detailDescription_rules = ['required', new MaxWord(1000)];
+      $this->detailDescription_rules = ['required', new MaxWord(500)];
       $this->merge([
         'isDraft' => 0,
         'author_id' => Auth::user()->id,
+        'category' => $this->category
       ]);
     } else {
       $this->title_rules = ['max:30'];
       $this->simpleDescription_rules = [new MaxWord(100)];
-      $this->detailDescription_rules = [new MaxWord(1000)];
+      $this->detailDescription_rules = [new MaxWord(500)];
       $this->merge([
         'isDraft' => 1,
         'author_id' => Auth::user()->id,
+        'category' => $this->category
       ]);
     }
   }

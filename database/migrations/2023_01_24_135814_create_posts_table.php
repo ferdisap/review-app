@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->text('simpleDescription')->nullable();
             $table->text('detailDescription')->nullable();
+            $table->tinyInteger('category_id')->nullable();
             $table->boolean('isDraft');
             $table->integer('author_id');
             $table->timestamps();

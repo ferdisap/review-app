@@ -17,6 +17,11 @@
         <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" autofocus error="{{ $errors->get('title') ? true : false }}"/>
         <x-input-error :messages="$errors->get('title')" class="mt-2" />
       </div>
+      <div class="mb-5 mt-5">
+        <x-input-label for="category" :value="__('Post Category')" />
+        <x-text-input id="category" class="block mt-1 w-full" type="text" name="category" :value="old('category')" error="{{ $errors->get('category') ? true : false }}" value='Foods and Beverages'/>
+        <x-input-error :messages="$errors->get('category')" class="mt-2" />
+      </div>
       <!-- images -->
       <div class="flex justify-between mb-5">
         @for ($i = 0 ; $i<5 ; $i++)
@@ -61,7 +66,7 @@
       <div class="w-full mb-5 mt-5">
         <x-input-label for="detailDescription" :value="__('Detail Description')" />
         <x-textarea class="max-h-96 w-full" name="detailDescription" id="detailDescription" :value="old('detailDescription')"/>
-        <p class="mr-3 italic font-light text-dsm text-gray-700 float-right" style="margin-top: -5px">max 1000 word</p>
+        <p class="mr-3 italic font-light text-dsm text-gray-700 float-right" style="margin-top: -5px">max 500 word</p>
         <x-input-error :messages="$errors->get('detailDescription')" class="mt-2" />
       </div>
 
