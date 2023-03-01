@@ -10,7 +10,9 @@ use Illuminate\Validation\Rules;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
-use Gumlet\ImageResize;
+
+use Fimage\Resizer;
+use Fimage\Formatter;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -71,13 +73,20 @@ class SettingController extends Controller
    */
   private function updatePProfile($request){
     $path = $request->file('pprofile')->path();
-    $this->resizeImage($path, 100);
-    if ($path = $request->pprofile->storeAs('photos', "pprofile/" . Auth::user()->username . "." . $request->pprofile->extension()) ){
-      if (User::where('username', '=', Auth::user()->username)->update(['pprofile' => $path])){
-        return true;      
-      } 
-    } 
-    return false;
+    $storePath = storage_path() . "\app\photos\pprofile\\" . Auth::user()->username . '.jpg';
+    $formatter = Formatter::reformat('jpg', $path, $storePath);
+    $resizer = Resizer::resizeToWidth($storePath, 400);
+    if (!($formatter || $resizer)){
+      return abort(500);
+    }
+    return true;
+    // $this->resizeImage($path, 100);
+    // if ($path = $request->pprofile->storeAs('photos', "pprofile/" . Auth::user()->username . "." . $request->pprofile->extension()) ){
+    //   if (User::where('username', '=', Auth::user()->username)->update(['pprofile' => $path])){
+    //     return true;      
+    //   } 
+    // } 
+    // return false;
   }
 
   /**
@@ -96,13 +105,13 @@ class SettingController extends Controller
   /**
    * @integer $width adalah PX
    */  
-  public function resizeImage(String $path = null, Int $width){
-    if ($path){
-      $image = new ImageResize($path);
-      $image->resizeToWidth($width);
-      $image->save($path);
-    }
-  }
+  // public function resizeImage(String $path = null, Int $width){
+  //   if ($path){
+  //     $image = new ImageResize($path);
+  //     $image->resizeToWidth($width);
+  //     $image->save($path);
+  //   }
+  // }
 
   /**
    * back with session
@@ -115,38 +124,51 @@ class SettingController extends Controller
   }
 
   /**
+   * set personal token
+   */
+  public function setToken(Request $request){
+    // return 'fail';
+    $uuid = Str::uuid();
+    if (User::where('personal_token', '=', $request->old_personal_token)->update(['personal_token' => $uuid]) == 1){
+      return $uuid;
+    }
+    return 'fail';
+
+  }
+
+  /**
    * $filename adalah $path to image, not relative page
    * TIDAK DIPAKAI
    */
-  public function resizeImage2($filename){
-    $filename = $filename;
+  // public function resizeImage2($filename){
+  //   $filename = $filename;
       
-    // Maximum width and height
-    $width = 100;
-    $height = 100;
+  //   // Maximum width and height
+  //   $width = 100;
+  //   $height = 100;
       
-    // File type
-    header('Content-Type: image/jpg');
+  //   // File type
+  //   header('Content-Type: image/jpg');
       
-    // Get new dimensions
-    list($width_orig, $height_orig) = getimagesize($filename);
+  //   // Get new dimensions
+  //   list($width_orig, $height_orig) = getimagesize($filename);
       
-    $ratio_orig = $width_orig/$height_orig;
+  //   $ratio_orig = $width_orig/$height_orig;
       
-    if ($width/$height > $ratio_orig) {
-        $width = $height*$ratio_orig;
-    } else {
-        $height = $width/$ratio_orig;
-    }
+  //   if ($width/$height > $ratio_orig) {
+  //       $width = $height*$ratio_orig;
+  //   } else {
+  //       $height = $width/$ratio_orig;
+  //   }
       
-    // Resampling the image 
-    $image_p = imagecreatetruecolor($width, $height);
-    $image = imagecreatefromjpeg($filename);
+  //   // Resampling the image 
+  //   $image_p = imagecreatetruecolor($width, $height);
+  //   $image = imagecreatefromjpeg($filename);
       
-    imagecopyresampled($image_p, $image, 0, 0, 0, 0,
-            $width, $height, $width_orig, $height_orig);
+  //   imagecopyresampled($image_p, $image, 0, 0, 0, 0,
+  //           $width, $height, $width_orig, $height_orig);
       
-    // Display of output image
-    return imagejpeg($image_p, null, 100);
-  }
+  //   // Display of output image
+  //   return imagejpeg($image_p, null, 100);
+  // }
 }

@@ -36,7 +36,7 @@
           {{-- @if($post->isDraft == 1) --}}
           <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
             <input name="list-post-cb[]" type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $post->uuid }}" {{ old($post->uuid) ?? '' }}/>
-            <a href="/post/{{ $post->uuid }}" class="list-post w-full">
+            <a href="/post/show/{{ $post->uuid }}" class="list-post w-full">
               <x-list-post 
               :inputValue="$key"
               :title="$post->title"
@@ -57,7 +57,7 @@
           {{-- @if($post->isDraft == 0) --}}
           <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
             <input name="list-post-cb[]" type="checkbox" class="list-post-cb appearance-none checked:bg-blue-500 mx-2" style="display: none" value="{{ $post->uuid }}" {{ old($post->uuid) ?? '' }}/>
-            <a href="/post/{{ $post->uuid }}" class="list-post w-full">
+            <a href="/post/show/{{ $post->uuid }}" class="list-post w-full">
               <x-list-post 
               :inputValue="$key"
               :title="$post->title"

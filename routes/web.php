@@ -25,6 +25,7 @@ Route::get('/post/search', [PostController::class, 'search']);
 Route::controller(SettingController::class)->group(function(){
   Route::get('/setting/{setting?}', 'index')->middleware('auth')->name('setting');
   Route::put('/setting/{user}/update', 'update')->middleware('auth');
+  Route::post('/user/token/change', 'setToken')->middleware('auth');
 });
 
 Route::get('/about', function(){return view('components.about.index');});
@@ -34,9 +35,13 @@ Route::controller(PostController::class)->group(function () {
   Route::get('/post','index');
   Route::get('/mypost', 'myindex')->middleware('auth')->name('mypostindex');
   Route::get('/post/create', 'create')->middleware('auth');
-  Route::get('/post/{uuid}', 'show'); 
+  Route::get('/post/show/{uuid}', 'show'); 
   Route::post('/post/store', 'store')->middleware('auth');
   Route::post('/post/delete', 'delete')->middleware('auth'); 
+
+  Route::post('/post/rate', 'setRatingValue')->middleware('auth');
+
+
 });
 
 require __DIR__.'/auth.php';

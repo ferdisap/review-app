@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('password');
             $table->text('address')->nullable();
             $table->text('bio')->nullable();
+            $table->string('personal_token');
             $table->rememberToken();
             $table->timestamps();
         });

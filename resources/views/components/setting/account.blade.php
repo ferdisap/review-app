@@ -14,6 +14,43 @@ $url = "/setting/". Auth::user()->id ."/update"
       <x-session-status :status="session('success')" bgColor="bg-green-200"/>
       <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
       
+      <!-- Form0: Personal Token Setting  -->
+      <x-dropdown-form title="Personal Token" open="{{ old('open_form0') ?? 'false' }}">
+        <x-slot name="form">
+          <div class="mb-2" x-data="{
+            changeToken(){
+              fetch('/user/token/change',{
+                method: 'post',
+                headers: {
+                  'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'),
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  'old_personal_token' : $el.querySelector('span[personal-token]').innerHTML,
+                }),
+              })
+              .then(rsp => rsp.json())
+              .then(rst => {
+                if (rst == 'fail'){
+                  $el.querySelector('div[token-message]').classList.remove('hidden');
+                } else {
+                  $el.querySelector('div[token-message]').classList.add('hidden');
+                  $el.querySelector('span[personal-token]').innerHTML = rst;
+                }
+              })
+            }
+          }">
+            <div class="w-full flex justify-center mt-2" id="personal-token">
+              <span personal-token>{{ Auth::user()->personal_token }}</span>
+              <span class="mx-2" role="button" x-on:click="changeToken()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M225 749q-26-37-41-81.5T169 574q0-127 90-219.5T476 265h1l-42-42 62-61 162 162-162 162-62-61 42-42h2q-81-2-136.5 55T287 574q0 25 5.5 47.5T309 665l-84 84Zm238 242L301 829l162-163 62 62-42 42h-2q81 2 136.5-55.5T673 578q0-25-5.5-47.5T651 487l84-83q26 37 41 81t15 93q0 126-90 219.5T484 888h-1l42 41-62 62Z"/></svg>
+              </span>
+            </div>                
+            <div token-message class='text-center text-sm text-pink-500 space-y-1 hidden'>Token cannot be updated</div>
+          </div>             
+        </x-slot>
+      </x-dropdown-form>   
+      
       <!-- Form1: change password  -->
       <x-dropdown-form title="Change Password" open="{{ old('open_form1') ?? 'false' }}">
         <x-slot name="form">
@@ -116,7 +153,7 @@ $url = "/setting/". Auth::user()->id ."/update"
                  <!-- image user -->
                  <div class="bg-gray-300 rounded-full absolute opacity-25 hover:bg-gray-400 z-10" style="height: 100px; width:100px"></div>
                  <img id="pprofile-icon" 
-                      src="{{ request()->getSchemeAndHttpHost() }}/photos/pprofile/{{ Auth::user()->username }}.jpgs"
+                      src="{{ request()->getSchemeAndHttpHost() }}/photos/pprofile/{{ Auth::user()->username }}.jpg"
                       {!! $attributes->merge(['class' => $basic_css . ($error ? $error_css : $noerror_css) ]) !!} 
                       style="width: 100px; height:100px"
                       alt="photo profile"

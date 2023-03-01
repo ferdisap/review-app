@@ -251,7 +251,7 @@ Alpine.store('search', {
                       </div>`;
             let list = document.createElement('a');
             list.classList.add('list-post-container');
-            list.href = `/post/${rst.posts[i].uuid}`;
+            list.href = `/post/show/${rst.posts[i].uuid}`;
             list.innerHTML = str;
             document.querySelector('#modal-search div').appendChild(list);
           }
