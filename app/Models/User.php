@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'address',
         'bio',
+        'personal_token',
     ];
 
     /**
@@ -46,4 +47,12 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * has many to many ratings
+     */
+    public function rate()
+    {
+      return $this->belongsToMany(Post::class, 'ratings', 'giver_id', 'post_uuid' );
+    }
 }

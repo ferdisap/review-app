@@ -22,6 +22,7 @@ return new class extends Migration
             $table->tinyInteger('category_id')->nullable();
             $table->boolean('isDraft');
             $table->integer('author_id');
+            $table->tinyInteger('ratingValue')->nullable();
             $table->timestamps();
         });
     }

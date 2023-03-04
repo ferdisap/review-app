@@ -6,14 +6,14 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
-Alpine.store('paginationURL', {
-  chgURL(e, url) {
-    e.preventDefault();
-    url = (new URL(url));
-    url.searchParams.set('active', Alpine.store('selectDiselectFeature').category);
-    window.location.href = url;
-  }
-});
+// Alpine.store('paginationURL', {
+//   chgURL(e, url) {
+//     e.preventDefault();
+//     url = (new URL(url));
+//     url.searchParams.set('active', Alpine.store('selectDiselectFeature').category);
+//     window.location.href = url;
+//   }
+// });
 
 Alpine.store('selectDiselectFeature', {
   ckboxDisplay: 'none',
@@ -214,8 +214,17 @@ Alpine.store('search', {
     if (e.key == 'ArrowUp' || e.key == 'ArrowDown' || e.key == 'Escape' || e.key == 'Tab' ){
       return undefined;
     }
-    this.delay(500, () => {
-      fetch('/post/search?key=' + this.inputText.value)
+    Alpine.store('delay').delay(500, () => {
+        fetch('/post/search', {
+          method:'post',
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'),
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            'key' : this.inputText.value,
+          }),
+        })
         .then(rsp => rsp.json())
         .then(rst => {
           document.querySelectorAll('#modal-search > div > a').forEach(list => list.remove());
@@ -268,10 +277,34 @@ Alpine.store('search', {
         });
     });
   },
+});
 
+Alpine.store('delay', {
   delay(t, callback) {
     clearTimeout(this.to);
     this.to = setTimeout(callback, t);
+  }
+})
+
+Alpine.store('setStarRating', {
+  run(container, value){
+    container.innerHTML = '';
+    // document.querySelector('div[star-container]').innerHTML = '';
+    this.ratingValue(container, value);
+  },
+  ratingValue(container, value){
+    value = value/2;
+    value - 10 >= 0 ? this.createStar(container, 'orange') : (value - 10 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
+    value - 20 >= 0 ? this.createStar(container, 'orange') : (value - 20 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
+    value - 30 >= 0 ? this.createStar(container, 'orange') : (value - 30 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
+    value - 40 >= 0 ? this.createStar(container, 'orange') : (value - 40 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
+    value - 50 >= 0 ? this.createStar(container, 'orange') : (value - 50 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;      
+    container.nextElementSibling.innerHTML = value
+  },
+  createStar(container, color){
+    let el = document.createElement('span');
+    el.classList.add('star', color);
+    container.appendChild(el);
   }
 });
 

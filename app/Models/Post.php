@@ -13,22 +13,22 @@ class Post extends Model
   use HasFactory, HasUuids;
 
   /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-      'isDraft',
-      'author_id',
-      'category_id',
+   * The attributes that are mass assignable.
+   *
+   * @var array<int, string>
+   */
+  protected $fillable = [
+    'isDraft',
+    'author_id',
+    'category_id',
   ];
 
-   /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'uuid';
+  /**
+   * The primary key associated with the table.
+   *
+   * @var string
+   */
+  protected $primaryKey = 'uuid';
 
   /**
    * Generate a new UUID for the model.
@@ -56,8 +56,8 @@ class Post extends Model
   public function scopeSearch($query, $keyword)
   {
     return $query->where('title', 'like', '%' . $keyword . '%')
-    ->orWhere('simpleDescription', 'like', '%' . $keyword . '%')
-    ->orWhere('detailDescription', 'like', '%' . $keyword . '%');    
+      ->orWhere('simpleDescription', 'like', '%' . $keyword . '%')
+      ->orWhere('detailDescription', 'like', '%' . $keyword . '%');
   }
 
   /**
@@ -66,5 +66,13 @@ class Post extends Model
   public function author()
   {
     return $this->belongsTo(User::class, 'author_id');
+  }
+
+  /**
+   * has many to many ratings
+   */
+  public function giver_rating()
+  {
+    return $this->belongsToMany(User::class, 'ratings','post_uuid', 'giver_id');
   }
 }

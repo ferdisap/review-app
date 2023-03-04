@@ -27,7 +27,6 @@
             }
           },
           deleteEl(el){
-            console.log(el);
             this.circleAll[el.getAttribute('circle')].remove();
             el.remove();
           }
@@ -37,7 +36,7 @@
 
     <h1 class="m-3 text-center text-txl">{{ $post->title }}</h1>
 
-    <x-rating :ratingValue="80" />
+    <x-rating :ratingValue="$post->ratingValue ?? 0" />
 
     <div class="grid grid-cols-6 gap-4 place-content-center place-items-center">
       <div class="col-start-1">
@@ -67,14 +66,45 @@
     </div>
 
   {{-- rating form --}}
-  <div class="mt-5 mb-5 w-full flex justify-center flex-wrap">
+  <div class="mt-5 mb-5 w-full flex justify-center flex-wrap" x-data="{
+    valuesRating: $el.querySelectorAll('div[role=button]'),
+    select(el,rateValue){
+      this.valuesRating.forEach(el => el.classList.remove('selected-rate'));
+      el.classList.add('selected-rate');
+      Alpine.store('delay').delay(500, () => {
+        fetch('/post/rate',{
+          method: 'post',
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'),
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            'rateValue' : rateValue,
+            'postID' : '{{ $post->uuid }}',
+          }),
+        })
+        .then(rsp => rsp.json())
+        .then(rst => {
+          (rateSession = document.querySelector('.rate-session')) ? rateSession.remove() : false ;
+          div = document.createElement('div');
+          div.setAttribute('class', 'rate-session');
+          rst.status == true ? div.style.backgroundColor = 'rgb(187 247 208)' : div.style.backgroundColor = 'rgb(254 202 202)'
+          div.innerHTML = rst.message + `<button class='close black scale-50' onclick='this.parentNode.remove()'></button>`
+          document.querySelector('main').prepend(div);
+
+          rst.status == true ? Alpine.store('setStarRating').run(document.querySelector('div[star-container]'), rst.postRate) : null;
+        });
+      });
+    },
+  }">
+    <link rel="stylesheet" href="/css/selectedRate.css">
     <h6 class="text-center mx-3 font-bold">give your rating:</h6>
     <div class="w-60 rounded-md grid grid-cols-5 place-content-center place-items-center">
-      <div class="hover:scale-150 col-start-1" role="button">1</div>
-      <div class="hover:scale-150 col-start-2" role="button">2</div>
-      <div class="hover:scale-150 col-start-3" role="button">3</div>
-      <div class="hover:scale-150 col-start-4" role="button">4</div>
-      <div class="hover:scale-150 col-start-5" role="button">5</div>
+      <div class="hover:scale-150 col-start-1" x-on:click="select($el,1)" role="button">1</div>
+      <div class="hover:scale-150 col-start-2" x-on:click="select($el,2)" role="button">2</div>
+      <div class="hover:scale-150 col-start-3" x-on:click="select($el,3)" role="button">3</div>
+      <div class="hover:scale-150 col-start-4" x-on:click="select($el,4)" role="button">4</div>
+      <div class="hover:scale-150 col-start-5" x-on:click="select($el,5)" role="button">5</div>
     </div>
   </div>
 
@@ -90,8 +120,9 @@
   <div x-data="{open: false}" class="px-8 my-4">
     <h5 class="text-dxl font-bold my-2" x-on:click="open = ! open" role="button">Review <span class="expand" x-init="$watch('open', v => v ? ($el.setAttribute('class', 'expand')) : ($el.setAttribute('class', 'arrow_rh')))"></span></h5>
     <div x-show="open" class="">
+      {{-- // masih harus punya Auth::user() --}}
       <x-comment :isCommenting="false"/>
-      <x-comment :isCommenting="true"/>
+      {{-- <x-comment :isCommenting="true"/> --}}
     </div>
   </div>
 
@@ -117,7 +148,7 @@
   {{-- suggested --}}
   <div class="px-8 my-4">
     <h5 class="text-dxl font-bold my-2">Other Post</h5>
-    @if ($otherPosts)
+    @if (isset($otherPosts))
     @foreach($otherPosts as $key => $post)
     <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
       <a href="/post/{{ $post->uuid }}" class="list-post w-full">

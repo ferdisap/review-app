@@ -110,5 +110,26 @@
 }
 
 
+.rate-session, .session-status{
+  display: flex;
+  justify-content: space-between;
+  vertical-align: top;
+  align-items: center;
+  padding-left: 1rem; 
 
+  animation: fadeInAnimation ease 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.rate-session > button {
+  transform: scale(0.5);
+}
 
+@keyframes fadeInAnimation {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}

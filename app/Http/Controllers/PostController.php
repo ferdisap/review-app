@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Jobs\ProccessRating;
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -86,14 +90,17 @@ class PostController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function show($id)
+  public function show($uuid)
   {
-    $post = Post::with('author')->findOrFail($id);
-    $otherPost = Post::where('author_id', '=', Auth::user()->id)->where('isDraft', '=', 0)->orderBy('updated_at', 'desc')->limit(3)->get();
+    if(Auth::user() != null) {
+      $otherPost = Post::where('author_id', '=', Auth::user()->id)->where('isDraft', '=', 0)->orderBy('updated_at', 'desc')->limit(3)->get();
+    }
+    $post = Post::with('author')->findOrFail($uuid);
     
     return view('components.post.show', [
       'post' => $post,
-      'otherPosts' => $otherPost,
+      'ratingValue' => $post->ratingValue,
+      'otherPosts' => $otherPost ?? null,
     ]);
   }
 
@@ -182,6 +189,46 @@ class PostController extends Controller
     }
     return response()->json([
       'posts' => $posts,
+    ]);
+  }
+
+  /**
+   * to set Rating Value of the post
+   */
+  public function setRatingValue(Request $request)
+  {
+    $postFromDB = Post::find($request->postID);
+    if ($postFromDB == null){
+      return response()->json([
+        'status' => false,
+        'message' => 'no post to be rated.',
+        'postRate' => $postFromDB->ratingValue ?? 0,
+      ]);
+    } elseif (Auth::user() == null || $postFromDB->author_id != Auth::user()->id){
+      $postFromDB->ratingValue = ((($postFromDB->ratingValue ?? 0)/ 20) + $request->rateValue)*20/($postFromDB->ratingValue == null ? 1 : 2);
+      $postFromDB->save();
+      return response()->json([
+        'status' => true,
+        'message' => 'this post has been added a rate.',
+        'postRate' => $postFromDB->ratingValue ?? 0,
+      ]);
+    } elseif ($postFromDB->author_id == Auth::user()->id) {
+      return response()->json([
+        'status' => false,
+        'message' => 'the author cannot rate their own post.',
+        'postRate' => $postFromDB->ratingValue ?? 0,
+      ]);
+    } else {      
+      return response()->json([
+        'status' => false,
+        'message' => 'this post has been failed to rate.',
+        'postRate' => $postFromDB->ratingValue ?? 0,
+      ]);
+    }
+    return response()->json([
+      'status' => false,
+      'message' => 'failed to rate a post.',
+      'postRate' => $postFromDB->ratingValue ?? 0,
     ]);
   }
 }
