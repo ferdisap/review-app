@@ -39,6 +39,8 @@ Route::controller(PostController::class)->group(function () {
 
   Route::post('/post/rate', 'setRatingValue');
 
+  Route::post('post/{post}/comment/push', 'storeComment');
+
 
 });
 

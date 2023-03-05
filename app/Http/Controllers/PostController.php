@@ -6,6 +6,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Jobs\ProccessRating;
 use App\Models\Category;
 use App\Models\Post;
+use App\Rules\MaxWord;
 use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -153,7 +154,7 @@ class PostController extends Controller
 
     // jika user cuma mencet delete post btn tanpa nyontreng, delete post is failed
     if ($validator->fails()){
-      return back()->withInput()->with('fail', 'delete post(s) failed.X');
+      return back()->withInput()->with('fail', 'delete post(s) failed.');
     }
 
     // proses mendelete post. Jika gagal, maka akan di tambahkan ke failedDestroyedUUID dan dilabelin 'checked' supaya di UI nya di otomatis di contreng
@@ -170,7 +171,7 @@ class PostController extends Controller
     // di toogle slider htmlnya, jika checkedValue nya == 'some', jalankan @showCkBox(), jika == true, maka checked saja (tidak perlu di toogle karena sudah dilakukan oleh @initialization)
     if (($qtyFailed = count($failedDestroyedUUID)) != 0) {
       $failedDestroyedUUID['toogle-switch'] = $request['toogle-switch'] ?? 'some';
-      return back()->withInput($failedDestroyedUUID)->with('fail', $qtyFailed . ' post(s) failed to delete.Y' );
+      return back()->withInput($failedDestroyedUUID)->with('fail', $qtyFailed . ' post(s) failed to delete.' );
     }
 
     // jika semua post berhasil di destroy dary DB, maka:
@@ -230,5 +231,21 @@ class PostController extends Controller
       'message' => 'failed to rate a post.',
       'postRate' => $postFromDB->ratingValue ?? 0,
     ]);
+  }
+
+  /**
+   * push store comment for post
+   */
+  public function storeComment(Post $post, Request $request)
+  {
+    $validator = Validator::make($request->all(),[
+      'comment' => ['required', new MaxWord(100)]
+    ]);
+
+    if ($validator->fails()){
+      return back()->withErrors($validator)->withInput(['open_comment_form' => $request->open_comment_form ])->with('fail', 'fail to send comment.');
+    }
+    return back()->withInput(['open_comment_form' => $request->open_comment_form ])->with('success', 'comment has been added.');
+
   }
 }

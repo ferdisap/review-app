@@ -1,4 +1,8 @@
 <x-app-layout title="Detail Post">
+
+  <x-session-status :status="session('success')" bgColor="bg-green-200"/>
+  <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
+
   <div  class="block h-full w-inherit"
         x-data="{          
           img: document.querySelector('.img-post-display'),
@@ -85,9 +89,9 @@
         })
         .then(rsp => rsp.json())
         .then(rst => {
-          (rateSession = document.querySelector('.rate-session')) ? rateSession.remove() : false ;
+          (rateSession = document.querySelector('.session-status')) ? rateSession.remove() : false ;
           div = document.createElement('div');
-          div.setAttribute('class', 'rate-session');
+          div.setAttribute('class', 'rate-session session-status');
           rst.status == true ? div.style.backgroundColor = 'rgb(187 247 208)' : div.style.backgroundColor = 'rgb(254 202 202)'
           div.innerHTML = rst.message + `<button class='close black scale-50' onclick='this.parentNode.remove()'></button>`
           document.querySelector('main').prepend(div);
@@ -117,12 +121,18 @@
   </div>
   
   {{-- Reviews Comment --}}
-  <div x-data="{open: false}" class="px-8 my-4">
+  <div x-data="{open: {{ old('open_comment_form') ?? 'true' }} }" class="px-8 my-4">
     <h5 class="text-dxl font-bold my-2" x-on:click="open = ! open" role="button">Review <span class="expand" x-init="$watch('open', v => v ? ($el.setAttribute('class', 'expand')) : ($el.setAttribute('class', 'arrow_rh')))"></span></h5>
     <div x-show="open" class="">
       {{-- // masih harus punya Auth::user() --}}
-      <x-comment :isCommenting="false"/>
-      {{-- <x-comment :isCommenting="true"/> --}}
+      <div class="w-full text-center relative" x-data="{open: false}">
+        <button class="comment tooltip" x-on:click="open = !open">
+          <span class="tooltiptext tooltip-center md:hidden">add comment</span>
+          <span class="hidden md:inline-block ml-7">add comment</span>
+        </button>
+        <x-comment :isCommenting="false"/>
+        <x-comment :isCommenting="true" :postID="$post->uuid" x-show="open"/>
+      </div>
     </div>
   </div>
 
@@ -175,19 +185,25 @@
       </x-slot>
 
       @php
-        $menus = [['name' => 'Add Post', 'href' => '/post/create', 'icon' => 'add', 'method' => 'get'],
-                  ['name' => 'Edit  Post', 'href' => '/post/edit/' . $post->uuid, 'icon' => 'more', 'method' => 'get'],
-                  ['name' => 'Delete Post', 'href' => '/post/delete/' . $post->uuid, 'icon' => 'more', 'method' => 'get'],
-                  ['name' => 'Show QR Code', 'href' => '/post/qrcode/' . $post->uuid, 'icon' => 'more', 'method' => 'get'],
+        $menus = [['name' => 'Add Post', 'href' => '/post/create', 'icon' => 'post_add', 'method' => 'get'],
+                  ['name' => 'Edit  Post', 'href' => '/post/edit/' . $post->uuid, 'icon' => 'edit_doc', 'method' => 'get'],
+                  ['name' => 'Delete Post', 'href' => '/post/delete/' . $post->uuid, 'icon' => 'delete', 'method' => 'get'],
                 ]
       @endphp
       
       <x-slot:content>            
         @foreach ($menus as $menu)
-        <x-dropdown-link :href="$menu['href']" :icon="$menu['icon']" :method="$menu['method']">
-          {{ __($menu['name']) }}
+        <x-dropdown-link :href="$menu['href']" :method="$menu['method']" :tooltip="$menu['name']" tooltipClass="tooltip-lh sm:hidden">
+          <span class="{{ $menu['icon'] }}"><span class="hidden sm:inline-block ml-7">{{ $menu['name'] }}</span></span>
         </x-dropdown-link>
         @endforeach
+        <hr>
+        <!-- Show QR Code -->
+        <x-dropdown-link href="/post/qrcode/post_uuid" class="sm:mt-4" tooltip="Show QR Code" tooltipClass="tooltip-lh sm:hidden">
+          <span class="qr_code"><span class="hidden sm:inline ml-7">Show QR Code</span></span>
+        </x-dropdown-link>
+            
+                        
       </x-slot>
     </x-dropdown>
   </div>

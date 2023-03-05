@@ -6,14 +6,21 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
-// Alpine.store('paginationURL', {
-//   chgURL(e, url) {
-//     e.preventDefault();
-//     url = (new URL(url));
-//     url.searchParams.set('active', Alpine.store('selectDiselectFeature').category);
-//     window.location.href = url;
-//   }
+// function showTT(event, id){
+//   event.target.
+// }
+
+// var ttIds = document.querySelectorAll('*[tt-id]');
+// ttIds.forEach( el => {
+//   el.addEventListener('mouseover', showTT);
 // });
+// console.log(ttIds);
+
+Alpine.store('changeURL', {
+  execute(element, attribute ,url){
+    element.setAttribute(attribute, url);
+  },
+})
 
 Alpine.store('selectDiselectFeature', {
   ckboxDisplay: 'none',
@@ -289,7 +296,6 @@ Alpine.store('delay', {
 Alpine.store('setStarRating', {
   run(container, value){
     container.innerHTML = '';
-    // document.querySelector('div[star-container]').innerHTML = '';
     this.ratingValue(container, value);
   },
   ratingValue(container, value){

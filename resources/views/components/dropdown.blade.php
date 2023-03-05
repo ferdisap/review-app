@@ -1,4 +1,4 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white', 'bottom' => false])
+@props(['align' => 'right', 'width' => null, 'contentClasses' => 'py-1 bg-white', 'bottom' => false])
 {{-- @props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white']) --}}
 
 @php
@@ -37,10 +37,10 @@ switch ($width) {
             x-transition:leave="transition ease-in duration-75"
             x-transition:leave-start="transform opacity-100 scale-100"
             x-transition:leave-end="transform opacity-0 scale-95"
-            class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }} mb-5"
+            class="absolute z-50 mt-2 rounded-md shadow-lg {{ $alignmentClasses }} mb-5 mr-3 ml-3"
             style="display: none; bottom: {{ $bottom }}"
             @click="open = false">
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 bg-neutral-100 shadow-lg {{ $contentClasses }}">
+        <div class="rounded-md ring-1 ring-black ring-opacity-5 bg-neutral-100 shadow-lg {{ $contentClasses }} pr-2 pl-1 w-max pb-2" style="min-width:26px">
             {{ $content }}
         </div>
     </div>

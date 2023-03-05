@@ -133,3 +133,62 @@
       opacity: 1;
   }
 }
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltip-center{
+  left: -40px;
+}
+.tooltip .tooltip-center::after{
+  left: 50%;
+}
+.tooltip .tooltip-rh{
+  left: 90%;
+}
+.tooltip .tooltip-rh::after{
+  left: 10%;
+}
+.tooltip .tooltip-lh {
+  left: -80px;
+}
+.tooltip .tooltip-lh::after{
+  left: 90%;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+
+  width: 100px;
+  background-color: #555;
+  color: #fff;
+
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 50;
+  bottom: 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  /* left: 50%; */
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}

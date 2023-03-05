@@ -26,7 +26,9 @@
 
       <div class="flex justify-between">
         <x-toogle-slider class="" :checkValue="$checked" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
-        <span class="search" role="button" x-on:click="$store.search.open()"></span>
+        <span class="search tooltip" role="button" x-on:click="$store.search.open()">
+          <span class="tooltiptext tooltip-lh">search</span>
+        </span>
       </div>
       <div id="content" class="" active="{{ $active }}" mousedownHandler="false" clickHandler="false" mouseupHandler="false"> 
         <input type="hidden" id="active-content" name="active-content" value="{{ $active }}"> 
@@ -77,22 +79,22 @@
     <div class="absolute right-4 bottom-4" style="top: calc(100% - 4rem)">
       <x-dropdown align="right" bottom="100%" width="48">
         <x-slot:trigger>
-          <div  style="cursor: pointer" id="float-btn" 
-                class="more bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full shadow-lg px-2 pt-1 active:ring-4 scale-11 transition-05"
-                role="button">          
-      </div>
+          <button  type="button" id="float-btn" 
+                class="more bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full shadow-lg px-2 pt-1 active:ring-4 scale-11 transition-05">          
+          </button>
         </x-slot>
 
         @php
-          $menus = [['name' => 'Add Post', 'href' => '/post/create', 'icon' => 'add', 'method' => 'get'],
-                    ['name' => 'Delete Post', 'href' => '/post/delete', 'icon' => 'more', 'method' => 'post']
+          $menus = [
+                    ['name' => 'Add Post', 'href' => '/post/create', 'icon' => 'post_add', 'method' => 'get'],
+                    ['name' => 'Delete Post', 'href' => '/post/delete', 'icon' => 'delete', 'method' => 'post'],
                   ]
         @endphp
         
         <x-slot:content>            
           @foreach ($menus as $menu)
-          <x-dropdown-link :href="$menu['href']" :icon="$menu['icon']" :method="$menu['method']">
-            {{ __($menu['name']) }}
+          <x-dropdown-link :href="$menu['href']" :method="$menu['method']" :tooltip="$menu['name']" tooltipClass="tooltip-lh md:hidden">
+            <span class="{{ $menu['icon'] }}"><span class="hidden md:inline ml-7">{{ $menu['name'] }}</span></span>
           </x-dropdown-link>
           @endforeach
         </x-slot>
