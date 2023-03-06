@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -69,10 +69,20 @@ class Post extends Model
   }
 
   /**
-   * has many to many ratings
+   * Get the comments for the post.
    */
-  public function giver_rating()
+  public function comments()
   {
-    return $this->belongsToMany(User::class, 'ratings','post_uuid', 'giver_id');
+    return $this->hasMany(Comment::class, 'post_uuid', 'uuid');
   }
+
+  /**
+   * selecting default column when get the data
+   */
+  // public static function booted()
+  // {
+  //   static::addGlobalScope('defaultColumnSelected', function (Builder $builder) {
+  //     $builder->select(['uuid', 'title', 'simpleDescription', ]);
+  //   });
+  // }
 }

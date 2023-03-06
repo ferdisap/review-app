@@ -1,0 +1,191 @@
+[33mcommit 2ddee9e34b2016cda8e79c7c9884d80aa21bf62c[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Mon Mar 6 01:44:55 2023 +0700
+
+    perbaikan UI pada comment,dropdown dan ada penambahan tooltip
+
+[33mcommit 242326337e3fa7b5ab970e460f1815412b892576[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Sun Mar 5 00:12:41 2023 +0700
+
+    rating UI dan Backend selesai. Selanjutnya fitur comment
+
+[33mcommit c70c13296a5f8d3877b58481edc058ee0b64e8e6[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Thu Mar 2 06:13:07 2023 +0700
+
+    sudah menambah personal_token di user. Selanjutnya membuat fungsi setRating di JS
+
+[33mcommit 80a46cd775386775ed6e49c47cf109aa1d649f56[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Wed Mar 1 14:59:57 2023 +0700
+
+    rating dan comment untuk detail show  belum jalan.
+
+[33mcommit 2665625db8ee589b873100d7915ee706210e39b0[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Tue Feb 28 16:25:40 2023 +0700
+
+    perbaiki lagi slider nya agar bisa di swipe
+
+[33mcommit c6dfb73dbd0aa29a3e4c03f54a7ee19d1a8ac46a[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Tue Feb 28 06:26:44 2023 +0700
+
+    menambah page show post
+
+[33mcommit 27570cb2bc666a962aa927138498f17b937fd7b3[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Mon Feb 27 15:30:01 2023 +0700
+
+    fitur search telah selesai
+
+[33mcommit ebad1b838bec626dc992212d5ae72de2b61a528d[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Mon Feb 27 06:33:29 2023 +0700
+
+    menambah view untuk search. Selanjutnya interaksi UI nya, Selanjutnya tembak ke backend
+
+[33mcommit 613e4a908b09be5c522856a4cb4e561afdb6e32b[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Sun Feb 26 15:51:42 2023 +0700
+
+    pagination sudah di tambahkan dengan baik
+
+[33mcommit bde3ada3eda8a62baae5cb8fd28016b9be6d9ca9[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Sun Feb 19 14:13:13 2023 +0700
+
+    sudah bisa delete post pakai select/diselectAll.Selanjutnya pasang pagination pada UI nya
+
+[33mcommit 7388f740c698c879f2847bb44123b73a761080bd[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Sat Feb 18 20:39:11 2023 +0700
+
+    sudah bisa masuk PostController@method.
+
+[33mcommit 6087605693cfcc363f7fbc6ef9d096a80cd345fc[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Fri Feb 17 17:54:46 2023 +0700
+
+    modifikasi float-btn pada post\index.blade.php
+
+[33mcommit 685b27e920ed7f652095c8bc2f0d9d80af4787a0[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Thu Feb 16 21:13:17 2023 +0700
+
+    masalah web menuju href saat mousedown-hideCkBox postlist sudah diselesaikan.
+
+[33mcommit 36db7cc289bcf5d7072a60dffa547409bbeba54e[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Thu Feb 16 00:04:24 2023 +0700
+
+    fungsi selectbox sudah fully completed. Selanjutnya benerin UI add post float-tbn karena jika post di klik/select, tidak bisa karena kehalang button/div nya.
+
+[33mcommit e37b69ec7a6736b3391be1886ce58601c8ed86f3[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Wed Feb 15 16:30:04 2023 +0700
+
+    tidak ada perubahan. Terakhir pakai index.blade_2
+
+[33mcommit b9bfe83de5b84fcce5cfd30c24d38b2ceb638346[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Tue Feb 14 23:23:09 2023 +0700
+
+    select/deselect hampir sempurna. Selanjutnya jika category berpindah. Kemudian juga nanti ubah UI nya karena tidak bisa click post paling bawah karena ketutup sama add post float-btn.
+
+[33mcommit 7fadb8e7b3f118e950f2f3bfc1bd051f613b2aef[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Tue Feb 14 16:41:32 2023 +0700
+
+    fungsi JS hideBox() dan selectBox() sudah disempurnakan, Selanjutnya tinggal jika pindah category mulai inisialisassi fungsi dari awal, kemudian jika klik checkbox, akan tercentang.
+
+[33mcommit fa5a448325f05968961928e99efacc529fa84d62[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Tue Feb 14 00:03:21 2023 +0700
+
+    select all sudah mulai sesuai konsep. pekerjaan selanjutnya di catat di component\post\index.blade.php, masih memperbaiki fitur select all.
+
+[33mcommit a550656f4fb03cad3f478dd289aee16165a95d16[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Mon Feb 13 16:42:38 2023 +0700
+
+    membuat select/diselect all lebhih baik. Selanjutnya hubungkan antar fungsinya sesuai konsep.
+
+[33mcommit b39eb09aee2bb478f715789a035023442ec3b8d0[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Mon Feb 13 07:03:10 2023 +0700
+
+    Penambahan fitur select/diselect (All) post, tapi belum sempurna. Selanjutnya memperbaiki fitur/ konsep fitur tersebut.
+
+[33mcommit 49965de375e5ec863650f22ed79d355c68aedddc[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Sun Feb 12 09:33:43 2023 +0700
+
+    Perbaikan pada setting photo profil, yaitu mengganti gambar otomatis jika load error.
+
+[33mcommit e8fc057b3a36d4239436687f03b3ad7776118da5[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Sun Feb 12 01:27:12 2023 +0700
+
+    1. StorePostRequest sudah memakai fimage yang sudah diperbarui, 2. Tampilan UI add-post sudah disesuaikan, 3. Perbaikan UI ratingValue, 4. Penambahan bar pilihan  draft or published pada MyPost page.
+
+[33mcommit 7499782b3acd38dc04eedc5edb3e713a1a02aba8[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Thu Feb 9 22:14:50 2023 +0700
+
+    penyimpanan Foto2 Post sudah selesai disertai perbaikan UI nya. Selanjutnya perbaikan Setting Request UI dan Controllernya. Pakai Imagick untuk save dan set format image. Berikutnya belajar buat module php yang bisa di download dari github atau composer nantinya.
+
+[33mcommit b3d3a231a9ae9eb500805a093bc6dbbc6d8db697[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Wed Feb 8 16:43:53 2023 +0700
+
+    memperbaiki UI error message saat create post dan perlu melanjutkan validation rules saat per image fail jangan lastore imagenya.
+
+[33mcommit 906409e4ab545427e044200f4811944f6036f80c[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Wed Feb 8 13:32:45 2023 +0700
+
+    php sudah ditambahkan ext imagick. Selanjutnya pada StorePostRequest dilakukan mengubah format dan resize photo post. Kemudian script Alpine JS terkait fungsi changeSRC di hapus saja karena semua photo akan diubah kedalam format.jpg
+
+[33mcommit 52f90bfb120933189ddebaa97398c6cdc3f475bd[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Thu Feb 2 22:35:14 2023 +0700
+
+    1/ post sudah bisa di save/publish ada session nya. 2/ verification post rules sudah di pisah berdasarkan save/publish 3/ next: membuat JS Alpine script untuk mengganti format photo thumbnaik di halaman index mypost jika photo-thumnnail gagal di download
+
+[33mcommit 3dc6168595773695a7a43cd603dfd7bf9daec2bd[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Tue Jan 31 23:51:16 2023 +0700
+
+    menambah halaman create. Progress saat ini hingga upload photo and validation. Selanjutnya upload post nya.
+
+[33mcommit 39f5a6e0f940171b7bf23b125e3d450baab46446[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Fri Jan 20 17:37:53 2023 +0700
+
+    penambahan rating value dan rating slider, tapi belum fungsi
+
+[33mcommit b20197cdaf64ee6ee5bfc5996a5a1f8534f227ee[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Wed Jan 18 13:10:12 2023 +0700
+
+    menambah page:about dan fungsionalisasi tombol back.
+
+[33mcommit b11a28f61d2fb494aa0db9733da2418f8774033d[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Tue Jan 17 16:26:41 2023 +0700
+
+    perbaikan pada controller dan form request setting. Semua fungsi sudah berjalan semua.
+
+[33mcommit 0a2036ab7a9c65c1abd0154fb6b08791cbe17251[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Wed Jan 11 16:19:52 2023 +0700
+
+    perbaikan pada Seting Form Request. Selanjutnya akan mengganti ChangePersonalInformationRequest form menjadi SettingRequest form. Didalamnya akan menyeleksi apakah change password only, pprofil ony, atau semuanya. Demikian
+
+[33mcommit 5e728892f3130b8d658f2fb7749768762c4a2d30[m
+Author: Ferdi Saptoko <ferdisaptoko@gmail.com>
+Date:   Tue Jan 10 16:33:00 2023 +0700
+
+    perbaikan pada backend 

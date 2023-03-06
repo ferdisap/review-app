@@ -2,15 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
 class Comment extends Model
 {
-  use HasFactory;
+  use HasFactory, HasUuids;
 
-  protected $fillable = ['description', 'comentator_id', 'post_id'];
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array<int, string>
+   */
+  protected $fillable = ['description', 'commentator_id', 'post_uuid'];
 
   /**
    * The primary key associated with the table.
@@ -18,6 +25,13 @@ class Comment extends Model
    * @var string
    */
   protected $primaryKey = 'uuid';
+
+  /**
+   * The relationships that should always be loaded.
+   *
+   * @var array
+   */
+  protected $with = ['commentator'];
 
   /**
    * Get the columns that should receive a unique identifier.
@@ -37,5 +51,26 @@ class Comment extends Model
   public function newUniqueId()
   {
     return (string) Uuid::uuid4();
+  }
+
+  /**
+   * Get the commentator (user)
+   */
+  public function commentator()
+  {
+    return $this->belongsTo(User::class, 'commentator_id', 'id');
+  }
+
+  /**
+   * default get data ordered by 'updated_at' 'descendant'
+   */
+  public static function booted()
+  {
+    static::addGlobalScope('orderedByUpdated_at', function (Builder $builder) {
+      $builder->orderBy('updated_at', 'desc');
+    });
+    static::addGlobalScope('limitQuery', function (Builder $builder) {
+      $builder->limit(3);
+    });
   }
 }

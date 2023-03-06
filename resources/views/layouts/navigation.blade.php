@@ -44,7 +44,7 @@
 
                     <x-slot name="content">
                       @foreach ($menus as $menu)
-                        <x-dropdown-link :href="$menu['href']" :method="$menu['method']" :tooltip="$menu['name']" tooltipClass="tooltip-lh sm:hidden">
+                        <x-dropdown-link :href="$menu['href']" :method="$menu['method']" :tooltip="$menu['name']" tooltipClass="tooltip-lh sm:hidden" class="mt-1">
                           <span class="{{ $menu['icon'] }}"><span class="hidden sm:inline ml-7">{{ $menu['name'] }}</span></span>
                         </x-dropdown-link>
                       @endforeach

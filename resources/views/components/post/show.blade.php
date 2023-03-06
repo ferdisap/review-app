@@ -1,3 +1,4 @@
+{{-- @dd($post) --}}
 <x-app-layout title="Detail Post">
 
   <x-session-status :status="session('success')" bgColor="bg-green-200"/>
@@ -121,16 +122,24 @@
   </div>
   
   {{-- Reviews Comment --}}
-  <div x-data="{open: {{ old('open_comment_form') ?? 'true' }} }" class="px-8 my-4">
+  <div x-data="{open: {{ old('open_comment_form') ?? 'false' }} }" class="px-8 my-4">
     <h5 class="text-dxl font-bold my-2" x-on:click="open = ! open" role="button">Review <span class="expand" x-init="$watch('open', v => v ? ($el.setAttribute('class', 'expand')) : ($el.setAttribute('class', 'arrow_rh')))"></span></h5>
     <div x-show="open" class="">
-      {{-- // masih harus punya Auth::user() --}}
-      <div class="w-full text-center relative" x-data="{open: false}">
-        <button class="comment tooltip" x-on:click="open = !open">
+      <div class="w-full text-center relative" x-data="{open: {{ old('open_add_comment_form') ?? 'false' }}}">
+        {{-- tombol add comment --}}
+        <button class="comment mx-4 tooltip" x-on:click="open = !open">
           <span class="tooltiptext tooltip-center md:hidden">add comment</span>
           <span class="hidden md:inline-block ml-7">add comment</span>
         </button>
-        <x-comment :isCommenting="false"/>
+        <button class="more_up mx-4 tooltip" x-on:click="open = !open">
+          <span class="tooltiptext tooltip-center md:hidden">more comment</span>
+          <span class="hidden md:inline-block ml-7">more comment</span>
+        </button>
+
+        {{-- list comment --}}
+        @foreach ($post->comments as $comment)
+        <x-comment :isCommenting="false" :comment="$comment"/>
+        @endforeach
         <x-comment :isCommenting="true" :postID="$post->uuid" x-show="open"/>
       </div>
     </div>

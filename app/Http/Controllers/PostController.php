@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Jobs\ProccessRating;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Rules\MaxWord;
 use Illuminate\Bus\Batch;
@@ -96,7 +97,8 @@ class PostController extends Controller
     if(Auth::user() != null) {
       $otherPost = Post::where('author_id', '=', Auth::user()->id)->where('isDraft', '=', 0)->orderBy('updated_at', 'desc')->limit(3)->get();
     }
-    $post = Post::with('author')->findOrFail($uuid);
+    // $post = Post::with(['author', 'comments'])->find('e7fa77e2-a8b4-4be8-a7ef-7271b926076a');
+    $post = Post::select(['uuid', 'title', 'simpleDescription', 'author_id', 'ratingValue'])->with(['author', 'comments'])->findOrFail($uuid);
     
     return view('components.post.show', [
       'post' => $post,
@@ -233,19 +235,5 @@ class PostController extends Controller
     ]);
   }
 
-  /**
-   * push store comment for post
-   */
-  public function storeComment(Post $post, Request $request)
-  {
-    $validator = Validator::make($request->all(),[
-      'comment' => ['required', new MaxWord(100)]
-    ]);
 
-    if ($validator->fails()){
-      return back()->withErrors($validator)->withInput(['open_comment_form' => $request->open_comment_form ])->with('fail', 'fail to send comment.');
-    }
-    return back()->withInput(['open_comment_form' => $request->open_comment_form ])->with('success', 'comment has been added.');
-
-  }
 }

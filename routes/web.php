@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -36,12 +37,11 @@ Route::controller(PostController::class)->group(function () {
   Route::get('/post/show/{uuid}', 'show'); 
   Route::post('/post/store', 'store')->middleware('auth');
   Route::post('/post/delete', 'delete')->middleware('auth'); 
-
   Route::post('/post/rate', 'setRatingValue');
+});
 
-  Route::post('post/{post}/comment/push', 'storeComment');
-
-
+Route::controller(CommentController::class)->group(function(){
+  Route::post('comment/{post}/push', 'store')->middleware('auth');
 });
 
 require __DIR__.'/auth.php';
