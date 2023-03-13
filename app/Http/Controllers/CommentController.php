@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Rules\MaxWord;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -45,10 +46,7 @@ class CommentController extends Controller
     ]);
 
     if ($validator->fails()) {
-      return back()->withErrors($validator)->withInput([
-        'open_comment_form' => $request->open_comment_form,
-        'open_add_comment_form' => $request->open_add_comment_form,
-        ])->with('fail', 'fail to send comment.');
+      return back()->withErrors($validator)->withInput()->with('fail', 'fail to send comment.');
     }
 
     Comment::create([
@@ -57,7 +55,8 @@ class CommentController extends Controller
       'post_uuid' => $post->uuid,
     ]);
     
-    return back()->withInput(['open_comment_form' => $request->open_comment_form])->with('success', 'comment has been added.');
+    return back()->withInput()->with('success', 'comment has been added.');
+    // return back()->withInput(['open_comment_form' => $request->open_comment_form])->with('success', 'comment has been added.');
   }
 
   /**
@@ -100,8 +99,48 @@ class CommentController extends Controller
    * @param  \App\Models\Comment  $comment
    * @return \Illuminate\Http\Response
    */
-  public function destroy(Comment $comment)
+  public function destroy(Comment $comment, Request $request)
   {
-    //
+    return back()->withInput()->with('success', 'This come from destroy()');
   }
+
+  /**
+   * more comment
+   */
+  public function more_comment(Request $request)
+  {
+    // dd($request);
+    $comments = Comment::where('post_uuid', '=', $request->post_uuid)->withoutGlobalScope('limitQuery')->offset($request->offset)->limit($request->limit)->get();
+    // $comments = Comment::where('post_uuid', '=', $request->post_uuid)->withoutGlobalScope('limitQuery')->offset(2)->paginate($request->qty);
+    // dd(Auth::user());
+    $comments->each(function ($comment,$key){
+      if (Auth::user()){
+        Auth::user()->id == $comment->commentator->id ? $comment->isMine($comment, true) : $comment->isMine($comment, false);
+      } else {
+        $comment->isMine($comment, false);
+      }
+      $comment->makeHidden(['commentator_id']);
+      $comment->timeForHumans($comment);
+      $comment->commentator->setHidden(['id', 'password', 'remember_token', 'email']);
+    });
+    
+    return response()->json([
+      'status' => 200,
+      'comments' => $comments,
+    ]);
+  }
+
+  /**
+   * load view for comment form / more comment
+   */
+  public function load_view()
+  {
+    // return response()->json(['status' => 200, 'view' => 'foo']);
+    $view = view('components.comment',[
+      'isCommenting' => false,
+      'ajax' => true
+    ])->render();
+    return response()->json(['status' => 200, 'view' => $view]);
+  }
+
 }

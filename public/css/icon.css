@@ -234,6 +234,7 @@
   content: url('/svg/icon/delete_forever_FILL0_wght400_GRAD0_opsz20.svg');
   position: absolute;
   margin-top: -1px;
+  display: inline-block;
 }
 
 .post_add::before{
@@ -256,6 +257,7 @@
   content: url('/svg/icon/edit_FILL0_wght400_GRAD0_opsz20.svg');
   position: absolute;
   margin-top: -1px;
+  display: inline-block;
 }
 .log_out::before {
   content: url('/svg/icon/logout_FILL0_wght400_GRAD0_opsz20.svg');
@@ -271,6 +273,7 @@
   content: url('/svg/icon/report_FILL0_wght400_GRAD0_opsz20.svg');
   position: absolute;
   margin-top: -1px;
+  display: inline-block;
 }
 .more_up::before {
   content: url('/svg/icon/more_up_FILL0_wght400_GRAD0_opsz20.svg');

@@ -24,6 +24,12 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        {{-- @stack('comment') --}}
+        {{ $additional_script ?? '' }}
+        <script type="module" defer>
+          Alpine.start();
+        </script>
+
     </head>
     <body class="relative font-sans antialiased">
       <div class="flex justify-center">

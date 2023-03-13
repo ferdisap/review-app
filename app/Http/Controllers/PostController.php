@@ -97,9 +97,7 @@ class PostController extends Controller
     if(Auth::user() != null) {
       $otherPost = Post::where('author_id', '=', Auth::user()->id)->where('isDraft', '=', 0)->orderBy('updated_at', 'desc')->limit(3)->get();
     }
-    // $post = Post::with(['author', 'comments'])->find('e7fa77e2-a8b4-4be8-a7ef-7271b926076a');
     $post = Post::select(['uuid', 'title', 'simpleDescription', 'author_id', 'ratingValue'])->with(['author', 'comments'])->findOrFail($uuid);
-    
     return view('components.post.show', [
       'post' => $post,
       'ratingValue' => $post->ratingValue,

@@ -42,6 +42,10 @@ Route::controller(PostController::class)->group(function () {
 
 Route::controller(CommentController::class)->group(function(){
   Route::post('comment/{post}/push', 'store')->middleware('auth');
+  Route::get('/comment/{comment}/delete', 'destroy')->middleware('auth');
+
+  Route::get('/more_comment', 'more_comment');
+  Route::get('/load_view', 'load_view');
 });
 
 require __DIR__.'/auth.php';

@@ -39,8 +39,9 @@ switch ($width) {
             x-transition:leave-end="transform opacity-0 scale-95"
             class="absolute z-50 mt-2 rounded-md shadow-lg {{ $alignmentClasses }} mb-5 mr-3 ml-3"
             style="display: none; bottom: {{ $bottom }}"
-            @click="open = false">
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 bg-neutral-100 shadow-lg {{ $contentClasses }} pr-2 pl-1 w-max pb-2" style="min-width:26px">
+            x-on:click="open = false">
+        <div class="rounded-md ring-1 ring-black ring-opacity-5 bg-neutral-100 shadow-lg {{ $contentClasses }} w-max pb-2" style="min-width:26px">
+        {{-- <div class="rounded-md ring-1 ring-black ring-opacity-5 bg-neutral-100 shadow-lg {{ $contentClasses }} pr-2 pl-1 w-max pb-2" style="min-width:26px"> --}}
             {{ $content }}
         </div>
     </div>

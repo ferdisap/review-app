@@ -11,6 +11,10 @@
   src: url(http://review-app.test/fonts/FORTE.ttf) format(truetype) tech(variations);
 }
 
+.h-20px{
+  height: 20px;
+}
+
 .font-forte {
   font-family: forte;
 }

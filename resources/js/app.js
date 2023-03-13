@@ -3,24 +3,15 @@
 
 
 import Alpine from 'alpinejs';
+// import comment from './comment.js'
 
 window.Alpine = Alpine;
-
-// function showTT(event, id){
-//   event.target.
-// }
-
-// var ttIds = document.querySelectorAll('*[tt-id]');
-// ttIds.forEach( el => {
-//   el.addEventListener('mouseover', showTT);
-// });
-// console.log(ttIds);
 
 Alpine.store('changeURL', {
   execute(element, attribute ,url){
     element.setAttribute(attribute, url);
   },
-})
+});
 
 Alpine.store('selectDiselectFeature', {
   ckboxDisplay: 'none',
@@ -314,6 +305,10 @@ Alpine.store('setStarRating', {
   }
 });
 
-Alpine.start();
+/**
+ * Start Alpine in separated files/code
+ */
+// Alpine.start();
+
 
 

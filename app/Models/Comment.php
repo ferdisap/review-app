@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Comment extends Model
 {
@@ -51,6 +52,22 @@ class Comment extends Model
   public function newUniqueId()
   {
     return (string) Uuid::uuid4();
+  }
+
+  /**
+   * add is_mine attribute
+   */
+  public static function isMine($comment, $param = false)
+  {
+    $comment->is_mine = $param;
+  }
+
+  /**
+   * add timeForHuman attributes
+   */
+  public static function timeForHumans($comment)
+  {
+    $comment->timeForHuman = $comment->updated_at->diffForHumans();
   }
 
   /**
