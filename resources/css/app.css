@@ -121,12 +121,23 @@
   align-items: center;
   padding-left: 1rem; 
 
+
+}
+.rate-session > button {
+  transform: scale(0.5);
+}
+
+.animate1s{
   animation: fadeInAnimation ease 1s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
-.rate-session > button {
-  transform: scale(0.5);
+
+.postImg-show{
+  min-height: 12rem;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 @keyframes fadeInAnimation {

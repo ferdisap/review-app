@@ -1,4 +1,3 @@
-{{-- @dd($post->comments) --}}
 <x-app-layout title="Detail Post">
   <x-slot:additional_script>
     @vite(['resources/js/comment.js', 'resources/js/viewPostImg.js', 'resources/js/giveRating.js' ])
@@ -10,50 +9,53 @@
 
       {{-- post title --}}
       <h1 class="m-3 text-center text-txl">{{ $post->title }}</h1>
-
       {{-- post rating --}}
       <x-rating :ratingValue="$post->ratingValue ?? 0" />
 
       {{-- post image --}}
-      <div class="grid grid-cols-6 gap-4 place-content-center place-items-center" x-data>
+      <div x-data="viewPostImg" class="grid grid-cols-6 gap-4 place-content-center place-items-center" x-data>
         <div class="col-start-1">
-          <span class="arrowhead_lh" role="button" x-on:click="$store.viewPostImg.previmg()"></span>
+          <span class="arrowhead_lh" role="button" x-on:click="previmg()"></span>
         </div>
         <div class="col-start-2 col-span-4 h-max">
-          <div>
-            <img circle="0" class="img-post-display rounded-lg shadow-lg my-2" style="min-height: 12rem"
+          <div class="post-img-container" active=1>
+            <img id="img0"
+              onerror="this.remove()"
+              x-on:load="onload()"
+              class="hidden shadow-lg postImg-show animate1s"
               src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.0.jpg"
               alt="{{ $post->title }}">
-            <img x-on:error="$store.viewPostImg.deleteEl($el)" circle="1"
-              class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem"
+            <img id="img1"
+              onerror="this.remove()"
+              x-on:load="onload()"
+              class="hidden shadow-lg postImg-show animate1s"
               src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.1.jpg"
               alt="{{ $post->title }}">
-            <img x-on:error="$store.viewPostImg.deleteEl($el)" circle="2"
-              class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem"
+            <img id="img2"
+              onerror="this.remove()"
+              x-on:load="onload()"
+              class="hidden shadow-lg postImg-show animate1s"
               src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.2.jpg"
               alt="{{ $post->title }}">
-            <img x-on:error="$store.viewPostImg.deleteEl($el)" circle="3"
-              class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem"
+            <img id="img3"
+              onerror="this.remove()"
+              x-on:load="onload()"
+              class="hidden shadow-lg postImg-show animate1s"
               src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.3.jpg"
               alt="{{ $post->title }}">
-            <img x-on:error="$store.viewPostImg.deleteEl($el)" circle="4"
-              class="img-post-display hidden rounded-lg shadow-lg my-2" style="min-height: 12rem"
+            <img id="img4"
+              onerror="this.remove()"
+              x-on:load="onload()"
+              class="hidden shadow-lg postImg-show animate1s"
               src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.4.jpg"
               alt="{{ $post->title }}">
           </div>
-          <div class="w-full flex justify-center">
-            <svg class="mt-2" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="85px" height="13px"
-              viewBox="0 0 87 13" xml:space="preserve">
-              <circle fill="rgba(0,0,0,0.9)" stroke="none" cx="6.5" cy="6.5" r="6" />
-              <circle fill="rgba(0,0,0,0.2)" stroke="none" cx="24.5" cy="6.5" r="6" />
-              <circle fill="rgba(0,0,0,0.2)" stroke="none" cx="42.5" cy="6.5" r="6" />
-              <circle fill="rgba(0,0,0,0.2)" stroke="none" cx="61" cy="6.5" r="6" />
-              <circle fill="rgba(0,0,0,0.2)" stroke="none" cx="79.5" cy="6.5" r="6" />
-            </svg>
+          <div class="circle-container w-full flex justify-center">
+            <!-- circle filled by JS -->
           </div>
         </div>
         <div class="col-end-7 col-span-1">
-          <span class="arrowhead_rh" role="button" x-on:click="$store.viewPostImg.nextimg()"></span>
+          <span class="arrowhead_rh" role="button" x-on:click="nextimg()"></span>
         </div>
       </div>
 
@@ -134,11 +136,11 @@
       <div class="px-8 my-4">
         <h5 class="text-dxl font-bold my-2">Other Post</h5>
         @if (isset($otherPosts))
-          @foreach ($otherPosts as $key => $post)
+          @foreach ($otherPosts as $key => $otherPost)
             <div class="list-post-container flex items-center h-full md:px-6 px-2 mb-2">
-              <a href="/post/{{ $post->uuid }}" class="list-post w-full">
-                <x-list-post :inputValue="$key" :title="$post->title" :simpleDescription="$post->simpleDescription" :ratingValue="80"
-                  imgsrc="{{ url('/postImages/' . Auth::user()->username . '/thumbnail/' . $post->uuid . '_50_images.0.jpg') }}" />
+              <a href="/post/{{ $otherPost->uuid }}" class="list-post w-full">
+                <x-list-post :inputValue="$key" :title="$otherPost->title" :simpleDescription="$otherPost->simpleDescription" :ratingValue="80"
+                  imgsrc="{{ url('/postImages/' . Auth::user()->username . '/thumbnail/' . $otherPost->uuid . '_50_images.0.jpg') }}" />
               </a>
             </div>
           @endforeach

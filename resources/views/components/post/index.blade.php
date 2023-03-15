@@ -6,7 +6,7 @@
   <x-session-status :status="session('fail')" bgColor="bg-red-200"/>
   @php
   // dd($active);
-  $active =  $active ?? (old('active-content') ?? 'published');
+  $active =  $active ?? (old('active-content') ?? '');
   $checked = old('toogle-switch') ?? false; // old('toogle-switch') @return 'some' / 'on'
   @endphp
   

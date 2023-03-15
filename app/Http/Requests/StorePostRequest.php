@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MaxWord;
 use Fimage\ImageResizer;
@@ -38,7 +39,6 @@ class StorePostRequest extends FormRequest
       'uuid' => 'required',
       'title' => $this->title_rules,
       'images.*' => ['mimes:jpg,png', 'max:4048', function ($attribute, $image, $fail) {
-
         if ($this->validator->errors()->get($attribute) == []) {
           $storePath = storage_path() . "\app\postImages\\ferdisap\\thumbnail\\" . $this->uuid . '_50_' . $attribute . '.' . 'jpg';
           Formatter::reformat('jpg', $image->path(), $storePath);
@@ -51,7 +51,15 @@ class StorePostRequest extends FormRequest
       }],
       'simpleDescription' => $this->simpleDescription_rules,
       'detailDescription' => $this->detailDescription_rules,
-      'category' => 'exists:categories,name',
+      // 'category' => 'exists:categories,name',
+      'category_name' => [function($attribute, $value, $fail){
+        $id = Category::where('name','=',$value)->limit(1)->pluck('id')[0];
+        if ($id){
+          $this->merge(['category_id' => $id]);
+        } else {
+          $fail('No such category exist.');
+        }
+      }],
     ];
   }
 
@@ -67,7 +75,7 @@ class StorePostRequest extends FormRequest
       $this->merge([
         'isDraft' => 0,
         'author_id' => Auth::user()->id,
-        'category' => $this->category
+        // 'category' => $this->category,
       ]);
     } else {
       $this->title_rules = ['max:30'];
@@ -76,7 +84,7 @@ class StorePostRequest extends FormRequest
       $this->merge([
         'isDraft' => 1,
         'author_id' => Auth::user()->id,
-        'category' => $this->category
+        // 'category' => $this->category
       ]);
     }
   }

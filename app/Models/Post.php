@@ -77,6 +77,22 @@ class Post extends Model
   }
 
   /**
+   * Get the category of the post
+   */
+  public function category()
+  {
+    return $this->hasOne(Category::class, 'id', 'category_id');
+  }
+
+   /**
+   * add category_name attribute
+   */
+  public static function category_name($post, $param = null)
+  {
+    $post->category_name = $param;
+  }
+
+  /**
    * selecting default column when get the data
    */
   // public static function booted()

@@ -18,11 +18,14 @@ Alpine.store('selectDiselectFeature', {
   qtyPostDraft: null,
   qtyPostPublished: null,
   showAllPost(cat = null) {
-    this.category == undefined ? (this.category = document.getElementById('content').getAttribute('active')) : this.hideAllPost();
+    let c;
+    this.category == undefined ? (this.category = (c = document.getElementById('content').getAttribute('active')) != '' ? c : (sessionStorage.getItem('category') ?? 'published')) : this.hideAllPost();
     cat != undefined ? (this.category = cat) : null;
     document.getElementById(this.category).style.display = 'block';
     document.getElementById('active-content').value = this.category;
     document.querySelector('div[for=' + this.category + ']').classList.add('active-content');
+
+    sessionStorage.setItem("category", this.category);
   },
   hideAllPost() {
     document.getElementById(this.category).style.display = 'none';
@@ -30,6 +33,7 @@ Alpine.store('selectDiselectFeature', {
     document.querySelector('div[for=' + this.category + ']').classList.remove('active-content');
   },
   initialization() {
+
     this.qtyPostDraft = document.querySelectorAll('#draft .list-post');
     this.qtyPostPublished = document.querySelectorAll('#published .list-post');
 
@@ -145,7 +149,7 @@ Alpine.store('selectDiselectFeature', {
         el.parentElement.parentElement.nodeName == 'A' ? el.parentElement.parentElement :
           el.parentElement.parentElement.parentElement.nodeName == 'A' ? el.parentElement.parentElement.parentElement :
             el.parentElement.parentElement.parentElement.parentElement.nodeName == 'A' ? el.parentElement.parentElement.parentElement.parentElement : null;
-    return targetBox.previousSibling.previousSibling.nodeName == 'INPUT' ? targetBox.previousSibling.previousSibling : targetBox.parentElement.querySelector('.list-post-checklist');
+    return targetBox.previousSibling.nodeName == 'INPUT' ? targetBox.previousSibling : targetBox.parentElement.querySelector('.list-post-checklist');
   },
 });
 

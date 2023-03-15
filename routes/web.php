@@ -35,6 +35,8 @@ Route::controller(PostController::class)->group(function () {
   Route::get('/mypost', 'myindex')->middleware('auth')->name('mypostindex');
   Route::get('/post/create', 'create')->middleware('auth');
   Route::get('/post/show/{uuid}', 'show'); 
+  Route::get('/post/edit/{uuid}', 'edit')->middleware('auth'); 
+
   Route::post('/post/store', 'store')->middleware('auth');
   Route::post('/post/delete', 'delete')->middleware('auth'); 
   Route::post('/post/rate', 'setRatingValue');

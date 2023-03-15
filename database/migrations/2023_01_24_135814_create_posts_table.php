@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->uuid('uuid');
             $table->string('title')->nullable();
-            $table->string('slug')->nullable();
             $table->text('simpleDescription')->nullable();
             $table->text('detailDescription')->nullable();
-            $table->tinyInteger('category_id')->nullable();
+            $table->ulid('token')->nullable();
+            $table->tinyInteger('category_id');
             $table->boolean('isDraft');
             $table->integer('author_id');
             $table->tinyInteger('ratingValue')->nullable();

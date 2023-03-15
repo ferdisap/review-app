@@ -35,7 +35,7 @@ class PostController extends Controller
    */
   public function myindex()
   {
-    $postsDraft = Post::where('isDraft', '=', 1)->where('author_id', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(9,['*'], 'draft')->withQueryString()->onEachSide(2);
+    $postsDraft = Post::where('isDraft', '=', 1)->where('author_id', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(9, ['*'], 'draft')->withQueryString()->onEachSide(2);
     $postsPublished = Post::where('isDraft', '=', 0)->where('author_id', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(9, ['*'], 'published')->withQueryString()->onEachSide(2);
 
     return view('components.post.index', [
@@ -51,14 +51,28 @@ class PostController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function create()
+  public function create(Request $request = null)
   {
+    $uuid = $request->uuid ?? null;
+    if (old('uuid')) {
+      $post = Post::with('category')->find(old('uuid'));
+    } elseif ($uuid) {
+      $post = Post::with('category')->find($uuid);
+      dd($post);
+    } 
+    else {
+      $post = Post::create([
+        'category_id' => 1,
+        'isDraft' => 1,
+        'author_id' => Auth::user()->id,
+        'token' => Str::ulid(),
+      ]);
+    }
+    $post->category_name($post, $post->category->name);
+
     return view('components.post.create',[
-      'uuid' => old('uuid') ?? 
-                (Post::create([
-                  'isDraft' => 1,
-                  'author_id' => Auth::user()->id,
-                ]))->uuid,
+      'post' => $post,
+      'being_edit' => $post->being_edit,
     ]);
   }
 
@@ -69,20 +83,29 @@ class PostController extends Controller
    * @return \Illuminate\Http\Response
    */
   public function store(StorePostRequest $request)
-  {    
-    if ($post = Post::find($request->uuid) ){
+  {
+    if ($post = Post::find($request->uuid)) {
       $post->title = $request->title;
       $post->simpleDescription = $request->simpleDescription;
       $post->detailDescription = $request->detailDescription;
       $post->isDraft = $request->isDraft;
       $post->author_id = $request->author_id;
-      $post->category_id = Category::where('name', '=', $request->category)->pluck('id')[0];
-      $post->save(); 
-      return $request->isDraft == true ? 
-          back()->withInput()->with('success', 'This Post has been saved.') :
-          redirect()->route('mypostindex')->with('success', 'New Post has been published.');
-    }
+      $post->category_id = $request->category_id;
+      $post->save();
 
+      
+      $status = 'success';
+      if ($request->being_edit == true){
+        $message = $post->title . ' has been saved.';  
+        return back()->withInput()->with($status, $message);
+      } elseif ($request->isDraft == true) {   
+        $message = 'This Post has been saved.';  
+        return redirect()->route('mypostindex')->with($status, $message);
+      } else {
+        $message = 'New Post has been published.';
+        return redirect()->route('mypostindex')->with($status, $message);
+      }        
+    }
     return back()->withInput()->with('fail', 'No post needed to action.');
   }
 
@@ -94,7 +117,7 @@ class PostController extends Controller
    */
   public function show($uuid)
   {
-    if(Auth::user() != null) {
+    if (Auth::user() != null) {
       $otherPost = Post::where('author_id', '=', Auth::user()->id)->where('isDraft', '=', 0)->orderBy('updated_at', 'desc')->limit(3)->get();
     }
     $post = Post::select(['uuid', 'title', 'simpleDescription', 'author_id', 'ratingValue'])->with(['author', 'comments'])->findOrFail($uuid);
@@ -111,9 +134,10 @@ class PostController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function edit($id)
-  {
-    //
+  public function edit($id, Request $request)
+  { 
+    $request->merge(['being_edit' => true, 'uuid' => $id]);
+    return $this->create($request);
   }
 
   /**
@@ -137,45 +161,45 @@ class PostController extends Controller
   public function destroy($id)
   {
     $result = Post::find($id)->delete();
-    if(!$result){
+    if (!$result) {
       return false;
-    }    
+    }
     return true;
   }
-  
+
   /**
    * Receives the posts which want to @destroy from DB
    */
   public function delete(Request $request)
   {
     $validator = Validator::make($request->all(), [
-      'list-post-cb' => ['required'], 
+      'list-post-cb' => ['required'],
     ]);
 
     // jika user cuma mencet delete post btn tanpa nyontreng, delete post is failed
-    if ($validator->fails()){
+    if ($validator->fails()) {
       return back()->withInput()->with('fail', 'delete post(s) failed.');
     }
 
     // proses mendelete post. Jika gagal, maka akan di tambahkan ke failedDestroyedUUID dan dilabelin 'checked' supaya di UI nya di otomatis di contreng
     $failedDestroyedUUID = [];
-    foreach($validator->getData()['list-post-cb'] as $uuid){
-      if (!$this->destroy($uuid)){
+    foreach ($validator->getData()['list-post-cb'] as $uuid) {
+      if (!$this->destroy($uuid)) {
         $failedDestroyedUUID[$uuid] = 'checked';
       };
     }
-    
+
     // jika ada post yang gagal di hapus, maka tambahkan old input ('toogle-switch') kalo ga 'on'/'some'. Jika on artinya checkall. jika some artinya ga semua di checkall (tapi ada yang di check)
     // if validator success, $request->merge['toogle-switch'] => $request->['toogle-switch'] ?? 'some'    
     // di app.js @initialization nya jika 'toogle-switch' checked == true,  maka di toogle(true), jika false, null
     // di toogle slider htmlnya, jika checkedValue nya == 'some', jalankan @showCkBox(), jika == true, maka checked saja (tidak perlu di toogle karena sudah dilakukan oleh @initialization)
     if (($qtyFailed = count($failedDestroyedUUID)) != 0) {
       $failedDestroyedUUID['toogle-switch'] = $request['toogle-switch'] ?? 'some';
-      return back()->withInput($failedDestroyedUUID)->with('fail', $qtyFailed . ' post(s) failed to delete.' );
+      return back()->withInput($failedDestroyedUUID)->with('fail', $qtyFailed . ' post(s) failed to delete.');
     }
 
     // jika semua post berhasil di destroy dary DB, maka:
-    return back()->withInput()->with('success', 'The selected post(s) has been deleted.' );
+    return back()->withInput()->with('success', 'The selected post(s) has been deleted.');
   }
 
   /**
@@ -183,7 +207,7 @@ class PostController extends Controller
    */
   public function search(Request $request)
   {
-    if ($request->key == '' || $request->key == null ){
+    if ($request->key == '' || $request->key == null) {
       $posts = null;
     } else {
       $posts = Post::search($request->key)->orderBy('updated_at')->get(['uuid', 'title', 'simpleDescription', 'detailDescription', 'isDraft']);
@@ -199,14 +223,14 @@ class PostController extends Controller
   public function setRatingValue(Request $request)
   {
     $postFromDB = Post::find($request->postID);
-    if ($postFromDB == null){
+    if ($postFromDB == null) {
       return response()->json([
         'status' => false,
         'message' => 'no post to be rated.',
         'postRate' => $postFromDB->ratingValue ?? 0,
       ]);
-    } elseif (Auth::user() == null || $postFromDB->author_id != Auth::user()->id){
-      $postFromDB->ratingValue = ((($postFromDB->ratingValue ?? 0)/ 20) + $request->rateValue)*20/($postFromDB->ratingValue == null ? 1 : 2);
+    } elseif (Auth::user() == null || $postFromDB->author_id != Auth::user()->id) {
+      $postFromDB->ratingValue = ((($postFromDB->ratingValue ?? 0) / 20) + $request->rateValue) * 20 / ($postFromDB->ratingValue == null ? 1 : 2);
       $postFromDB->save();
       return response()->json([
         'status' => true,
@@ -219,7 +243,7 @@ class PostController extends Controller
         'message' => 'the author cannot rate their own post.',
         'postRate' => $postFromDB->ratingValue ?? 0,
       ]);
-    } else {      
+    } else {
       return response()->json([
         'status' => false,
         'message' => 'this post has been failed to rate.',
@@ -232,6 +256,4 @@ class PostController extends Controller
       'postRate' => $postFromDB->ratingValue ?? 0,
     ]);
   }
-
-
 }
