@@ -122,10 +122,11 @@ class CommentController extends Controller
       $comment->makeHidden(['commentator_id']);
       $comment->timeForHumans($comment);
       $comment->commentator->setHidden(['id', 'password', 'remember_token', 'email']);
-    });
+    });   
     
     return response()->json([
-      'status' => 200,
+      'status' => $comments->count() > 0 ? 'success' : 'fail',
+      'message' => $comments->count() > 0 ? '' : 'no more comments available.',
       'comments' => $comments,
     ]);
   }

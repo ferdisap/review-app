@@ -8,7 +8,7 @@
           <h6 class="text-xl font-bold">{{ Auth::user()->name ?? 'Anonymous' }}</h6>
         </div>
         <form action="/comment/{{ $postID }}/push" method="post" x-show="open_add_comment_form">
-          <input type="hidden" name="qtyComment" value="{{ old('qtyComment') ?? 2 }}">
+          <input type="hidden" name="qtyComment" n="2" value="{{ old('qtyComment') ?? 2 }}">
           <input type="hidden" name="open_comment_form" value="true">
           <input type="hidden" name="open_add_comment_form" value="true">
           @csrf

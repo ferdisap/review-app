@@ -18,15 +18,16 @@ const GiveRating = {
       })
         .then(rsp => rsp.json())
         .then(rst => {
-          let rateSession = document.querySelector('.session-status');
-          if (rateSession != undefined || rateSession != null) {
-            rateSession.remove();
-          }
-          let div = document.createElement('div');
-          div.setAttribute('class', 'rate-session session-status');
-          rst.status == true ? div.style.backgroundColor = 'rgb(187 247 208)' : div.style.backgroundColor = 'rgb(254 202 202)';
-          div.innerHTML = rst.message + `<button class='close black scale-50' onclick='this.parentNode.remove()'></button>`;
-          document.querySelector('main').prepend(div);
+          // let rateSession = document.querySelector('.session-status');
+          // if (rateSession != undefined || rateSession != null) {
+          //   rateSession.remove();
+          // }
+          // let div = document.createElement('div');
+          // div.setAttribute('class', 'rate-session session-status');
+          // rst.status == true ? div.style.backgroundColor = 'rgb(187 247 208)' : div.style.backgroundColor = 'rgb(254 202 202)';
+          // div.innerHTML = rst.message + `<button class='close black scale-50' onclick='this.parentNode.remove()'></button>`;
+          // document.querySelector('main').prepend(div);
+          Alpine.store('session').push(rst.status, rst.message);
 
           rst.status == true ? Alpine.store('setStarRating').run(document.querySelector('div[star-container]'), rst.postRate) : null;
         });

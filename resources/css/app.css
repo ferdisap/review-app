@@ -38,7 +38,15 @@
   border-radius: 0.5rem;
 }
 
-#modal-search .list-post-container{
+#modal-search, #location-search {
+  position: fixed;
+  left: 0;
+  z-index: 10;  
+  height: 100vh;
+  width: 100vw;
+}
+
+#modal-search .list-post-container, #location-search .list-post-container{
   border-radius: 0.5rem;
   display: block;
   color: rgb(0 0 0);
@@ -46,6 +54,12 @@
   padding-right: 0.5rem; /* 8px */
   margin-bottom: 0.5rem; /* 8px */
   margin-top: 0.25rem;
+}
+
+#modal-search .list-post-container:focus, #location-search .list-post-container:focus{
+  outline: none;
+  padding: 0.3rem;
+  border: 3px solid red;
 }
 
 #modal-search .list-post-container > div {
@@ -104,6 +118,12 @@
 }
 #modal-search .list-post-container > div > div > div:nth-child(3) > div > p {
   margin-top: 0px;
+}
+
+p[for='location']{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .more_result {

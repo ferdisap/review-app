@@ -21,6 +21,9 @@
             border: 1px solid blue !important;
           }
         </style>
+        @auth
+        <script>sessionStorage.setItem('auth_username', '{{ Auth::user()->username }}')</script>
+        @endauth
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -50,7 +53,10 @@
                 {{ $slot }}
             </main>
         </div>
-        <x-search></x-search>
+        <div id="modal" active="none">
+          <x-search-modal/>
+          <x-location-modal/>
+        </div>
       </div>
     </body>
 </html>

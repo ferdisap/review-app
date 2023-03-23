@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::connection('mysql')->create('posts', function (Blueprint $table) {
             $table->uuid('uuid');
             $table->string('title')->nullable();
             $table->text('simpleDescription')->nullable();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::connection('mysql')->dropIfExists('posts');
     }
 };

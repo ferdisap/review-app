@@ -13,10 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql')->create('categories', function (Blueprint $table) {
-            $table->id();
+        $this->down();
+        Schema::connection('sqlite')->create('addresses', function (Blueprint $table) {
+            $table->integer('id');
             $table->string('name');
-            $table->timestamps();
+            $table->string('type');
+            $table->string('latitude');
+            $table->string('longitude');
+            $table->string('parentId')->nullable();
+            // $table->timestamps();
         });
     }
 
@@ -27,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('mysql')->dropIfExists('categories');
+      Schema::connection('sqlite')->dropIfExists('addresses');
     }
 };

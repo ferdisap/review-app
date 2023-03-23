@@ -3,12 +3,16 @@
 
 
 import Alpine from 'alpinejs';
-// import comment from './comment.js'
+import {search, modal_post_search} from './search.js'
+import {session} from './session.js'
+import {starRating} from './starRating.js'
+import {delay} from './delay.js'
+import {modal_location_search} from './location.js'
 
 window.Alpine = Alpine;
 
 Alpine.store('changeURL', {
-  execute(element, attribute ,url){
+  execute(element, attribute, url) {
     element.setAttribute(attribute, url);
   },
 });
@@ -164,155 +168,19 @@ Alpine.store('previewThumbnail', {
   }
 });
 
-Alpine.store('search', {
-  modal: document.getElementById('modal-search'),
-  inputText: document.getElementById('search-input'),
-  open(e) {
-    this.modal.classList.remove('hidden');
-    this.keyupHandler = this.keyupHandler.bind(this);
-    this.modal.addEventListener('keyup', this.keyupHandler);
-    this.inputText.value = "";
-    this.inputText.focus();
-    e.preventDefault();
-  },
-  close() {
-    this.modal.classList.add('hidden');
-    this.modal.removeEventListener('keyup', this.keyupHandler);
-  },
-  init() {
-    document.addEventListener('keydown', (e) => {
-      switch (e.key) {
-        case "/":
-          // console.log('/');
-          if (this.modal.classList.contains('hidden')) {
-            this.open(e);
-          } else {
-            if (e.target.nodeName != "INPUT") {
-              e.preventDefault();
-              this.inputText.focus();
-            }
-          }
-          break;
+Alpine.store('search', search);
+Alpine.store('modal_post_search', modal_post_search);
+Alpine.store('delay', delay);
+Alpine.store('session', session);
+Alpine.store('setStarRating', starRating);
 
-        case "ArrowDown":
-          // console.log(e.target)
-          e.target.nextElementSibling.focus();
-          break;
 
-        case "ArrowUp":
-          e.target.previousElementSibling.focus();
-          break;
+Alpine.store('modal_location_search', modal_location_search);
 
-        case "Escape":
-          this.close();
-          break;
 
-        default:
-          break;
-      }
-    });
-  },
-  keyupHandler(e) {
-    if (e.key == 'ArrowUp' || e.key == 'ArrowDown' || e.key == 'Escape' || e.key == 'Tab' ){
-      return undefined;
-    }
-    Alpine.store('delay').delay(500, () => {
-        fetch('/post/search', {
-          method:'post',
-          headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'),
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            'key' : this.inputText.value,
-          }),
-        })
-        .then(rsp => rsp.json())
-        .then(rst => {
-          document.querySelectorAll('#modal-search > div > a').forEach(list => list.remove());
-          for (let i = 0; i < 4; i++) {
-            let ratingValue = 40 / 2 // rst.posts[i].ratingValue/2
-            let star1 = ratingValue - 10 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 10 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
-            let star2 = ratingValue - 20 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 20 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
-            let star3 = ratingValue - 30 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 30 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
-            let star4 = ratingValue - 40 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 40 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
-            let star5 = ratingValue - 50 >= 0 ? "<span class='star orange'></span>" : (ratingValue - 50 >= -5 ? "<span class='star orange-to-black'></span>" : "<span class='star black'></span>")
-            var str = `<div>          
-                        <div>
-                          <div>
-                            <img loading="lazy" src="/svg/icon/lunch_dining_FILL0_wght400_GRAD0_opsz48.svg" alt="" class="scale-11 transition-05">
-                          </div>
-                          <div>
-                            <h6 class="md:text-md lg:text-lg">${rst.posts[i].title}</h6>
-                            <p class="text-ssm sm:text-sm md:text-md lg:text-lg xl:text-xl">${rst.posts[i].simpleDescription}</p>
-                          </div>
-                          <div>
-                            <div>
-                              <div>
-                                ${star1}
-                                ${star2}
-                                ${star3}
-                                ${star4}
-                                ${star5}
-                              </div>
-                              <p class="text-dsm">${ratingValue * 2}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>`;
-            let list = document.createElement('a');
-            list.classList.add('list-post-container');
-            list.href = `/post/show/${rst.posts[i].uuid}`;
-            list.innerHTML = str;
-            document.querySelector('#modal-search div').appendChild(list);
-          }
-          if (rst.posts.length > 4) {
-            var str = ` <div class="more_result">
-                            ${rst.posts.length} posts found.
-                          </div>`;
-            let more = document.createElement('a');
-            more.classList.add('list-post-container');
-            more.href = `javascript:void`;
-            more.innerHTML = str;
-            document.querySelector('#modal-search div').appendChild(more);
-          }
-        });
-    });
-  },
-});
 
-Alpine.store('delay', {
-  delay(t, callback) {
-    clearTimeout(this.to);
-    this.to = setTimeout(callback, t);
-  }
-})
-
-Alpine.store('setStarRating', {
-  run(container, value){
-    container.innerHTML = '';
-    this.ratingValue(container, value);
-  },
-  ratingValue(container, value){
-    value = value/2;
-    value - 10 >= 0 ? this.createStar(container, 'orange') : (value - 10 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
-    value - 20 >= 0 ? this.createStar(container, 'orange') : (value - 20 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
-    value - 30 >= 0 ? this.createStar(container, 'orange') : (value - 30 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
-    value - 40 >= 0 ? this.createStar(container, 'orange') : (value - 40 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;
-    value - 50 >= 0 ? this.createStar(container, 'orange') : (value - 50 >= -5 ? this.createStar(container, 'orange-to-black') : this.createStar(container, 'black')) ;      
-    container.nextElementSibling.innerHTML = value
-  },
-  createStar(container, color){
-    let el = document.createElement('span');
-    el.classList.add('star', color);
-    container.appendChild(el);
-  }
-});
 
 /**
  * Start Alpine in separated files/code
  */
 // Alpine.start();
-
-
-

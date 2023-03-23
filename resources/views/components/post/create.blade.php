@@ -77,10 +77,12 @@
           save
         </x-primary-button>
 
+        @if($post->isDraft == 1)
         <!-- button Submit -->
         <x-primary-button name='submit'>
           publish
         </x-primary-button>
+        @endif
       </div>
     </form>
   </div>

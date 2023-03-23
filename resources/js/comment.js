@@ -64,7 +64,7 @@ const CommentDua = {
    * send, receive, further action in getting comment from backend 
    * @param {string} post_uuid 
    */
-  async more_comment(post_uuid) {
+  async more_comment(post_uuid, needSession = true) {
     // get the view from backend if not already available
     if (this.comment_view_template == undefined) {
       this.comment_view_template = await this.load_view();
@@ -74,6 +74,11 @@ const CommentDua = {
     fetch(`/more_comment?post_uuid=${post_uuid}&limit=${this.limit}&offset=${this.offset}`)
       .then(rsp => rsp.json())
       .then(rst => {
+        if(needSession){
+          if (rst.comments.length == 0){
+            Alpine.store('session').push(rst.status, rst.message);
+          }
+        }
         rst.comments.forEach(comment => {
           let template = this.comment_view_template;
           let strSlots = this.getStringSlot(template);

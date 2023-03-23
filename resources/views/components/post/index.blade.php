@@ -26,7 +26,8 @@
 
       <div class="flex justify-between">
         <x-toogle-slider class="" :checkValue="$checked" name="toogle-switch" id="toogle-switch">Select All</x-toogle-slider>
-        <span class="search tooltip" role="button" x-on:click="$store.search.open()">
+        {{-- <span class="search tooltip" role="button" x-on:click="$store.search.open(event)"> --}}
+        <span class="search tooltip" role="button" onclick="Alpine.store('search').open(event)">
           <span class="tooltiptext tooltip-lh">search</span>
         </span>
       </div>

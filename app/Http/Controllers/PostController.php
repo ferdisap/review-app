@@ -58,7 +58,6 @@ class PostController extends Controller
       $post = Post::with('category')->find(old('uuid'));
     } elseif ($uuid) {
       $post = Post::with('category')->find($uuid);
-      dd($post);
     } 
     else {
       $post = Post::create([
@@ -97,7 +96,10 @@ class PostController extends Controller
       $status = 'success';
       if ($request->being_edit == true){
         $message = $post->title . ' has been saved.';  
-        return back()->withInput()->with($status, $message);
+        // return back()->withInput()->with($status, $message);
+        
+        return redirect($request->root() .'/post/show/' . $request->uuid)->with($status, $message);
+
       } elseif ($request->isDraft == true) {   
         $message = 'This Post has been saved.';  
         return redirect()->route('mypostindex')->with($status, $message);
@@ -208,9 +210,9 @@ class PostController extends Controller
   public function search(Request $request)
   {
     if ($request->key == '' || $request->key == null) {
-      $posts = null;
+      $posts = [];
     } else {
-      $posts = Post::search($request->key)->orderBy('updated_at')->get(['uuid', 'title', 'simpleDescription', 'detailDescription', 'isDraft']);
+      $posts = Post::search($request->key)->orderBy('updated_at', 'desc')->limit(4)->get(['uuid', 'title', 'simpleDescription', 'detailDescription', 'isDraft','ratingValue']);
     }
     return response()->json([
       'posts' => $posts,

@@ -98,7 +98,7 @@
   content: url('/svg/icon/more_vert_FILL0_wght400_GRAD0_opsz20.svg');
 }
 
-.back::after {
+/* .back::after {
   width: 24px;
   height: 24px;
   z-index: 10;
@@ -109,7 +109,7 @@
   -webkit-mask-size: cover;
   mask-size: cover;
   transform-origin: center;
-}
+} */
 
 .scale-11:hover {
   transform: scale(1.1);
@@ -126,6 +126,10 @@
   -moz-transition: 0.5s ease;
   -o-transition: 0.5s ease;
   transition: 0.5s ease;  
+}
+
+.scale-150{
+  transform: scale(1.5);
 }
 
 .plus::before {
@@ -156,10 +160,10 @@
 }
 
 .black::after {
-  background-color: black;
+  background-color: black !important;
 }
 .gray::after {
-  background-color: rgb(82 82 91);
+  background-color: rgb(194, 194, 197);
 }
 
 
@@ -191,8 +195,8 @@
 }
 
 .circle::after {
-  width: 18px;
-  height: 18px;
+  width: 10px;
+  height: 10px;
   z-index: 10;
   display: inline-block;
   content: '';
@@ -277,6 +281,21 @@
 }
 .more_up::before {
   content: url('/svg/icon/more_up_FILL0_wght400_GRAD0_opsz20.svg');
+  position: absolute;
+  margin-top: -1px;
+}
+.my_loc::before {
+  content: url('/svg/icon/my_location_FILL0_wght400_GRAD0_opsz20.svg');
+  position: absolute;
+  margin-top: -1px;
+}
+.my_loc::before {
+  content: url('/svg/icon/my_location_FILL0_wght400_GRAD0_opsz20.svg');
+  position: absolute;
+  margin-top: -1px;
+}
+.pin_drop::before {
+  content: url('/svg/icon/pin_drop_FILL0_wght400_GRAD0_opsz20.svg');
   position: absolute;
   margin-top: -1px;
 }

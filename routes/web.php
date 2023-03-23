@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -34,7 +35,7 @@ Route::controller(PostController::class)->group(function () {
   Route::get('/post','index');
   Route::get('/mypost', 'myindex')->middleware('auth')->name('mypostindex');
   Route::get('/post/create', 'create')->middleware('auth');
-  Route::get('/post/show/{uuid}', 'show'); 
+  Route::get('/post/show/{uuid}', 'show')->name('post.show'); 
   Route::get('/post/edit/{uuid}', 'edit')->middleware('auth'); 
 
   Route::post('/post/store', 'store')->middleware('auth');
@@ -48,6 +49,13 @@ Route::controller(CommentController::class)->group(function(){
 
   Route::get('/more_comment', 'more_comment');
   Route::get('/load_view', 'load_view');
+});
+
+// Route::get('/address/fill', [AddressController::class, 'fillIndexes']);
+Route::controller(AddressController::class)->group(function(){
+  Route::get('/address/search', 'search');
+  Route::get('/address/pull', 'pull');
+  Route::post('/address/push', 'push')->middleware('auth');
 });
 
 require __DIR__.'/auth.php';

@@ -1,4 +1,6 @@
 <x-app-layout title="Detail Post">
+  <script>sessionStorage.setItem('post_uuid', '{{ $post->uuid }}')</script>
+  <script>sessionStorage.setItem('post_author_username', '{{ $post->author->username }}')</script>
   <x-slot:additional_script>
     @vite(['resources/js/comment.js', 'resources/js/viewPostImg.js', 'resources/js/giveRating.js' ])
     </x-slot>
@@ -14,48 +16,56 @@
 
       {{-- post image --}}
       <div x-data="viewPostImg" class="grid grid-cols-6 gap-4 place-content-center place-items-center" x-data>
-        <div class="col-start-1">
-          <span class="arrowhead_lh" role="button" x-on:click="previmg()"></span>
+        <div class="col-start-1 opacity-10 hover:opacity-100 transition-05">
+          <span class="arrowhead_lh" role="button" x-on:click="setImg(false)"></span>
+          {{-- <span class="arrowhead_lh" role="button" x-on:click="previmg()"></span> --}}
         </div>
         <div class="col-start-2 col-span-4 h-max">
-          <div class="post-img-container" active=1>
-            <img id="img0"
-              onerror="this.remove()"
-              x-on:load="onload()"
-              class="hidden shadow-lg postImg-show animate1s"
-              src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.0.jpg"
+          <div class="post-img-container" active=0>
+            {{-- onerror="this.remove()" --}}
+              {{-- loading="lazy" --}}
+              {{-- onload="alert('foo')" --}}
+              {{-- onerror="Alpine.store('remove').remove(this)" --}}
+              {{-- x-on:error="remove($el)" --}}
+              {{-- x-on:load="onload()" --}}
+            {{-- <img id="img0"              
+              x-on:click="zoom($el)"
+              @click.outside="zoom(event.target, $el)"              
+              class="hidden shadow-lg postImg-show animate1s hover:scale-150 transition-05"
+              src="{{ request()->root() }}/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.0.jpg"
               alt="{{ $post->title }}">
-            <img id="img1"
-              onerror="this.remove()"
-              x-on:load="onload()"
-              class="hidden shadow-lg postImg-show animate1s"
-              src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.1.jpg"
+            <img id="img1"              
+              x-on:click="zoom($el)"
+              @click.outside="zoom(event.target, $el)"              
+              class="hidden shadow-lg postImg-show animate1s hover:scale-150 transition-05"
+              src="{{ request()->root() }}/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.1.jpg"
               alt="{{ $post->title }}">
-            <img id="img2"
-              onerror="this.remove()"
-              x-on:load="onload()"
-              class="hidden shadow-lg postImg-show animate1s"
-              src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.2.jpg"
+            <img id="img2"              
+              x-on:click="zoom($el)"
+              @click.outside="zoom(event.target, $el)"              
+              class="hidden shadow-lg postImg-show animate1s hover:scale-150 transition-05"
+              src="{{ request()->root() }}/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.2.jpg"
               alt="{{ $post->title }}">
-            <img id="img3"
-              onerror="this.remove()"
-              x-on:load="onload()"
-              class="hidden shadow-lg postImg-show animate1s"
-              src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.3.jpg"
+            <img id="img3"              
+              x-on:click="zoom($el)"
+              @click.outside="zoom(event.target, $el)"              
+              class="hidden shadow-lg postImg-show animate1s hover:scale-150 transition-05"
+              src="{{ request()->root() }}/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.3.jpg"
               alt="{{ $post->title }}">
-            <img id="img4"
-              onerror="this.remove()"
-              x-on:load="onload()"
-              class="hidden shadow-lg postImg-show animate1s"
-              src="/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.4.jpg"
-              alt="{{ $post->title }}">
+            <img id="img4"              
+              x-on:click="zoom($el)"
+              @click.outside="zoom(event.target, $el)"              
+              class="hidden shadow-lg postImg-show animate1s hover:scale-150 transition-05"
+              src="{{ request()->root() }}/postImages/{{ $post->author->username }}/display/{{ $post->uuid }}_400_images.4.jpg"
+              alt="{{ $post->title }}"> --}}
           </div>
-          <div class="circle-container w-full flex justify-center">
+          <div class="circle-container w-full flex justify-center space-x-1">
             <!-- circle filled by JS -->
           </div>
         </div>
-        <div class="col-end-7 col-span-1">
-          <span class="arrowhead_rh" role="button" x-on:click="nextimg()"></span>
+        <div class="col-end-7 col-span-1 opacity-10 hover:opacity-100 transition-05">
+          <span class="arrowhead_rh" role="button" x-on:click="setImg(true)"></span>
+          {{-- <span class="arrowhead_rh" role="button" x-on:click="nextimg()"></span> --}}
         </div>
       </div>
 
@@ -93,7 +103,7 @@
         <h5 class="text-dxl font-bold my-2" x-on:click="open = ! open" role="button">Review <span class="expand"
             x-init="$watch('open', v => v ? ($el.setAttribute('class', 'expand')) : ($el.setAttribute('class', 'arrow_rh')))"></span></h5>
         <div class="w-full text-center relative" x-show="open">
-          <div class="comment-container" x-init="more_comment('{{ $post->uuid }}')">
+          <div class="comment-container" x-init="more_comment('{{ $post->uuid }}', false)">
             <x-comment :isCommenting="true" :postID="$post->uuid" x-show="open" />
           </div>
           <!-- tombol add and more comment -->
@@ -158,7 +168,11 @@
             </x-slot>
 
             @php
-              $menus = [['name' => 'Add Post', 'href' => '/post/create', 'icon' => 'post_add', 'method' => 'get'], ['name' => 'Edit  Post', 'href' => '/post/edit/' . $post->uuid, 'icon' => 'edit_doc', 'method' => 'get'], ['name' => 'Delete Post', 'href' => '/post/delete/' . $post->uuid, 'icon' => 'delete', 'method' => 'get']];
+              $menus = [
+                ['name' => 'Add Post', 'href' => '/post/create', 'icon' => 'post_add', 'method' => 'get'], 
+                ['name' => 'Edit  Post', 'href' => '/post/edit/' . $post->uuid, 'icon' => 'edit_doc', 'method' => 'get'], 
+                ['name' => 'Delete Post', 'href' => '/post/delete/' . $post->uuid, 'icon' => 'delete', 'method' => 'get'],
+              ];
             @endphp
 
             <x-slot:content>

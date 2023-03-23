@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::connection('mysql')->create('comments', function (Blueprint $table) {
             $table->uuid('uuid');
             $table->text('description');
             $table->integer('commentator_id');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comments');
+        Schema::connection('mysql')->dropIfExists('comments');
     }
 };
